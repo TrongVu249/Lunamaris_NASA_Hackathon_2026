@@ -21,7 +21,7 @@
      Đã bỏ tham số fbclid=... (tham số theo dõi của Facebook, không đổi đích đến)
      để mã QR ít ô hơn → quét nhanh và chắc hơn. */
   var NOTEBOOK_URL =
-    "https://notebook.google.com/notebook/eb772db5-b353-4fd7-aeea-b67ca4b120c4";
+    "https://notebook.google.com/notebook/1c4fe88f-3774-481e-ac80-15f0992d96da";
 
   var btn = document.getElementById("notebook-qr-btn");
   var panel = document.getElementById("notebook-qr-panel");
