@@ -158,8 +158,111 @@
       document.body.removeChild(link);
     }
 
+    /** Tách chữ thành các dòng vừa maxWidth (không vẽ) — để tính chiều cao ảnh trước khi vẽ. */
+    function splitLines(ctx, text, maxWidth) {
+      const words = String(text).split(" ");
+      const lines = [];
+      let line = "";
+      words.forEach((w) => {
+        const test = line ? line + " " + w : w;
+        if (ctx.measureText(test).width > maxWidth && line) {
+          lines.push(line);
+          line = w;
+        } else {
+          line = test;
+        }
+      });
+      if (line) lines.push(line);
+      return lines;
+    }
+
+    /**
+     * Lá thư thứ năm (DUSTER) → ảnh PNG dọc, vẽ ngay trên trình duyệt, không gửi đi đâu.
+     * letter = { greeting, body: [đoạn], last, sign, title }
+     */
+    function downloadLetterPNG(letter) {
+      const W = 1080;
+      const PAD = 96;
+      const TEXT_W = W - PAD * 2 - 28;
+      const LH = 46;
+      const BODY_FONT = "400 30px 'Overpass', sans-serif";
+
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      ctx.font = BODY_FONT;
+      const paras = [letter.greeting].concat(letter.body || [], [letter.last]);
+      const blocks = paras.map((p) => splitLines(ctx, p, TEXT_W));
+      const textH = blocks.reduce((h, b) => h + b.length * LH + 24, 0);
+      const H = Math.max(1080, 250 + textH + 210);
+
+      canvas.width = W;
+      canvas.height = H;
+
+      const grad = ctx.createLinearGradient(0, 0, 0, H);
+      grad.addColorStop(0, "#151622");
+      grad.addColorStop(1, "#10131F");
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, W, H);
+
+      ctx.strokeStyle = "#10B981";
+      ctx.lineWidth = 3;
+      ctx.strokeRect(36, 36, W - 72, H - 72);
+
+      // con dấu tròn (không dùng logo NASA)
+      ctx.save();
+      ctx.translate(W - PAD - 30, PAD + 26);
+      ctx.fillStyle = "#E7F434";
+      ctx.beginPath();
+      ctx.arc(0, 0, 30, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "#151622";
+      ctx.font = "800 26px 'Fira Sans', sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("5", 0, 9);
+      ctx.restore();
+
+      ctx.fillStyle = "#94A3B8";
+      ctx.font = "600 20px 'JetBrains Mono', monospace";
+      ctx.fillText("LUNAMARIS • HANOI 02:40 → 2076", PAD, PAD + 10);
+
+      ctx.fillStyle = "#F8FAFC";
+      ctx.font = "800 44px 'Fira Sans', sans-serif";
+      ctx.fillText(letter.title || "", PAD, PAD + 70);
+
+      // gạch dọc bên trái thân thư (giống .letter trên web)
+      let y = 250;
+      ctx.fillStyle = "#10B981";
+      ctx.fillRect(PAD, y - 30, 3, textH - 10);
+
+      ctx.font = BODY_FONT;
+      blocks.forEach((lines, i) => {
+        ctx.fillStyle = i === blocks.length - 1 ? "#E7F434" : "#E2E8F0";
+        lines.forEach((ln) => {
+          ctx.fillText(ln, PAD + 28, y);
+          y += LH;
+        });
+        y += 24;
+      });
+
+      ctx.fillStyle = "#F8FAFC";
+      ctx.font = "700 30px 'Fira Sans', sans-serif";
+      ctx.fillText(letter.sign || "", PAD + 28, y + 20);
+
+      ctx.fillStyle = "#94A3B8";
+      ctx.font = "400 18px 'Overpass', sans-serif";
+      ctx.fillText("NASA Space Apps Challenge 2026 • Made in your browser, no personal data.", PAD, H - 70);
+
+      const link = document.createElement("a");
+      link.download = "LUNAMARIS_Letter_5_DUSTER.png";
+      link.href = canvas.toDataURL("image/png");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
     return {
-      downloadCertificatePNG
+      downloadCertificatePNG,
+      downloadLetterPNG
     };
   })();
 

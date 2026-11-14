@@ -16,7 +16,7 @@
   - *Để sau cuộc thi:* chuyển sang Tailwind biên dịch sẵn (Standalone CLI + bước build trên Vercel) để giảm tải script lúc đầu. Cách viết class không đổi.
 - **Đồ họa tương tác:** **Inline SVG kết hợp CSS transform/filter**, điều khiển qua sự kiện `input` của `<input type="range">` và qua Pointer Events. **Không dùng thư viện 3D, WebGL, canvas game hay game engine.** Canvas chỉ dùng để xuất thẻ Guardian ra PNG.
 - **Cơ chế dự phòng (Fallback):** Mỗi thanh trượt bắt buộc đi kèm 3–4 nút "Mốc trạng thái cố định" (Preset State Buttons). Bấm nút thì thanh trượt nhảy tới giá trị đó và giao diện cập nhật, để vẫn dùng được 100% khi thao tác kéo trên điện thoại bị kẹt.
-- **Dữ liệu:** `data/content.json` là **nguồn duy nhất**. `js/data.js` được sinh lại từ JSON này (để vẫn chạy khi mở file trực tiếp, không bị lỗi CORS). Không sửa tay số liệu trong `data.js`.
+- **Dữ liệu:** `js/data.js` là bản trang web đọc khi chạy (để vẫn chạy khi mở file trực tiếp, không bị lỗi CORS). `data/content.json` là bản JSON xuất từ `data.js` (phần `meta`, `artifacts`, `decision_station`): sửa số liệu trong `data.js` rồi xuất lại JSON để hai bản luôn khớp (cập nhật 15/11/2026).
 - **Hosting:** Vercel, dự phòng bằng GitHub Pages. `.vercelignore` loại `docs/`, `*.docx`, `types/` khỏi bản deploy.
 
 ### 1.1a. Yêu cầu UI/UX thống nhất

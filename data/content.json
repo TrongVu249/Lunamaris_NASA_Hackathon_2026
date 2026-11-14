@@ -44,8 +44,10 @@
       "narrative_voice": {
         "epistemic_label_en": "NARRATIVE INTERPRETATION GROUNDED IN TELEMETRY",
         "epistemic_label_vi": "DIỄN GIẢI VĂN HỌC DỰA TRÊN DỮ LIỆU ĐO XA",
-        "letter_en": "On July 20, 1969, Neil Armstrong and Buzz Aldrin placed my aluminum frame onto the dark basalt of Tranquility Base, just steps away from the golden legs of the Eagle descent stage. I have no batteries, no radio transmitter, and no moving gears—only one hundred fused-silica corner-cube prisms, each measuring 3.8 centimeters across. When Eagle blasted off to return home, I remained behind in the silent vacuum. Yet for fifty-seven years, whenever Earth observatories fire a green laser pulse across the void, I catch a single stray photon out of a hundred quadrillion and reflect it straight back in 2.56 seconds, whispering that the Moon is drifting away by 3.8 centimeters every year.",
-        "letter_vi": "Ngày 20 tháng 7 năm 1969, Neil Armstrong và Buzz Aldrin đặt khung nhôm của tôi xuống nền đá bazan sẫm màu tại Căn cứ Tĩnh Lặng, chỉ cách những chân đáp ánh vàng của tầng hạ cánh Eagle vài bước chân. Tôi không có ắc-quy, không máy phát sóng vô tuyến, cũng chẳng có bánh răng chuyển động—chỉ có đúng một trăm lăng kính góc bằng thạch anh nung chảy, mỗi chiếc rộng 3,8 centimet. Khi tầng cất cánh của Eagle rời Mặt Trăng trở về nhà, tôi ở lại giữa khoảng chân không câm lặng. Thế nhưng suốt 57 năm qua, mỗi khi các đài quan sát trên Trái Đất bắn một xung laser xanh xuyên qua bóng tối, tôi lại bắt lấy một hạt photon hiếm hoi giữa hàng trăm triệu triệu hạt và phản xạ nó về đúng nơi xuất phát sau 2,56 giây, thì thầm rằng Mặt Trăng đang trôi xa thêm 3,8 centimet mỗi năm."
+        "letter_en": "<p>To the people of Earth,</p><p>On July 20, 1969, two astronauts set me down here and flew home. I stayed. I was made to stay.</p><p>I have no battery. All I have is 100 prisms, each about the size of a ping-pong ball. You shine a laser at me, and I send the light straight back to where it came from. There and back takes about two and a half seconds.</p><p>That is how you know the Moon is slowly drifting away, 3.8 cm every year. About as fast as your fingernails grow.</p><p>It has been 57 years. I still work. I am only afraid of dust. If dust covers me, I won't be able to answer anymore.</p><p class=\"letter-sign\">LRRR, Apollo 11</p>",
+        "letter_vi": "<p>Gửi những người ở Trái Đất,</p><p>Ngày 20/7/1969, hai phi hành gia đặt tôi xuống đây rồi bay về. Tôi ở lại. Tôi được làm ra để ở lại.</p><p>Tôi không có pin. Tôi chỉ có 100 lăng kính, mỗi cái to cỡ quả bóng bàn. Các bạn chiếu laser lên, tôi gửi ánh sáng về đúng chỗ cũ. Đi rồi về mất chừng hai giây rưỡi.</p><p>Nhờ vậy, các bạn biết Mặt Trăng đang lùi xa dần, mỗi năm 3,8 cm. Bằng tốc độ móng tay bạn mọc.</p><p>Đã 57 năm. Tôi vẫn làm việc. Tôi chỉ sợ bụi. Bụi phủ kín thì tôi không trả lời được nữa.</p><p class=\"letter-sign\">LRRR, Apollo 11</p>",
+        "log_en": "On July 20, 1969, Neil Armstrong and Buzz Aldrin placed my aluminum frame onto the dark basalt of Tranquility Base, just steps away from the golden legs of the Eagle descent stage. I have no batteries, no radio transmitter, and no moving gears—only one hundred fused-silica corner-cube prisms, each measuring 3.8 centimeters across. When Eagle blasted off to return home, I remained behind in the silent vacuum. Yet for fifty-seven years, whenever Earth observatories fire a green laser pulse across the void, I catch a single stray photon out of a hundred quadrillion and reflect it straight back in 2.56 seconds, whispering that the Moon is drifting away by 3.8 centimeters every year.",
+        "log_vi": "Ngày 20 tháng 7 năm 1969, Neil Armstrong và Buzz Aldrin đặt khung nhôm của tôi xuống nền đá bazan sẫm màu tại Căn cứ Tĩnh Lặng, chỉ cách những chân đáp ánh vàng của tầng hạ cánh Eagle vài bước chân. Tôi không có ắc-quy, không máy phát sóng vô tuyến, cũng chẳng có bánh răng chuyển động—chỉ có đúng một trăm lăng kính góc bằng thạch anh nung chảy, mỗi chiếc rộng 3,8 centimet. Khi tầng cất cánh của Eagle rời Mặt Trăng trở về nhà, tôi ở lại giữa khoảng chân không câm lặng. Thế nhưng suốt 57 năm qua, mỗi khi các đài quan sát trên Trái Đất bắn một xung laser xanh xuyên qua bóng tối, tôi lại bắt lấy một hạt photon hiếm hoi giữa một trăm triệu tỷ hạt và phản xạ nó về đúng nơi xuất phát sau 2,56 giây, thì thầm rằng Mặt Trăng đang trôi xa thêm 3,8 centimet mỗi năm."
       },
       "archaeologist_dossier": {
         "epistemic_label_en": "VERIFIED SCIENTIFIC & LEGAL RECORD",
@@ -54,12 +56,16 @@
         "how_it_operated_vi": "Gương phản xạ Laser Mặt Trăng (LRRR) sử dụng các lăng kính góc bằng thạch anh nung chảy siêu tinh khiết (đường kính 3,8 cm mỗi lăng kính; gồm 100 lăng kính trên Apollo 11 & 14, và nâng lên 300 lăng kính trên Apollo 15). Nhờ cấu tạo ba mặt vuông góc, tia sáng chiếu vào luôn được phản xạ ngược lại song song tuyệt đối với hướng tới. Bằng cách bấm giờ hành trình khứ hồi ~2,56 giây của xung laser, các nhà khoa học đo khoảng cách Trái Đất - Mặt Trăng chính xác tới từng milimet, chứng minh Mặt Trăng đang xa dần 3,8 cm/năm do ma sát thủy triều và kiểm nghiệm Thuyết Tương đối rộng của Einstein.",
         "conservation_law_en": "Under NASA's 2011 Recommendations to Space-Faring Entities (Table 1 & Figure 4) and the One Small Step to Protect Human Heritage in Space Act (Public Law 116-275, signed Dec 31, 2020; implemented via NASA GIC 21-07), Tranquility Base is protected by a strict 75-meter Artifact Boundary (no rover or astronaut entry) and a 2.0-kilometer Descent/Approach Exclusion Radius (Apollo 17's boundary is 225 meters).",
         "conservation_law_vi": "Theo Khuyến nghị năm 2011 của NASA (Bảng 1 & Hình 4) và Đạo luật Bảo vệ Di sản Nhân loại trong Không gian (Public Law 116-275, ký ngày 31/12/2020; thi hành qua Thông tư NASA GIC 21-07), khu vực di tích Apollo 11 được bảo vệ bởi Vành đai Hiện vật 75 mét (cấm xe tự hành và phi hành gia đi vào) cùng Bán kính Vùng cấm Hạ cánh 2,0 kilomet (đối với Apollo 17, vành đai hiện vật là 225 mét).",
-        "discrepancy_note_en": "Formula Verification: Cumulative Lunar Drift Δd = 3.8 cm/year × (Selected Year − 1969). At Year 2026 (57 years), Δd = 216.6 cm (~2.17 meters). Photon Return Ratio: ~1 returned photon detected per 10^17 emitted photons (ILRS / Dickey et al., Science 1994).",
-        "discrepancy_note_vi": "Kiểm chứng Công thức: Độ trôi quỹ đạo tích lũy Δd = 3,8 cm/năm × (Năm chọn − 1969). Tại năm 2026 (57 năm), Δd = 216,6 cm (~2,17 mét). Tỷ lệ thu nhận photon: Trung bình thu được dưới 1 photon phản hồi trên mỗi 10^17 photon bắn đi từ Trái Đất (Nguồn: ILRS / Dickey et al., Science 1994).",
+        "discrepancy_note_en": "Formula Verification: Cumulative Lunar Drift Δd = 3.8 cm/year × (Selected Year − 1969). At Year 2026 (57 years), Δd = 216.6 cm (~2.17 meters). Photon Return Ratio: ~1 returned photon detected per 10^17 emitted photons (ILRS / Dickey et al., Science 1994). Dust Warning: the Apollo reflectors now return only about 1/10 of the signal that careful calculations predict, and roughly 10 times less again near full Moon; the leading explanation is a thin layer of dust on the prisms (Murphy et al., Icarus 2010).",
+        "discrepancy_note_vi": "Kiểm chứng Công thức: Độ trôi quỹ đạo tích lũy Δd = 3,8 cm/năm × (Năm chọn − 1969). Tại năm 2026 (57 năm), Δd = 216,6 cm (~2,17 mét). Tỷ lệ thu nhận photon: Trung bình thu được dưới 1 photon phản hồi trên mỗi 10^17 photon bắn đi từ Trái Đất (Nguồn: ILRS / Dickey et al., Science 1994). Cảnh báo bụi: các gương Apollo hiện chỉ trả về khoảng 1/10 tín hiệu so với tính toán, và gần trăng tròn còn yếu thêm khoảng 10 lần nữa; giả thuyết được ủng hộ nhất là một lớp bụi mỏng phủ trên lăng kính (Murphy và cộng sự, Icarus 2010).",
         "source_links": [
           {
             "label": "ILRS / NASA Lunar Laser Ranging Paper (Faller 2014)",
             "url": "https://ilrs.gsfc.nasa.gov/lw19/docs/2014/Papers/3127_Faller_paper.pdf"
+          },
+          {
+            "label": "Murphy et al. (2010): Long-term degradation of optical devices on the Moon",
+            "url": "https://arxiv.org/abs/1003.0713"
           },
           {
             "label": "Public Law 116-275: One Small Step Act (2020)",
@@ -78,29 +84,29 @@
         "stops": [
           {
             "value": 1969,
-            "label_en": "1969: Apollo 11 Deployment",
-            "label_vi": "1969: Lắp đặt trên Apollo 11",
+            "label_en": "1969: Apollo 11 Deployment (0 cm)",
+            "label_vi": "1969: Lắp đặt trên Apollo 11 (0 cm)",
             "desc_en": "July 20, 1969: 100 fused-silica prisms (3.8 cm each) deployed inside the 75 m Tranquility Base artifact zone. Cumulative drift: 0.0 cm.",
             "desc_vi": "20/07/1969: Mảng 100 lăng kính thạch anh (3,8 cm/lăng kính) được đặt tại Biển Tĩnh Lặng. Độ dịch chuyển tích lũy: 0,0 cm."
           },
           {
             "value": 1971,
-            "label_en": "1971: Apollo 15 (300 Prisms)",
-            "label_vi": "1971: Apollo 15 (300 Lăng kính)",
+            "label_en": "1971: Apollo 15 (+7.6 cm)",
+            "label_vi": "1971: Apollo 15 (+7,6 cm)",
             "desc_en": "Apollo 15 deploys the largest 300-prism array at Hadley Rille, tripling laser return efficiency. Cumulative drift: +7.6 cm.",
             "desc_vi": "Apollo 15 đặt mảng lớn nhất gồm 300 lăng kính, tăng gấp ba hiệu suất phản xạ tín hiệu. Độ dịch chuyển tích lũy: +7,6 cm."
           },
           {
             "value": 2000,
-            "label_en": "2000: 31 Years of Ranging",
-            "label_vi": "2000: 31 Năm Đo đạc",
+            "label_en": "2000: 31 Years (+117.8 cm)",
+            "label_vi": "2000: 31 Năm Đo đạc (+117,8 cm)",
             "desc_en": "Three decades of continuous passive laser ranging confirm fluid lunar core dynamics. Cumulative drift: +117.8 cm.",
             "desc_vi": "Ba thập kỷ đo laser thụ động liên tục giúp xác nhận lõi lỏng của Mặt Trăng. Độ dịch chuyển tích lũy: +117,8 cm."
           },
           {
             "value": 2026,
-            "label_en": "2026: 57 Years (+216.6 cm)",
-            "label_vi": "2026: 57 Năm (+216,6 cm)",
+            "label_en": "2026: 57 Years Active (+216.6 cm)",
+            "label_vi": "2026: 57 Năm Hoạt động (+216,6 cm)",
             "desc_en": "57 years after Eagle landed, the passive prisms still operate daily without power. Total measured lunar recession: +216.6 cm (~2.17 m).",
             "desc_vi": "57 năm sau khi Eagle hạ cánh, các lăng kính vẫn hoạt động mỗi ngày không cần điện. Tổng độ trôi Mặt Trăng: +216,6 cm (~2,17 m)."
           }
@@ -114,7 +120,7 @@
       "name_en": "Surveyor 3 & Apollo 12 (LM Intrepid)",
       "name_vi": "Tàu Đổ bộ Surveyor 3 & Apollo 12 (LM Intrepid)",
       "cospar_id": "1967-035A (Surveyor 3) / 1969-099C (Intrepid)",
-      "location_name": "Oceanus Procellarum (Ocean of Storms — 3.01° S, 23.42° W)",
+      "location_name": "Oceanus Procellarum (Ocean of Storms — 3° S, 23.41° W)",
       "functionality_status_en": "INACTIVE LANDER (Camera & Scoop Returned to Earth in 1969)",
       "functionality_status_vi": "ĐÃ NGỪNG HOẠT ĐỘNG (Camera & Gầu xúc được mang về Trái Đất năm 1969)",
       "media": {
@@ -124,22 +130,32 @@
       "narrative_voice": {
         "epistemic_label_en": "NARRATIVE INTERPRETATION GROUNDED IN TELEMETRY",
         "epistemic_label_vi": "DIỄN GIẢI VĂN HỌC DỰA TRÊN DỮ LIỆU ĐO XA",
-        "letter_en": "For thirty-one months, I sat alone inside a shallow crater on the Ocean of Storms. Between April and May 1967, my mechanical scoop dug trenches into the gray regolith, while my television camera transmitted 6,315 images to prove the Moon would not swallow future astronauts in dust. When the lunar night froze my batteries, I thought my watch had ended. Then, on November 19, 1969, the silent vacuum roared. Lunar Module Intrepid descended just 155 meters from my rim. Its rocket plume blasted hyper-velocity dust across my white paint, turning my shell tan and pitting my mirror. Hours later, two silver figures walked down the slope. Pete Conrad and Alan Bean gently detached my camera—taking my eyes back to Earth, while my three legs guard this crater forever.",
-        "letter_vi": "Suốt ba mươi mốt tháng ròng, tôi ngồi đơn độc bên sườn một miệng hố nông giữa Đại dương Bão tố. Từ tháng 4 đến tháng 5 năm 1967, chiếc gầu xúc cơ học của tôi đã đào những rãnh đất xám, còn camera truyền hình gửi về 6.315 bức ảnh để chứng minh Mặt Trăng sẽ không nhấn chìm các phi hành gia tương lai trong bụi lún. Khi đêm trường Mặt Trăng đóng băng ắc-quy, tôi ngỡ ca trực của mình đã khép lại. Rồi ngày 19/11/1969, khoảng chân không câm lặng bỗng gầm vang. Tàu đổ bộ Intrepid đáp xuống chỉ cách mép hố của tôi 155 mét. Luồng phụt tên lửa bắn những hạt bụi siêu tốc vào lớp sơn trắng, nhuộm vỏ tôi sang màu nâu rám và làm rỗ gương phản xạ. Vài giờ sau, hai bóng người ánh bạc bước xuống dốc. Pete Conrad và Alan Bean nhẹ nhàng tháo chiếc camera—mang đôi mắt tôi về lại Trái Đất, để ba chân đáp của tôi canh giữ miệng hố này mãi mãi."
+        "letter_en": "<p>To the people of Earth,</p><p>I am Surveyor 3. I arrived here on April 20, 1967, to answer one question: would the lunar ground sink under a person's feet?</p><p>I took more than 6,300 pictures. I dug the soil with a little scoop. My answer: the ground is as firm as wet sand on a beach, strong enough to hold up a crewed ship.</p><p>Two and a half years later, on November 19, 1969, the lander Intrepid touched down about 160 m from me, about one and a half football fields. Dust from its engine whipped across my body. My white paint turned brown. Two astronauts walked over and took my camera home.</p><p>I am not angry. But please remember: 160 m was still not far enough.</p><p class=\"letter-sign\">Surveyor 3</p>",
+        "letter_vi": "<p>Gửi những người ở Trái Đất,</p><p>Tôi là Surveyor 3. Tôi đến đây ngày 20/4/1967 để trả lời một câu hỏi: đất Mặt Trăng có lún dưới chân người không?</p><p>Tôi chụp hơn 6.300 tấm ảnh. Tôi đào đất bằng cái gầu xúc nhỏ. Câu trả lời của tôi: đất chắc như cát ướt ngoài bãi biển, đủ đỡ một con tàu có người.</p><p>Hai năm rưỡi sau, ngày 19/11/1969, tàu Intrepid đáp cách tôi khoảng 160 m, chừng một sân bóng rưỡi. Bụi từ động cơ quất vào người tôi. Lớp sơn trắng ngả nâu. Hai phi hành gia đến, tháo camera của tôi mang về.</p><p>Tôi không giận. Nhưng các bạn nhớ giùm: 160 m vẫn chưa đủ xa.</p><p class=\"letter-sign\">Surveyor 3</p>",
+        "log_en": "For thirty-one months, I sat alone inside a shallow crater on the Ocean of Storms. Between April and May 1967, my mechanical scoop dug trenches into the gray regolith, while my television camera transmitted 6,326 images to prove the Moon would not swallow future astronauts in dust. When the lunar night froze my batteries, I thought my watch had ended. Then, on November 19, 1969, the silent vacuum roared. Lunar Module Intrepid descended just 160 meters from my rim. Its rocket plume blasted hyper-velocity dust across my white paint, turning my shell tan and pitting my mirror. The next day, two silver figures walked down the slope. Pete Conrad and Alan Bean gently detached my camera—taking my eyes back to Earth, while my three legs guard this crater forever.",
+        "log_vi": "Suốt ba mươi mốt tháng ròng, tôi ngồi đơn độc bên sườn một miệng hố nông giữa Đại dương Bão tố. Từ tháng 4 đến tháng 5 năm 1967, chiếc gầu xúc cơ học của tôi đã đào những rãnh đất xám, còn camera truyền hình gửi về 6.326 bức ảnh để chứng minh Mặt Trăng sẽ không nhấn chìm các phi hành gia tương lai trong bụi lún. Khi đêm trường Mặt Trăng đóng băng ắc-quy, tôi ngỡ ca trực của mình đã khép lại. Rồi ngày 19/11/1969, khoảng chân không câm lặng bỗng gầm vang. Tàu đổ bộ Intrepid đáp xuống chỉ cách mép hố của tôi 160 mét. Luồng phụt tên lửa bắn những hạt bụi siêu tốc vào lớp sơn trắng, nhuộm vỏ tôi sang màu nâu rám và làm rỗ gương phản xạ. Hôm sau, hai bóng người ánh bạc bước xuống dốc. Pete Conrad và Alan Bean nhẹ nhàng tháo chiếc camera—mang đôi mắt tôi về lại Trái Đất, để ba chân đáp của tôi canh giữ miệng hố này mãi mãi."
       },
       "archaeologist_dossier": {
         "epistemic_label_en": "VERIFIED SCIENTIFIC & LEGAL RECORD",
         "epistemic_label_vi": "HỒ SƠ KHOA HỌC & PHÁP LÝ ĐÃ KIỂM CHỨNG",
-        "how_it_operated_en": "Landed on April 20, 1967, Surveyor 3 used an electric surface-sampler scoop and a 600-line television camera to measure lunar soil bearing strength, directly validating the landing gear design for Apollo Lunar Modules. On November 19, 1969, Apollo 12 astronauts Charles 'Pete' Conrad and Alan Bean executed the first precision pinpoint landing, touching down ~155 meters away. During their second EVA, the crew retrieved ~10 kg of Surveyor 3 hardware—including its TV camera, scoop, and aluminum tubing—after 950 Earth days of lunar exposure.",
-        "how_it_operated_vi": "Đáp xuống ngày 20/04/1967, Surveyor 3 dùng gầu xúc lấy mẫu bề mặt và camera truyền hình 600 dòng quét để đo sức chịu tải của đất Mặt Trăng, xác nhận trực tiếp thiết kế chân đáp cho tàu Apollo. Ngày 19/11/1969, phi hành đoàn Apollo 12 (Pete Conrad và Alan Bean) thực hiện cú hạ cánh chính xác đầu tiên, đáp cách đó ~155 mét. Trong chuyến đi bộ thứ hai (EVA 2), họ đã tháo dỡ và mang về Trái Đất ~10 kg bộ phận của Surveyor 3 (gồm camera, gầu xúc và ống nhôm) sau 950 ngày phơi nhiễm môi trường Mặt Trăng.",
+        "how_it_operated_en": "Landed on April 20, 1967, Surveyor 3 used an electric surface-sampler scoop and a 600-line television camera to measure lunar soil bearing strength, directly validating the landing gear design for Apollo Lunar Modules. On November 19, 1969 (06:54 UTC), Apollo 12 astronauts Charles 'Pete' Conrad and Alan Bean executed the first precision pinpoint landing, touching down ~160 meters away. During their second moonwalk (November 20), the crew retrieved ~10 kg of Surveyor 3 hardware—including its TV camera, scoop, and aluminum tubing—after 31 months of lunar exposure.",
+        "how_it_operated_vi": "Đáp xuống ngày 20/04/1967, Surveyor 3 dùng gầu xúc lấy mẫu bề mặt và camera truyền hình 600 dòng quét để đo sức chịu tải của đất Mặt Trăng, xác nhận trực tiếp thiết kế chân đáp cho tàu Apollo. Ngày 19/11/1969 (06:54 UTC, tức 13:54 giờ Hà Nội), phi hành đoàn Apollo 12 (Pete Conrad và Alan Bean) thực hiện cú hạ cánh chính xác đầu tiên, đáp cách đó ~160 mét. Trong chuyến đi bộ thứ hai trên bề mặt (20/11), họ đã tháo dỡ và mang về Trái Đất ~10 kg bộ phận của Surveyor 3 (gồm camera, gầu xúc và ống nhôm) sau 31 tháng phơi nhiễm môi trường Mặt Trăng.",
         "conservation_law_en": "Post-flight laboratory examination documented in NASA Special Publication SP-284 (1972) revealed that Apollo 12's descent engine blast accelerated lunar dust grains into a hyper-velocity spray that sandblasted, micro-pitted, and discolored Surveyor 3's surfaces. This exact discovery prompted NASA's 2011 Recommendations to establish a 2.0 km approach and landing exclusion radius around soft-landing heritage sites (and 0.5 km for hard impact sites).",
         "conservation_law_vi": "Phân tích hậu kiểm trong ấn phẩm đặc biệt NASA SP-284 (1972) phát hiện luồng phụt động cơ hạ cánh của Apollo 12 đã gia tốc các hạt bụi Mặt Trăng thành luồng bắn cát siêu tốc, làm rỗ vi mô và biến đổi màu sắc bề mặt Surveyor 3. Phát hiện lịch sử này chính là cơ sở khoa học để Khuyến nghị năm 2011 của NASA thiết lập bán kính vùng cấm tiếp cận hạ cánh 2,0 km quanh các bãi đáp di sản (và 0,5 km cho các điểm va chạm cứng).",
-        "discrepancy_note_en": "Historical vs. Satellite Measurement Note: Modern high-resolution Lunar Reconnaissance Orbiter Camera (LROC) imagery measures the center-to-center distance between LM Intrepid and Surveyor 3 at ~155 meters, whereas 1969 preliminary NASA/NSSDCA logs estimated 160 to 180 meters (520–600 feet).",
-        "discrepancy_note_vi": "Ghi chú Đối chiếu Số liệu: Ảnh chụp độ phân giải cao từ vệ tinh LROC hiện đại đo khoảng cách tâm-tới-tâm giữa LM Intrepid và Surveyor 3 là ~155 mét, trong khi các báo cáo sơ bộ năm 1969 trên cổng NASA/NSSDCA ước tính từ 160 đến 180 mét (520–600 feet).",
+        "discrepancy_note_en": "Source Alignment Note (re-audited 2026-11-15): NASA pages quote 160–183 m for the Intrepid–Surveyor 3 separation (~600 ft on moon.nasa.gov, ~197 yd on the Surveyor 3 mission page). Lunar Reconnaissance Orbiter images taken in 2011 measured 538 ft (≈ 164 m), and NASA's Scientific Visualization Studio gives 160 m — this site uses 160 m. Touchdown was 06:54 UTC on November 19, 1969 (some U.S. pages list November 18, Pacific time). Picture count: 6,326 on NASA's mission page and the LPI archive; a 1968 USGS report counts 6,315.",
+        "discrepancy_note_vi": "Ghi chú Đối chiếu Nguồn (kiểm lại ngày 15/11/2026): các trang NASA ghi khoảng cách Intrepid–Surveyor 3 từ 160 đến 183 m (~600 ft trên moon.nasa.gov, ~197 yard trên trang sứ mệnh Surveyor 3). Ảnh chụp từ tàu quỹ đạo LRO năm 2011 đo được 538 ft (≈ 164 m), và Trung tâm Hình ảnh Khoa học của NASA (SVS) ghi 160 m — website dùng 160 m. Tàu chạm đất lúc 06:54 UTC ngày 19/11/1969 (một số trang của Mỹ ghi 18/11 theo giờ Thái Bình Dương). Số ảnh: 6.326 theo trang sứ mệnh NASA và kho LPI; báo cáo USGS năm 1968 đếm 6.315.",
         "source_links": [
           {
             "label": "NASA SP-284 (1972): Analysis of Surveyor 3 Material Returned by Apollo 12",
             "url": "https://ntrs.nasa.gov/citations/19720019081"
+          },
+          {
+            "label": "NASA SVS: The Apollo 12 Landing Site (160 m from Surveyor 3, LRO imagery)",
+            "url": "https://svs.gsfc.nasa.gov/4767"
+          },
+          {
+            "label": "NASA: Surveyor 3 mission page",
+            "url": "https://science.nasa.gov/mission/surveyor-3/"
           },
           {
             "label": "NASA 2011 Recommendations to Space-Faring Entities (2.0 km Rule)",
@@ -154,28 +170,28 @@
         "min_val": 50,
         "max_val": 2500,
         "step": 5,
-        "default_val": 155,
+        "default_val": 160,
         "stops": [
           {
             "value": 2000,
-            "label_en": "2,000 m: NASA 2011 Safe Threshold",
+            "label_en": "2,000 m: NASA 2011 Safe Buffer",
             "label_vi": "2.000 m: Ngưỡng An toàn NASA 2011",
             "desc_en": "At ≥ 2.0 km, ballistic rocket plume ejecta falls back to the lunar surface before reaching the heritage artifact. Zero sandblasting damage.",
             "desc_vi": "Ở cự ly ≥ 2,0 km, toàn bộ hạt bụi bắn ra theo quỹ đạo đạn đạo rơi xuống đất trước khi chạm tới di vật. An toàn 100%."
           },
           {
             "value": 500,
-            "label_en": "500 m: Hard Impact Site Boundary",
+            "label_en": "500 m: Impact Site Boundary",
             "label_vi": "500 m: Ranh giới Điểm Va chạm",
             "desc_en": "0.5 km is only sufficient for crashed impact sites (e.g., Ranger/S-IVB). Powered descent plumes still shower fine dust over optical mirrors.",
             "desc_vi": "0,5 km chỉ đủ cho điểm va chạm cứng. Động cơ tên lửa hạ cánh ở cự ly này vẫn thổi bụi mịn phủ mờ gương quang học."
           },
           {
-            "value": 155,
-            "label_en": "155 m: 1969 Apollo 12 Touchdown",
-            "label_vi": "155 m: Cự ly Đáp Apollo 12 (1969)",
-            "desc_en": "Historical Apollo 12 distance (LROC verified; 1969 docs noted 160–180 m). High-velocity regolith spray pits camera glass and turns white paint tan (NASA SP-284).",
-            "desc_vi": "Khoảng cách thực tế của Apollo 12 (theo LROC; tài liệu 1969 ghi 160–180 m). Bão cát siêu tốc bắn rỗ kính camera và nhuộm nâu lớp sơn trắng (NASA SP-284)."
+            "value": 160,
+            "label_en": "160 m: 1969 Apollo 12 Touchdown",
+            "label_vi": "160 m: Cự ly Đáp Apollo 12 1969",
+            "desc_en": "Historical Apollo 12 distance measured from Lunar Reconnaissance Orbiter images (538 ft ≈ 164 m; NASA SVS: 160 m). High-velocity regolith spray pits camera glass and turns white paint tan (NASA SP-284).",
+            "desc_vi": "Khoảng cách thực tế của Apollo 12 đo từ ảnh tàu quỹ đạo LRO (538 ft ≈ 164 m; NASA SVS: 160 m). Bão cát siêu tốc bắn rỗ kính camera và nhuộm nâu lớp sơn trắng (NASA SP-284)."
           }
         ]
       }
@@ -197,14 +213,16 @@
       "narrative_voice": {
         "epistemic_label_en": "NARRATIVE INTERPRETATION GROUNDED IN TELEMETRY",
         "epistemic_label_vi": "DIỄN GIẢI VĂN HỌC DỰA TRÊN DỮ LIỆU ĐO XA",
-        "letter_en": "Engineers built me for a ninety-sol sprint across Meridiani Planum, expecting Martian dust to coat my solar wings within three months. Instead, seasonal whirlwinds swept my panels clean, and I rolled across ancient shorelines for nearly fifteen Earth years—traveling 45.16 kilometers and finding hematite 'blueberries' born in liquid water. On Sol 5111, June 10, 2018, a planet-encircling storm swallowed the sun. Atmospheric opacity soared to an unprecedented tau of 10.8, turning noon into pitch-black night. My solar array output collapsed from 700 watt-hours to just 22 watt-hours. I never sent English words—only binary telemetry packets—before my mission clock fell asleep in Perseverance Valley.",
-        "letter_vi": "Các kỹ sư chế tạo tôi cho cuộc chạy nước rút chỉ dài 90 ngày Sao Hỏa (sol) trên bình nguyên Meridiani, nghĩ rằng bụi đỏ sẽ sớm phủ kín đôi cánh pin mặt trời sau ba tháng. Thế nhưng những cơn lốc xoáy theo mùa đã quét sạch tấm pin, giúp tôi lăn bánh qua những bờ biển cổ đại suốt gần 15 năm Trái Đất—đi hết quãng đường kỷ lục 45,16 kilomet và tìm ra những viên đá hematit hình thành trong nước lỏng. Vào ngày Sol 5111 (10/06/2018), một cơn bão bụi toàn cầu nuốt chửng Mặt Trời. Độ mờ khí quyển vọt lên mức kỷ lục Tau 10,8, biến buổi trưa thành đêm đen đặc quánh. Điện năng của tôi sụt từ 700 watt-giờ xuống chỉ còn 22 watt-giờ. Tôi không hề gửi đi câu chữ tiếng Anh nào—chỉ truyền về gói dữ liệu nhị phân cuối cùng—trước khi chìm vào giấc ngủ vĩnh hằng nơi Thung lũng Kiên Trì."
+        "letter_en": "<p>To the people of Earth,</p><p>Everyone calls me Oppy. I was built to run for 90 days. The engineers said dust would cover my solar panels within three months at most.</p><p>But every now and then, the Martian wind blew my panels clean. So I kept going for almost 15 years and drove 45.16 km. That's longer than a marathon.</p><p>I found little round stones, small as peas. They formed in water, a very long time ago.</p><p>In June 2018, a storm covered the whole sky. My power fell from 645 to just 22 Wh. Not enough to stay awake.</p><p>Oh, and I never knew how to write words. I only ever sent back 0s and 1s. You translated this letter for me.</p><p class=\"letter-sign\">Oppy</p>",
+        "letter_vi": "<p>Gửi những người ở Trái Đất,</p><p>Mọi người gọi tôi là Oppy. Tôi được làm để chạy 90 ngày. Kỹ sư bảo bụi sẽ phủ kín tấm pin trong ba tháng là cùng.</p><p>Nhưng thỉnh thoảng gió Sao Hỏa lại thổi sạch pin cho tôi. Thế là tôi chạy gần 15 năm, đi 45,16 km. Dài hơn một cuộc thi marathon đấy.</p><p>Tôi tìm được những viên đá tròn nhỏ như hạt đậu. Chúng thành hình trong nước, từ rất lâu rồi.</p><p>Tháng 6/2018, bão phủ kín bầu trời. Điện của tôi tụt từ 645 xuống còn 22 Wh. Không đủ để thức.</p><p>À, tôi chưa bao giờ biết viết chữ. Tôi chỉ gửi về những con số 0 và 1. Lá thư này là các bạn dịch hộ tôi.</p><p class=\"letter-sign\">Oppy</p>",
+        "log_en": "Engineers built me for a ninety-sol sprint across Meridiani Planum, expecting Martian dust to coat my solar wings within three months. Instead, seasonal whirlwinds swept my panels clean, and I rolled across ancient shorelines for nearly fifteen Earth years—traveling 45.16 kilometers and finding hematite 'blueberries' born in liquid water. On Sol 5111, June 10, 2018, a planet-encircling storm swallowed the sun. Atmospheric opacity soared to an unprecedented tau of 10.8, turning noon into pitch-black night. My solar array output collapsed from 645 watt-hours (June 2) to just 22 watt-hours. I never sent English words—only binary telemetry packets—before my mission clock fell asleep in Perseverance Valley.",
+        "log_vi": "Các kỹ sư chế tạo tôi cho cuộc chạy nước rút chỉ dài 90 ngày Sao Hỏa (sol) trên bình nguyên Meridiani, nghĩ rằng bụi đỏ sẽ sớm phủ kín đôi cánh pin mặt trời sau ba tháng. Thế nhưng những cơn lốc xoáy theo mùa đã quét sạch tấm pin, giúp tôi lăn bánh qua những bờ biển cổ đại suốt gần 15 năm Trái Đất—đi hết quãng đường kỷ lục 45,16 kilomet và tìm ra những viên đá hematit hình thành trong nước lỏng. Vào ngày Sol 5111 (10/06/2018), một cơn bão bụi toàn cầu nuốt chửng Mặt Trời. Độ mờ khí quyển vọt lên mức kỷ lục Tau 10,8, biến buổi trưa thành đêm đen đặc quánh. Điện năng của tôi sụt từ 645 watt-giờ (ngày 2/6) xuống chỉ còn 22 watt-giờ. Tôi không hề gửi đi câu chữ tiếng Anh nào—chỉ truyền về gói dữ liệu nhị phân cuối cùng—trước khi chìm vào giấc ngủ vĩnh hằng nơi Thung lũng Kiên Trì."
       },
       "archaeologist_dossier": {
         "epistemic_label_en": "VERIFIED SCIENTIFIC & LEGAL RECORD",
         "epistemic_label_vi": "HỒ SƠ KHOA HỌC & PHÁP LÝ ĐÃ KIỂM CHỨNG",
-        "how_it_operated_en": "Landing on January 25, 2004, Opportunity was designed for a 90-sol mission and a 1 km drive. Powered by gallium-arsenide triple-junction solar arrays, it operated for 5,111 sols (55 times its design life) and drove 45.16 km (28.06 miles). Using its Panoramic Camera (Pancam) and Mössbauer/APXS spectrometers, Opportunity discovered spherical hematite concretions ('blueberries') and clay minerals, proving ancient Mars once hosted habitable, neutral-pH liquid water.",
-        "how_it_operated_vi": "Đáp xuống ngày 25/01/2004, Opportunity chỉ được thiết kế cho sứ mệnh 90 sol và quãng đường 1 km. Nhờ hệ thống pin mặt trời ba lớp tiếp giáp gallium-arsenide, xe đã hoạt động suốt 5.111 sol (gấp 55 lần tuổi thọ thiết kế) và đi được 45,16 km. Bằng camera toàn cảnh Pancam và các máy quang phổ trên cánh tay robot, Opportunity đã phát hiện các kết hạch hematit hình cầu và khoáng vật sét, chứng minh Sao Hỏa cổ đại từng có nước lỏng ấm áp.",
+        "how_it_operated_en": "Landing on January 24, 2004, Opportunity was designed for a 90-sol mission and a 1 km drive. Powered by gallium-arsenide triple-junction solar arrays, it operated for 5,111 sols (55 times its design life) and drove 45.16 km (28.06 miles). Using its Panoramic Camera (Pancam) and Mössbauer/APXS spectrometers, Opportunity discovered spherical hematite concretions ('blueberries') and clay minerals, proving ancient Mars once hosted habitable, neutral-pH liquid water.",
+        "how_it_operated_vi": "Đáp xuống ngày 24/01/2004, Opportunity chỉ được thiết kế cho sứ mệnh 90 sol và quãng đường 1 km. Nhờ hệ thống pin mặt trời ba lớp tiếp giáp gallium-arsenide, xe đã hoạt động suốt 5.111 sol (gấp 55 lần tuổi thọ thiết kế) và đi được 45,16 km. Bằng camera toàn cảnh Pancam và các máy quang phổ trên cánh tay robot, Opportunity đã phát hiện các kết hạch hematit hình cầu và khoáng vật sét, chứng minh Sao Hỏa cổ đại từng có nước lỏng ấm áp.",
         "conservation_law_en": "During the June 2018 global dust storm, atmospheric optical depth (Tau, τ) reached a historic peak of 10.8 (compared to ~5.5 in the 2007 storm). Solar energy dropped to ~22 Wh on Sol 5109–5111 (June 10, 2018), triggering a low-power fault and mission clock loss. After sending over 1,000 recovery commands, NASA officially declared the mission complete on February 13, 2019.",
         "conservation_law_vi": "Trong cơn bão bụi toàn cầu tháng 6/2018, độ mờ quang học khí quyển (Tau, τ) đạt đỉnh kỷ lục 10,8 (so với mức ~5,5 trong cơn bão năm 2007). Năng lượng mặt trời tụt xuống ~22 Wh trong đợt liên lạc cuối cùng từ Sol 5109–5111 (kết thúc ngày 10/06/2018), kích hoạt chế độ ngắt nguồn khẩn cấp. Sau hơn 1.000 lệnh gọi đánh thức không hồi âm, NASA chính thức tuyên bố kết thúc sứ mệnh vào ngày 13/02/2019.",
         "discrepancy_note_en": "Fact-Checking the Viral Quote: Opportunity did NOT transmit the text 'My battery is low and it's getting dark.' That poetic phrase was a metaphorical summary tweeted by science reporter Jacob Margolis (KPCC/LAist) on Feb 13, 2019, translating JPL's raw engineering telemetry (22 Wh battery charge & τ = 10.8 atmospheric opacity).",
@@ -221,24 +239,24 @@
         ]
       },
       "slider_config": {
-        "parameter_name_en": "Martian Dust Storm Optical Depth (Tau τ: 1.0 – 10.8)",
-        "parameter_name_vi": "Độ mờ Khí quyển trong Bão bụi Sao Hỏa (Tau τ: 1,0 – 10,8)",
+        "parameter_name_en": "Martian Dust Storm Optical Depth (Tau τ: 0.6 – 10.8)",
+        "parameter_name_vi": "Độ mờ Khí quyển trong Bão bụi Sao Hỏa (Tau τ: 0,6 – 10,8)",
         "unit": "Tau (τ)",
-        "min_val": 1.0,
+        "min_val": 0.6,
         "max_val": 10.8,
         "step": 0.1,
         "default_val": 10.8,
         "stops": [
           {
-            "value": 1.0,
-            "label_en": "τ = 1.0: Clear Martian Sky (700 Wh)",
-            "label_vi": "τ = 1,0: Trời Quang đãng (700 Wh)",
-            "desc_en": "Nominal sunlight in Meridiani Planum. Solar arrays generate ~700 Wh/sol, powering full driving and spectrometer science.",
-            "desc_vi": "Ánh nắng bình thường tại bình nguyên Meridiani. Tấm pin sinh ra ~700 Wh/sol, đủ năng lượng cho xe di chuyển và phân tích quang phổ."
+            "value": 0.6,
+            "label_en": "τ = 0.6: Early June 2018 (645 Wh)",
+            "label_vi": "τ = 0,6: Đầu tháng 6/2018 (645 Wh)",
+            "desc_en": "June 2, 2018: before the storm thickened, the solar arrays still produced about 645 Wh per sol, enough for driving and spectrometer science.",
+            "desc_vi": "02/06/2018: trước khi bão dày lên, tấm pin vẫn sinh khoảng 645 Wh mỗi sol, đủ cho xe di chuyển và phân tích quang phổ."
           },
           {
             "value": 5.5,
-            "label_en": "τ = 5.5: 2007 Major Storm (120 Wh)",
+            "label_en": "τ = 5.5: 2007 Dust Storm (120 Wh)",
             "label_vi": "τ = 5,5: Bão bụi Năm 2007 (120 Wh)",
             "desc_en": "Severe 2007 dust storm blocks ~99% of direct sunlight. Rover survives at ~120 Wh/sol by hibernating between brief wake-ups.",
             "desc_vi": "Bão bụi lớn năm 2007 che khuất ~99% ánh nắng trực tiếp. Xe sống sót ở mức ~120 Wh/sol nhờ ngủ đông tiết kiệm điện."
@@ -270,8 +288,10 @@
       "narrative_voice": {
         "epistemic_label_en": "NARRATIVE INTERPRETATION GROUNDED IN TELEMETRY",
         "epistemic_label_vi": "DIỄN GIẢI VĂN HỌC DỰA TRÊN DỮ LIỆU ĐO XA",
-        "letter_en": "Weighing just 1.8 kilograms, I was carried beneath Perseverance's belly to attempt what many thought impossible: aerodynamic flight in a Martian atmosphere with only one percent of Earth's surface air density. My carbon-fiber rotors had to spin at 2,537 revolutions per minute just to lift off on April 19, 2021. Built for only five test flights over thirty sols, I soared seventy-two times across Jezero Crater, scouting 17 kilometers of rocky ridges. On Flight 72 (January 18, 2024), featureless sand dunes confused my navigation camera, and my rotor tips struck the slope. Though my wings are clipped at Valinor Hills, my solar panel still wakes my computer every morning to record Martian weather for the next twenty years.",
-        "letter_vi": "Chỉ nặng vỏn vẹn 1,8 kilôgam, tôi được mang theo dưới bụng xe Perseverance để thử nghiệm điều tưởng chừng bất khả thi: bay khí động học trong bầu khí quyển Sao Hỏa mỏng manh chỉ bằng 1% mật độ không khí Trái Đất. Cặp cánh quạt sợi carbon của tôi phải quay tới 2.537 vòng/phút mới nâng nổi thân mình lên vào ngày 19/04/2021. Được thiết kế cho đúng 5 chuyến bay thử trong 30 sol, tôi đã tung cánh tới 72 lần trên miệng hố Jezero, trinh sát 17 kilomet địa hình hiểm trở. Ở chuyến bay thứ 72 (18/01/2024), những đồi cát đơn điệu làm hệ thống định vị quang học mất điểm bám, khiến đầu cánh quạt va vào sườn dốc. Dù đôi cánh đã gãy tại Đồi Valinor, tấm pin mặt trời vẫn đánh thức máy tính của tôi mỗi sáng để ghi nhật ký thời tiết Sao Hỏa suốt 20 năm tới."
+        "letter_en": "<p>Hello everyone on Earth,</p><p>I'm Ingenuity. I weigh just 1.8 kg, about three bottles of water. I hitched a ride to Mars under the belly of the Perseverance rover.</p><p>The air here is really thin, only about 1% as thick as on Earth. My rotors have to spin more than 2,500 times a minute just to lift me up.</p><p>On April 19, 2021, I flew. It was the first time people ever flew an aircraft on another planet. Everyone just hoped I'd fly 5 times. I flew 72 times.</p><p>On the last flight, the sand dunes below were smooth, and my navigation camera couldn't find a single rock to hold on to. I missed my landing and hit the ground hard, and a rotor blade broke.</p><p>Now every morning I wake up, take a picture, check the temperature and save it all in my memory. If you come by, please pick it up for me.</p><p class=\"letter-sign\">Ingenuity</p>",
+        "letter_vi": "<p>Gửi mọi người ở Trái Đất,</p><p>Em là Ingenuity, nặng có 1,8 kg, bằng ba chai nước. Em đi nhờ dưới bụng xe Perseverance để sang Sao Hỏa.</p><p>Không khí ở đây loãng lắm, chỉ bằng khoảng 1% ở Trái Đất. Cánh quạt em phải quay hơn 2.500 vòng một phút mới nhấc nổi người lên.</p><p>Ngày 19/4/2021, em bay. Đó là lần đầu tiên con người lái được một máy bay trên hành tinh khác. Mọi người chỉ mong em bay 5 lần. Em bay 72 lần.</p><p>Lần cuối, đồi cát bên dưới trơn nhẵn, camera định vị của em không tìm được viên đá nào làm mốc để bám. Em trượt nhịp hạ cánh, va mạnh làm gãy cánh quạt.</p><p>Giờ sáng nào em cũng thức dậy chụp một tấm ảnh, đo nhiệt độ rồi cất vào bộ nhớ. Ai sang thì lấy giúp em nhé.</p><p class=\"letter-sign\">Ingenuity</p>",
+        "log_en": "Weighing just 1.8 kilograms, I was carried beneath Perseverance's belly to attempt what many thought impossible: aerodynamic flight in a Martian atmosphere with only one percent of Earth's surface air density. My carbon-fiber rotors had to spin at 2,537 revolutions per minute just to lift off on April 19, 2021. Built for only five test flights over thirty sols, I soared seventy-two times across Jezero Crater, scouting 17 kilometers of rocky ridges. On Flight 72 (January 18, 2024), featureless sand dunes confused my navigation camera, and my rotor tips struck the slope. Though my wings are clipped at Valinor Hills, my solar panel still wakes my computer every morning to record Martian weather for the next twenty years.",
+        "log_vi": "Chỉ nặng vỏn vẹn 1,8 kilôgam, tôi được mang theo dưới bụng xe Perseverance để thử nghiệm điều tưởng chừng bất khả thi: bay khí động học trong bầu khí quyển Sao Hỏa mỏng manh chỉ bằng 1% mật độ không khí Trái Đất. Cặp cánh quạt sợi carbon của tôi phải quay tới 2.537 vòng/phút mới nâng nổi thân mình lên vào ngày 19/04/2021. Được thiết kế cho đúng 5 chuyến bay thử trong 30 sol, tôi đã tung cánh tới 72 lần trên miệng hố Jezero, trinh sát 17 kilomet địa hình hiểm trở. Ở chuyến bay thứ 72 (18/01/2024), những đồi cát đơn điệu làm hệ thống định vị quang học mất điểm bám, khiến đầu cánh quạt va vào sườn dốc. Dù đôi cánh đã gãy tại Đồi Valinor, tấm pin mặt trời vẫn đánh thức máy tính của tôi mỗi sáng để ghi nhật ký thời tiết Sao Hỏa suốt 20 năm tới."
       },
       "archaeologist_dossier": {
         "epistemic_label_en": "VERIFIED SCIENTIFIC & LEGAL RECORD",
@@ -304,22 +324,22 @@
         "stops": [
           {
             "value": 1,
-            "label_en": "Flight 1: Wright Brothers Moment",
-            "label_vi": "Chuyến 1: Khoảnh khắc Lịch sử",
+            "label_en": "Flight 1: First Powered Flight on Another Planet",
+            "label_vi": "Chuyến 1: Chuyến bay Đầu tiên trên Hành tinh Khác",
             "desc_en": "April 19, 2021 (Sol 58): First powered, controlled flight on another planet. Rotors spin at 2,537 rpm; hovers at 3 m altitude for 39.1 seconds.",
             "desc_vi": "19/04/2021 (Sol 58): Chuyến bay có điều khiển đầu tiên trên một hành tinh khác. Cánh quạt quay 2.537 vòng/phút; bay treo ở độ cao 3 m trong 39,1 giây."
           },
           {
             "value": 5,
-            "label_en": "Flight 5: Design Limit Reached",
-            "label_vi": "Chuyến 5: Đạt Giới hạn Thiết kế",
+            "label_en": "Flight 5: Original Design Limit Reached",
+            "label_vi": "Chuyến 5: Đạt Giới hạn Thiết kế Ban đầu",
             "desc_en": "May 7, 2021: Completes its original 5-flight technology demonstration, transitioning into an operational scout for Perseverance.",
             "desc_vi": "07/05/2021: Hoàn thành trọn vẹn 5 chuyến bay thử nghiệm theo thiết kế ban đầu, chuyển sang giai đoạn trinh sát thực địa."
           },
           {
             "value": 72,
-            "label_en": "Flight 72: Rotor Damage & Rebirth",
-            "label_vi": "Chuyến 72: Gãy Cánh & Tái sinh",
+            "label_en": "Flight 72: Sol 1036 Rotor Damage & Stationary Rebirth",
+            "label_vi": "Chuyến 72: Sol 1036 Gãy Cánh & Tái sinh Trạm Tĩnh",
             "desc_en": "Jan 18, 2024 (Sol 1036): Rotor tips damaged after 17.0 km total flight. Reprogrammed to log daily Martian weather and avionics data for ~20 years.",
             "desc_vi": "18/01/2024 (Sol 1036): Gãy đầu cánh quạt sau tổng quãng đường bay 17,0 km. Được lập trình lại để ghi dữ liệu thời tiết và vi mạch suốt ~20 năm tiếp theo."
           }
@@ -328,10 +348,10 @@
     }
   ],
   "decision_station": {
-    "title_en": "THE ARTEMIS LANDING SITE DECISION STATION",
-    "title_vi": "TRẠM QUYẾT ĐỊNH BÃI ĐÁP SỨ MỆNH ARTEMIS",
-    "physics_callout_en": "Vacuum Ballistics Physics: Why does landing 155 meters away still damage a spacecraft? Because the Moon has NO atmosphere to slow down dust and 1/6th Earth's gravity. Rocket exhaust plumes accelerate jagged lunar regolith grains to 300–2,000 m/s (faster than a rifle bullet), creating a supersonic sandblasting spray across kilometers!",
-    "physics_callout_vi": "Vật lý Đạn đạo trong Chân không: Tại sao đáp cách xa 155 mét vẫn làm hỏng tàu vũ trụ? Vì Mặt Trăng KHÔNG có không khí cản bụi lại và trọng lực chỉ bằng 1/6 Trái Đất. Luồng phụt tên lửa gia tốc các hạt bụi sắc nhọn tới vận tốc 300–2.000 m/s (nhanh hơn đạn súng trường), tạo ra cơn bão bắn cát siêu thanh văng xa hàng kilomet!",
+    "title_en": "The Artemis landing site decision station",
+    "title_vi": "Trạm quyết định bãi đáp sứ mệnh Artemis",
+    "physics_callout_en": "Vacuum Ballistics Physics: Why does landing 160 meters away still damage a spacecraft? Because the Moon has NO atmosphere to slow down dust and 1/6th Earth's gravity. Rocket exhaust plumes accelerate jagged lunar regolith grains to 300–2,000 m/s (faster than a rifle bullet), creating a supersonic sandblasting spray across kilometers!",
+    "physics_callout_vi": "Vật lý Đạn đạo trong Chân không: Tại sao đáp cách xa 160 mét vẫn làm hỏng tàu vũ trụ? Vì Mặt Trăng KHÔNG có không khí cản bụi lại và trọng lực chỉ bằng 1/6 Trái Đất. Luồng phụt tên lửa gia tốc các hạt bụi sắc nhọn tới vận tốc 300–2.000 m/s (nhanh hơn đạn súng trường), tạo ra cơn bão bắn cát siêu thanh văng xa hàng kilomet!",
     "zones": [
       {
         "id": "zone-red",
@@ -348,15 +368,15 @@
       },
       {
         "id": "zone-orange",
-        "distance_label": "155 m (Apollo 12 Historical)",
-        "distance_num": 155,
+        "distance_label": "160 m (Apollo 12 Historical)",
+        "distance_num": 160,
         "status_badge_en": "WARNING — SUPERSONIC PLUME SANDBLASTING",
         "status_badge_vi": "CẢNH BÁO CAM — HIỆU ỨNG BÃO CÁT BẮN RỖ",
         "color_hex": "#F97316",
         "impact_en": "Replicates Apollo 12 LM Intrepid landing near Surveyor 3. Hyper-velocity dust spray micro-pits optical glass and turns white thermal paint tan.",
         "impact_vi": "Tái hiện đúng khoảng cách tàu Intrepid (Apollo 12) đáp cạnh Surveyor 3 năm 1969. Luồng bụi siêu tốc bắn rỗ kính quang học và làm ố nâu lớp sơn cách nhiệt.",
-        "law_citation_en": "Proven empirically by post-flight laboratory analysis in NASA Special Publication SP-284 (1972); separation measured at 155 m via LROC imagery.",
-        "law_citation_vi": "Được chứng minh thực nghiệm qua phân tích phòng thí nghiệm trong báo cáo NASA SP-284 (1972); khoảng cách 155 m đo bằng vệ tinh LROC.",
+        "law_citation_en": "Proven empirically by post-flight laboratory analysis in NASA Special Publication SP-284 (1972); separation of ~160 m measured from Lunar Reconnaissance Orbiter images (538 ft; NASA SVS).",
+        "law_citation_vi": "Được chứng minh thực nghiệm qua phân tích phòng thí nghiệm trong báo cáo NASA SP-284 (1972); khoảng cách ~160 m đo từ ảnh tàu quỹ đạo LRO (538 ft; NASA SVS).",
         "unlocks_badge": false
       },
       {

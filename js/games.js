@@ -225,8 +225,13 @@
     if (s.value == null) s.value = g.start;
     var targetPct = ((g.target - min) / (max - min)) * 100;
 
+    var isOppy = art.id === "opportunity-rover";
     el.innerHTML =
-      '<div class="game-stage" data-svg></div>' +
+      '<div class="game-stage">' +
+      '<div data-svg></div>' +
+      (isOppy ? '<span class="game-bits" aria-hidden="true">0100 1111 0111</span>' : "") +
+      (art.id === "ingenuity-helicopter" ? navcamHtml() : "") +
+      "</div>" +
       '<div class="game-controls">' +
       '<p class="game-goal" id="goal-' + art.id + '">' + esc(L(g, "goal", ctx.lang)) + "</p>" +
       '<div class="game-readout"><span class="game-readout-v num" data-readout></span><span class="game-readout-s" data-readout-sub></span></div>' +
@@ -235,6 +240,7 @@
       '<span class="game-target" aria-hidden="true"></span>' +
       "</div>" +
       '<p class="game-feedback" aria-live="polite"></p>' +
+      (isOppy ? '<div class="game-packet" hidden><button type="button" class="btn-signal" data-packet>' + esc(t.game_send_packet) + "</button></div>" : "") +
       winBlock(t) +
       "</div>";
 
@@ -269,11 +275,47 @@
       return v >= g.target - 0.05;
     }
 
-    function win() {
+    function win(fresh) {
       s.won = true;
       input.disabled = true;
-      el.querySelector(".game-stage").classList.add("is-won");
+      var stage = el.querySelector(".game-stage");
+      stage.classList.add("is-won");
+      // Chương 4: lần đầu tới chuyến 72, xem qua camera định vị — các chấm mốc tắt dần rồi chạm đất
+      if (fresh && art.id === "ingenuity-helicopter" && !reduceMotion.matches) {
+        stage.classList.remove("is-crash");
+        void stage.offsetWidth;
+        stage.classList.add("is-crash");
+      }
+      // Chương 3: trước khi mở thư, gửi gói 0 và 1 cuối cùng lên ăng-ten (một lần chạm)
+      if (isOppy && !s.sent) {
+        fb.textContent = L(g, "win", ctx.lang);
+        fb.classList.add("is-win");
+        var pk = el.querySelector(".game-packet");
+        var pb = pk.querySelector("[data-packet]");
+        pk.hidden = false;
+        pb.addEventListener("click", function () {
+          pb.disabled = true;
+          var done = function () {
+            s.sent = true;
+            pk.hidden = true;
+            stage.classList.remove("is-sending");
+            stage.classList.add("is-sent");
+            var b2 = showWin(el, g, ctx);
+            fb.textContent = L(g, "win", ctx.lang) + " " + (t.game_packet_sent || "");
+            if (b2) b2.focus();
+          };
+          if (reduceMotion.matches) done();
+          else {
+            stage.classList.add("is-sending");
+            setTimeout(done, 1300);
+          }
+        });
+        pb.focus();
+        return;
+      }
+      if (isOppy) stage.classList.add("is-sent");
       var b = showWin(el, g, ctx);
+      if (isOppy) fb.textContent = L(g, "win", ctx.lang) + " " + (t.game_packet_sent || "");
       if (b) b.focus();
     }
 
@@ -281,19 +323,29 @@
       var v = update();
       if (s.won) return;
       fb.textContent = "";
-      if (art.id !== "surveyor-3" && reached(v)) win();
+      if (art.id !== "surveyor-3" && reached(v)) win(true);
     });
 
     // Surveyor 3: tính khi thả tay (hoặc mỗi lần bấm phím mũi tên), để kéo ngang qua mốc không bị thắng nhầm
     input.addEventListener("change", function () {
       if (s.won || art.id !== "surveyor-3") return;
       var v = Number(input.value);
-      if (reached(v)) win();
+      if (reached(v)) win(true);
       else fb.textContent = v > g.target ? L(g, "far", ctx.lang) : L(g, "near", ctx.lang);
     });
 
     update();
-    if (s.won) win();
+    if (s.won) win(false);
+  }
+
+  /** Lớp phủ camera định vị của Ingenuity: mặt cát trơn, các chấm xanh = điểm mốc camera bám theo. */
+  function navcamHtml() {
+    var dots = [[18, 30], [36, 62], [52, 24], [64, 70], [78, 40], [30, 82], [86, 76], [46, 48]]
+      .map(function (p, i) {
+        return '<span class="navcam-dot" style="--i:' + i + ";left:" + p[0] + "%;top:" + p[1] + '%"></span>';
+      })
+      .join("");
+    return '<div class="game-navcam" aria-hidden="true"><span class="navcam-label">NAV CAM · FLIGHT 72</span>' + dots + "</div>";
   }
 
   /* =========================================================================
@@ -340,6 +392,8 @@
       // D: sườn dốc có đá
       '<path d="M410 250 Q 520 220 620 262 L620 360 Q 510 372 410 342 Z" fill="#3b4354" opacity="0.8"/>' + rocksD +
       // A: di tích + vòng 2 km
+      '<circle class="art-ring-near" cx="' + RELIC.x + '" cy="' + RELIC.y + '" r="14"/>' +
+      '<text class="art-ring-near-label" x="' + (RELIC.x + 18) + '" y="' + (RELIC.y - 16) + '">160 m</text>' +
       '<circle class="art-ring" cx="' + RELIC.x + '" cy="' + RELIC.y + '" r="150"/>' +
       '<text class="art-ring-label" x="' + (RELIC.x + 156) + '" y="' + (RELIC.y + 5) + '">2 km</text>' +
       '<g class="art-relic"><circle class="art-relic-glow" cx="' + RELIC.x + '" cy="' + RELIC.y + '" r="16"/>' +
@@ -485,7 +539,14 @@
           return;
         }
         if (r.effect === "reveal") {
+          var firstPing = !art5.mirror;
           art5.mirror = true;
+          if (firstPing && !reduceMotion.matches) {
+            svg.classList.remove("is-pinging");
+            void svg.getBoundingClientRect();
+            svg.classList.add("is-pinging");
+            setTimeout(function () { svg.classList.remove("is-pinging"); }, 2600);
+          }
         } else {
           if (art5.crossed[z]) {
             speak(t.art_done_zone, false);
@@ -494,7 +555,12 @@
           art5.crossed[z] = true;
         }
         art5.selected = null;
-        speak(allCrossed() && r.effect === "cross" ? L(r, "say", ctx.lang) + " " + t.art_all_clear : L(r, "say", ctx.lang), false);
+        speak(
+          allCrossed() && r.effect === "cross"
+            ? L(r, "say", ctx.lang) + " " + (t.art_soil ? t.art_soil + " " : "") + t.art_all_clear
+            : L(r, "say", ctx.lang),
+          false
+        );
         sync();
         if (allCrossed()) landBtn.focus();
       });

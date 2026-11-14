@@ -5,7 +5,8 @@ Hiện tại trang là chuỗi cảnh toàn màn hình (`js/book.js`). Mỗi ch�
 
 ```
 Lần đầu: Truyện mở đầu → Màn bắt đầu → 4 tín hiệu → Game 1 → Thư → Truyện → Game 2 → Thư → Truyện
-         → Game 3 → Thư → Truyện → Game 4 → Thư → Truyện → Game 5 (Artemis) → Truyện kết → Thẻ Guardian
+         → Game 3 → Thư → Truyện → Game 4 → Thư → Truyện → Game 5 (Artemis) → Truyện kết (cú lật)
+         → Lá thư thứ năm → Truyện 2076 → Cảnh 2076 (hiện lại thư) → Thẻ Guardian (phần phụ) → Giáo viên → Nguồn
 Lần sau: vào màn 4 tín hiệu, các thiết bị mở theo tiến trình đã lưu trong localStorage
 ```
 Mỗi cảnh game có nút **"Hồ sơ Khoa học"** ở góc dưới phải. Nút mở popup che màn game, gồm bộ mô phỏng cũ, hồ sơ nhà khảo cổ và nguồn, không có lá thư. Nút đổi thành **X** ngay tại chỗ.
@@ -13,9 +14,9 @@ Mỗi cảnh game có nút **"Hồ sơ Khoa học"** ở góc dưới phải. N�
 **Giới hạn:** chỉ code được **3 giờ**, còn 7 giờ là tới hạn nộp. Bài phải chạy trên cả điện thoại 375px lẫn máy tính, bằng cảm ứng và chuột/bàn phím.
 
 **Bạn đã chốt:**
-- Mốc thắng Game 2 là **180 m**.
+- Mốc thắng Game 2 là **160 m** (cập nhật 15/11: ảnh LRO 2011 đo 538 ft ≈ 164 m; trước đó là 180 m).
 - Truyện **chỉ có chữ**, ảnh là trường tùy chọn.
-- Lá thư dùng **bản dài trong data.js**.
+- Lá thư dùng **bản ngắn theo kịch bản** (`letter_*`); bản dài chuyển sang `log_*`, hiện ở mục "Nhật ký kỹ thuật" trong popup Hồ sơ (cập nhật 15/11).
 - Vẫn có **thẻ luật**.
 - Có nút **Bỏ qua**, bỏ qua vẫn được nhận thẻ.
 - Thiết bị chưa tới thì **khóa nhẹ**: hiện mờ, kèm nút "Mở chặng này".
@@ -149,3 +150,37 @@ Mỗi đoạn truyện là một `book-scene[data-story]` đã chừa sẵn. M�
   5. Game 5: áp tem sai thì bản đồ lắc, áp đúng thì vùng bị gạch, D sáng lên → hạ cánh → truyện kết → Guardian mở khóa.
   6. Tải lại → không tự chạy mở đầu, 4 tín hiệu mở đúng theo tiến trình. Link `#ch3` vào thẳng. Đổi EN/VI ở mọi trạng thái.
   7. Bật `prefers-reduced-motion` thì không còn hiệu ứng. Ở 375px không có thanh cuộn ngang. Nút cao ít nhất 44px.
+
+## Cập nhật 15/11: khớp luồng với kịch bản gốc
+
+**Số liệu** (đối chiếu nguồn NASA):
+- Surveyor 3 – Intrepid: 160 m (LRO). Ngày chạm đất: 19/11/1969, 06:54 UTC.
+- Số ảnh: "hơn 6.300" trong thư; nhật ký ghi 6.326 kèm nguồn.
+- Opportunity: 645 Wh (2/6/2018, τ ≈ 0,6) xuống 22 Wh. Thanh trượt bắt đầu ở τ = 0,6.
+- Gương LRRR: chỉ trả về khoảng 1/10 tín hiệu so với tính toán (Murphy 2010).
+- DUSTER: gắn trên xe MAPP; được chọn để phát triển tiếp, danh sách thiết bị chưa chốt.
+
+**Thư hai lớp:**
+- `narrative_voice.letter_*`: thư ngắn theo kịch bản, HTML gồm các `<p>`.
+- `narrative_voice.log_*`: bản dài, hiện trong popup Hồ sơ.
+- `rules[*].sub` trích câu gài bài học của từng thư.
+
+**Đoạn kết:**
+- `story.ending` (Cảnh 11) kết bằng câu "Vậy nó nên nói gì với họ?".
+- Cảnh `letter5` (Cảnh 12, `data-kind="game"`) bị chặn đi tiếp cho tới khi niêm phong.
+  - Mẫu thư nằm trong `LUNAMARIS_FLOW.letter5`. Chỉ chỗ trống cuối được chọn: 3 gợi ý, hoặc tự viết tối đa 120 ký tự.
+  - Có các nút Niêm phong / Bỏ qua / Tải về PNG (`downloadLetterPNG` trong certificate.js) / Mở niêm phong.
+  - Popup Hồ sơ ở cảnh này hiện Sổ tay DUSTER.
+- `story.future` (Cảnh 13), rồi cảnh `future`: hiện lại **đúng** lá thư đã niêm phong. Sau đó là câu chốt, nút Nguồn và Góc giáo viên, cuối cùng là Guardian (phần phụ).
+- Tiến trình lưu thêm `letter5: { choice, custom, sealed }` trong `lunamaris_progress`. Chữ người chơi luôn được escape.
+
+**Hình ảnh phản hồi** (giữ nguyên 3 kiểu chơi):
+- Chương 3: thêm nút "Gửi gói tin cuối"; chuỗi 0/1 bay lên rồi mới mở thư.
+- Chương 4: ở chuyến 72 có lớp phủ camera định vị, các chấm mốc tắt dần rồi màn hình rung.
+- Artemis:
+  - thẻ LRRR → một nháy laser;
+  - thẻ Surveyor → vòng 160 m rồi vòng 2 km nở ra;
+  - thẻ Ingenuity → chấm mốc ở D hiện ra;
+  - gạch xong cả ba vùng → câu "Đất ở đây đủ chắc".
+
+**Dữ liệu:** `data/content.json` được xuất lại từ `js/data.js` (runtime) để hai bản khớp nhau.

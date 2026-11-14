@@ -44,7 +44,7 @@ COLUMBINA: Cái này không có pin, không có radio. Nó không gọi được
 
 COLUMBINA: Muốn nói chuyện với nó thì phải chiếu ánh sáng vào.
 
-\[Người chơi nhấn giữ nút Laser. Một tia xanh bắn từ Trái Đất lên. Đồng hồ chạy: 0,5… 1,0… 1,5… 2,0… 2,5 giây. Một chấm sáng nhỏ quay về. Con dấu trên phong bì nứt ra.\]
+\[Người chơi nhấn giữ nút Laser. Một tia xanh bắn từ Trái Đất lên. Đồng hồ chạy: 0,5… 1,0… 1,5… 2,0… 2,56 giây. Một chấm sáng nhỏ quay về. Con dấu trên phong bì nứt ra.\]
 
 COLUMBINA (khẽ): Nó vẫn trả lời.
 
@@ -54,7 +54,7 @@ COLUMBINA (khẽ): Nó vẫn trả lời.
 >
 > Ngày 20/7/1969, hai phi hành gia đặt tôi xuống đây rồi bay về. Tôi ở lại. Tôi được làm ra để ở lại.
 >
-> Tôi không có pin. Tôi chỉ có 100 lăng kính, mỗi cái to cỡ quả bóng bàn. Các bạn chiếu laser lên, tôi gửi ánh sáng về đúng chỗ cũ. Đi rồi về mất chừng 2,5 giây.
+> Tôi không có pin. Tôi chỉ có 100 lăng kính, mỗi cái to cỡ quả bóng bàn. Các bạn chiếu laser lên, tôi gửi ánh sáng về đúng chỗ cũ. Đi rồi về mất chừng hai giây rưỡi.
 >
 > Nhờ vậy, các bạn biết Mặt Trăng đang lùi xa dần, mỗi năm 3,8 cm. Bằng tốc độ móng tay bạn mọc.
 >
@@ -64,7 +64,7 @@ COLUMBINA (khẽ): Nó vẫn trả lời.
 
 \[Thanh trượt năm, từ 1969 đến 2026. Ba nút mốc: 1969, 2000, 2026. Kéo đến đâu, Mặt Trăng trên màn hình lùi xa đến đó. Ở mốc 2026 hiện dòng chữ: *xa thêm khoảng 2,2 m, cao cỡ một cánh cửa.*\]
 
-\[Sổ tay kỹ sư, mở khi bấm: Mỗi lần bắn laser chỉ vài hạt ánh sáng quay về được. Bây giờ cái gương phản xạ yếu hơn lúc mới đặt khoảng 10 lần, các nhà khoa học nghi là do bụi. Nút: Nguồn NASA (https://nssdc.gsfc.nasa.gov/nmc/experiment/display.action?id=1969-059C-04).\]
+\[Sổ tay kỹ sư, mở khi bấm: Mỗi lần bắn laser chỉ vài hạt ánh sáng quay về được. Bây giờ các gương Apollo chỉ trả về khoảng 1/10 tín hiệu so với tính toán, gần trăng tròn còn yếu thêm khoảng 10 lần nữa; các nhà khoa học nghi là do một lớp bụi mỏng phủ trên lăng kính (Murphy và cộng sự, 2010). Nút: Nguồn NASA (https://nssdc.gsfc.nasa.gov/nmc/experiment/display.action?id=1969-059C-04).\]
 
 COLUMBINA: Người ta đặt nó xuống rồi đi. Chắc không ai nghĩ nó sẽ làm việc lâu đến thế.
 
@@ -88,7 +88,7 @@ COLUMBINA: Do chúng ta.
 >
 > Tôi là Surveyor 3. Tôi đến đây ngày 20/4/1967 để trả lời một câu hỏi: đất Mặt Trăng có lún dưới chân người không?
 >
-> Tôi chụp 6.315 tấm ảnh. Tôi đào đất bằng cái gầu xúc nhỏ. Câu trả lời của tôi: đất chắc như cát ướt ngoài bãi biển, đủ đỡ một con tàu có người.
+> Tôi chụp hơn 6.300 tấm ảnh. Tôi đào đất bằng cái gầu xúc nhỏ. Câu trả lời của tôi: đất chắc như cát ướt ngoài bãi biển, đủ đỡ một con tàu có người.
 >
 > Hai năm rưỡi sau, ngày 19/11/1969, tàu Intrepid đáp cách tôi khoảng 160 m, chừng một sân bóng rưỡi. Bụi từ động cơ quất vào người tôi. Lớp sơn trắng ngả nâu. Hai phi hành gia đến, tháo camera của tôi mang về.
 >
@@ -98,7 +98,7 @@ COLUMBINA: Do chúng ta.
 
 \[Thanh trượt thời gian. Ba nút mốc: 20/4/1967 hạ cánh · 4/5/1967 liên lạc lần cuối · 19/11/1969 Intrepid đến.\]
 
-\[Sổ tay kỹ sư: Đất chịu được khoảng $10\text{ psi}$, tức khoảng $0,7\text{ kg/cm}^2$. Những mảnh Surveyor 3 mang về Trái Đất cho thấy bụi từ tàu đổ bộ bay xa và mạnh đến mức nào. Năm 2011, NASA khuyên các tàu sau này hạ cánh cách xa di tích. Nút: Nguồn NASA (https://science.nasa.gov/mission/surveyor-3/).\]
+\[Sổ tay kỹ sư: Đất chịu được khoảng $10\text{ psi}$, tức khoảng $0,7\text{ kg/cm}^2$. Ảnh tàu quỹ đạo LRO (2011) đo được tàu Intrepid đáp cách Surveyor 3 khoảng 538 ft (≈ 164 m); website dùng 160 m theo NASA SVS. Những mảnh Surveyor 3 mang về Trái Đất cho thấy bụi từ tàu đổ bộ bay xa và mạnh đến mức nào. Năm 2011, NASA khuyên các tàu sau này hạ cánh cách xa di tích. Nút: Nguồn NASA (https://science.nasa.gov/mission/surveyor-3/).\]
 
 COLUMBINA: Người ta còn chọn chỗ đáp gần nó cho tiện đi bộ sang xem. Ai ngờ.
 
@@ -188,7 +188,7 @@ COLUMBINA: Chúng nó trả lời câu này từ lâu rồi.
 
 \[Bản đồ một vùng Mặt Trăng với bốn vùng A, B, C, D. Góc màn hình ghi nhỏ: *Bản đồ mô phỏng huấn luyện, không phải tọa độ thực địa.* Bốn lá thư nằm ở mép màn hình. Người chơi kéo từng lá lên bản đồ, theo thứ tự tùy ý.\]
 
-\[Kéo thư LRRR lên: gần vùng A hiện một chấm nhỏ. Người chơi bấm Laser như ở chương 1, ánh sáng quay về sau 2,5 giây.\]
+\[Kéo thư LRRR lên: gần vùng A hiện một chấm nhỏ. Người chơi bấm Laser như ở chương 1, ánh sáng quay về sau 2,56 giây.\]
 
 COLUMBINA: Ở đây có một thứ vẫn đang làm việc.
 
@@ -214,7 +214,7 @@ COLUMBINA: Vậy là D.
 
 COLUMBINA: Bắn thử laser lần nữa đi.
 
-\[Người chơi bấm Laser. Đồng hồ chạy 2,5 giây. Chấm sáng quay về.\]
+\[Người chơi bấm Laser. Đồng hồ chạy 2,56 giây. Chấm sáng quay về.\]
 
 COLUMBINA: Nó vẫn trả lời.
 
@@ -222,7 +222,7 @@ Cô ngả người ra ghế. Lần đầu tiên trong đêm, cô có vẻ nhẹ 
 
 **CẢNH 11. CÚ LẬT**
 
-Trên bản đồ, con tàu ở vùng D đứng yên. Các phi hành gia đặt xuống trạm thiết bị **DUSTER**, rồi quay lại tàu. Tàu cất cánh. **DUSTER** ở lại.
+Trên bản đồ, con tàu ở vùng D đứng yên. Các phi hành gia đặt xuống chiếc xe nhỏ mang bộ đo bụi **DUSTER**, rồi quay lại tàu. Tàu cất cánh. **DUSTER** ở lại.
 
 Columbina nhìn nó rất lâu.
 
@@ -238,7 +238,7 @@ COLUMBINA: Vậy nó nên nói gì với họ?
 
 **CẢNH 12. LÁ THƯ THỨ NĂM**
 
-\[Một phong bì trống hiện ra. Bên trong là một lá thư viết dở. Các chỗ trống đã được điền sẵn theo lựa chọn của người chơi, và người chơi sửa được từng câu. Thư chỉ ở trên máy, không gửi đi đâu và không hỏi tên. Có nút Tải về.\]
+\[Một phong bì trống hiện ra. Bên trong là một lá thư viết dở. Các câu đầu đã điền sẵn theo lựa chọn bãi đáp của người chơi; chỉ chỗ trống cuối là người chơi chọn gợi ý hoặc tự viết (tối đa 120 ký tự). Thư chỉ ở trên máy, không gửi đi đâu và không hỏi tên. Có nút Tải về.\]
 
 > Gửi người ở tương lai,
 >
@@ -252,7 +252,7 @@ COLUMBINA: Vậy nó nên nói gì với họ?
 
 \[Chỗ trống cuối cùng có gợi ý: *đáp thật xa · bắn laser chào cái gương bên cạnh · kể cho tôi nghe Trái Đất giờ ra sao* · hoặc người chơi tự viết.\]
 
-\[Sổ tay kỹ sư: DUSTER (DUst and plaSma environmenT survEyoR) là trạm thiết bị khoa học thực tế được NASA chọn cho sứ mệnh Artemis IV. Sau khi phi hành gia rời đi, DUSTER sẽ ở lại Mặt Trăng để đo cách bụi và plasma phản ứng khi con người và tàu vũ trụ hoạt động — bảo vệ trực tiếp các sứ mệnh tương lai. Nút: Nguồn NASA (https://www.nasa.gov/news-release/nasa-selects-2-instruments-for-artemis-iv-lunar-surface-science/).\]
+\[Sổ tay kỹ sư: DUSTER (DUst and plaSma environmenT survEyoR) là bộ thiết bị đo bụi và plasma do LASP (Đại học Colorado Boulder) chế tạo, gồm máy phân tích bụi tĩnh điện EDA và máy dò plasma RESOLVE, gắn trên một xe tự hành nhỏ (MAPP của Lunar Outpost) do phi hành gia triển khai gần cực Nam Mặt Trăng. Tháng 12/2025, NASA chọn DUSTER cùng trạm địa chấn SPSS để tiếp tục phát triển cho Artemis IV; danh sách thiết bị cuối cùng sẽ được quyết định sau. Bãi đáp vùng D và việc DUSTER ở lại suốt 50 năm là phần hư cấu của câu chuyện. Nút: Nguồn NASA (https://science.nasa.gov/missions/artemis/artemis-4/nasa-selects-2-instruments-for-artemis-iv-lunar-surface-science/).\]
 
 \[Người chơi bấm Niêm phong.\]
 
@@ -286,6 +286,8 @@ Màn hình tối dần. Chỉ còn một dòng:
 
   * Báo cáo kỹ thuật: https://www.nasa.gov/wp-content/uploads/2015/01/protecting_lunar_heritage_report_072011.pdf
 
+  * Khoảng cách 160 m đo từ ảnh LRO: https://svs.gsfc.nasa.gov/4767
+
 * **Opportunity Rover (Mars Exploration Rover – MER-B):** Dữ liệu công suất quang điện trong trận bão bụi toàn cầu Sao Hỏa năm 2018 ($645\text{ Wh}$ xuống $22\text{ Wh}$).
 
   * Nguồn: https://science.nasa.gov/mission/mer-opportunity/
@@ -294,9 +296,11 @@ Màn hình tối dần. Chỉ còn một dòng:
 
   * Nguồn: https://science.nasa.gov/mission/mars-2020-perseverance/ingenuity-mars-helicopter/
 
-* **Artemis IV – Thiết bị khảo sát bụi và plasma DUSTER (DUst and plaSma environmenT survEyoR):** Công bố của NASA về hai thiết bị khoa học sẽ được phi hành gia Artemis IV lắp đặt và để lại lâu dài trên bề mặt Mặt Trăng.
+* **Artemis IV – Thiết bị khảo sát bụi và plasma DUSTER (DUst and plaSma environmenT survEyoR):** Công bố của NASA (12/2025) về hai thiết bị khoa học được chọn để tiếp tục phát triển cho Artemis IV: DUSTER (gắn trên xe tự hành nhỏ MAPP) và trạm địa chấn SPSS. Danh sách thiết bị cuối cùng của sứ mệnh chưa chốt.
 
-  * Nguồn: https://www.nasa.gov/news-release/nasa-selects-2-instruments-for-artemis-iv-lunar-surface-science/
+  * Nguồn: https://science.nasa.gov/missions/artemis/artemis-4/nasa-selects-2-instruments-for-artemis-iv-lunar-surface-science/
+
+  * LASP: https://lasp.colorado.edu/2025/12/05/lasp-instruments-target-a-trip-to-the-moon-aboard-nasas-artemis-iv-mission/
 
 ### \[Popup 2: Góc giáo viên – Hướng dẫn sử dụng trong lớp học (15 phút)\]
 
@@ -312,7 +316,7 @@ Màn hình tối dần. Chỉ còn một dòng:
      $$
 
      
-     (với $t \approx 2,5\text{ s}$ và $c \approx 300.000\text{ km/s}$).
+     (với $t \approx 2,56\text{ s}$ và $c \approx 300.000\text{ km/s}$).
 
   2. **Cơ học đất & Động lực học chất lưu chân không (Surveyor 3 & DUSTER):** Áp suất nén bề mặt Mặt Trăng ($10\text{ psi} \approx 0,7\text{ kg/cm}^2$) và hiện tượng hạt bụi regolith tích điện văng đi với vận tốc lớn do không có lực cản không khí khi tàu hạ cánh.
 

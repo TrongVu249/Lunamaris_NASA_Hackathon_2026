@@ -30,7 +30,7 @@
       "opportunity-rover": false,
       "ingenuity-helicopter": false
     },
-    selectedZoneId: "zone-orange", // mặc định: mốc lịch sử Apollo 12 (180 m)
+    selectedZoneId: "zone-orange", // mặc định: mốc lịch sử Apollo 12 (160 m)
     badgeUnlocked: false,
     selectedPledgeIndex: 0,
     guardianName: "",
@@ -45,12 +45,16 @@
 
   /* ---------------------------------------------------------------------------
    * TIẾN TRÌNH (localStorage, không có dữ liệu cá nhân):
-   *   { won: { artId: true }, landed: bool } — won = đã thắng hoặc bỏ qua trò của chương
+   *   { won: { artId: true }, landed: bool, letter5: { choice, custom, sealed } }
+   *   won = đã thắng hoặc bỏ qua trò của chương. letter5 = Lá thư thứ năm: chỉ nằm trên máy này,
+   *   không gửi đi đâu; choice = 0..2 (gợi ý) | "custom" (chữ người chơi tự viết trong `custom`).
    * ------------------------------------------------------------------------- */
   const PROGRESS_KEY = "lunamaris_progress";
   const FLOW = window.LUNAMARIS_FLOW || { games: {}, rules: {}, story: {} };
+  const L5 = FLOW.letter5 || null;
   state.chapterView = {}; // artId → "game" | "letter"
   state.dossierOpen = false;
+  state.letter5 = { choice: 0, custom: "", sealed: false };
 
   function loadProgress() {
     try {
@@ -62,6 +66,12 @@
       });
       state.badgeUnlocked = !!p.landed;
       if (state.badgeUnlocked) state.selectedZoneId = "zone-green";
+      if (p.letter5 && typeof p.letter5 === "object") {
+        const c = p.letter5.choice;
+        state.letter5.choice = c === "custom" || (Number.isInteger(c) && c >= 0 && c <= 2) ? c : 0;
+        state.letter5.custom = typeof p.letter5.custom === "string" ? p.letter5.custom.slice(0, L5 ? L5.max_len : 120) : "";
+        state.letter5.sealed = !!p.letter5.sealed;
+      }
     } catch (e) {
       /* chế độ riêng tư / dữ liệu hỏng: bắt đầu lại */
     }
@@ -71,7 +81,7 @@
     try {
       window.localStorage.setItem(
         PROGRESS_KEY,
-        JSON.stringify({ won: state.collectedStamps, landed: state.badgeUnlocked })
+        JSON.stringify({ won: state.collectedStamps, landed: state.badgeUnlocked, letter5: state.letter5 })
       );
     } catch (e) {
       /* bỏ qua */
@@ -86,6 +96,10 @@
 
   function tr() {
     return I18N[state.lang];
+  }
+
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
   }
 
   function setTxt(id, val) {
@@ -156,6 +170,11 @@
     if (artemis) {
       if (state.badgeUnlocked) artemis.removeAttribute("data-gate");
       else artemis.setAttribute("data-gate", "locked");
+    }
+    const letter5 = document.getElementById("scene-letter5");
+    if (letter5) {
+      if (state.letter5.sealed) letter5.removeAttribute("data-gate");
+      else letter5.setAttribute("data-gate", "locked");
     }
     syncSceneView();
   }
@@ -410,6 +429,7 @@
     const more = document.getElementById("signal-more");
     if (more) {
       more.innerHTML = [
+        ["letter5", t.scene_title_letter5],
         ["guardian", t.scene_title_guardian],
         ["teacher", t.scene_title_teacher],
         ["sources", t.scene_title_sources]
@@ -441,6 +461,8 @@
       setTitle(sceneIdForArtifact(art), L(art, "name"), `${t.toc_chapter} ${Number(art.chapter_num)}`);
     });
     setTitle("artemis", t.scene_title_artemis);
+    setTitle("letter5", t.scene_title_letter5);
+    setTitle("future", t.scene_title_future);
     setTitle("guardian", t.scene_title_guardian);
     setTitle("teacher", t.scene_title_teacher);
     setTitle("sources", t.scene_title_sources);
@@ -601,6 +623,12 @@
               <p>${L(ad, "conservation_law")}</p>
               <ul class="link-list">${sourceLinksHtml(art)}</ul>
             </div>
+            ${art.narrative_voice && L(art.narrative_voice, "log")
+              ? `<div class="dossier-log">
+                   <p class="dossier-log-k">${t.dossier_log_title}</p>
+                   <p>${L(art.narrative_voice, "log")}</p>
+                 </div>`
+              : ""}
           </div>
         </section>`;
   }
@@ -805,6 +833,215 @@
     if (window.LunamarisBook) window.LunamarisBook.next();
   }
 
+  /* ---------- Lá thư thứ năm (Cảnh 12) + Hà Nội 2076 (Cảnh 13) ---------- */
+
+  /** Lời nhắn cuối đang chọn (theo ngôn ngữ hiện tại). Rỗng nếu chọn "Tự viết" mà chưa gõ gì. */
+  function letter5Line() {
+    if (!L5) return "";
+    const l5 = state.letter5;
+    if (l5.choice === "custom") return (l5.custom || "").trim();
+    return L(L5, "suggestions")[l5.choice] || L(L5, "suggestions")[0];
+  }
+
+  /** Thân lá thư thứ năm (HTML). Chữ người chơi luôn đi qua esc(). */
+  function letter5BodyHtml(line, withBlank) {
+    const blank = withBlank
+      ? `<span class="letter5-blank" data-l5-line>${esc(line) || "&nbsp;".repeat(12)}</span>`
+      : `<span class="letter5-blank is-filled">${esc(line)}</span>`;
+    return `
+      <p>${esc(L(L5, "greeting"))}</p>
+      ${L(L5, "body").map((para) => `<p>${esc(para)}</p>`).join("")}
+      <p>${esc(L(L5, "ask"))} ${blank}.</p>
+      <p class="letter-sign">${esc(L(L5, "sign"))}</p>`;
+  }
+
+  /** Dữ liệu cho bản PNG tải về (certificate.js). */
+  function letter5Export() {
+    return {
+      lang: state.lang,
+      greeting: L(L5, "greeting"),
+      body: L(L5, "body"),
+      last: `${L(L5, "ask")} ${letter5Line() || L(L5, "suggestions")[0]}.`,
+      sign: L(L5, "sign"),
+      title: tr().letter5_title
+    };
+  }
+
+  function sealLetter5() {
+    state.letter5.sealed = true;
+    saveProgress();
+    updateGates();
+    renderLetter5(true);
+    renderFuture();
+    notifyBook();
+    const next = document.querySelector("[data-l5-next]");
+    if (next) next.focus({ preventScroll: true });
+  }
+
+  function renderLetter5(justSealed) {
+    const slot = document.getElementById("letter5-slot");
+    if (!slot || !L5) return;
+    const t = tr();
+    const l5 = state.letter5;
+    const max = L5.max_len;
+    const sugg = L(L5, "suggestions");
+    const options = sugg
+      .map((txt, i) => ({ key: i, label: txt }))
+      .concat([{ key: "custom", label: t.letter5_custom }]);
+
+    slot.innerHTML = `
+      <article class="chapter letter5 ${l5.sealed ? "is-sealed" : ""} ${justSealed ? "is-just-sealed" : ""}" style="--c: #10B981;">
+        <header class="chapter-head game-head">
+          <span class="chapter-num" aria-hidden="true">5</span>
+          <h2 class="chapter-name" data-scene-heading tabindex="-1">${esc(t.letter5_title)}</h2>
+        </header>
+        <p class="scene-lead">${esc(t.letter5_lead)}</p>
+        <div class="letter5-paper">
+          <div class="seal letter5-seal" aria-hidden="true"><span class="seal-half seal-half--l"></span><span class="seal-half seal-half--r"></span></div>
+          <div class="letter" data-l5-letter>${letter5BodyHtml(letter5Line(), !l5.sealed)}</div>
+        </div>
+        ${l5.sealed
+          ? `<p class="letter5-status" role="status">${esc(t.letter5_sealed)}</p>
+             <div class="letter-actions">
+               <button type="button" class="btn-signal" data-l5-next>${esc(t.letter5_continue)}</button>
+               <button type="button" class="btn-ghost" data-l5-download>${esc(t.letter5_download)}</button>
+               <button type="button" class="link-quiet" data-l5-reopen>${esc(t.letter5_reopen)}</button>
+             </div>`
+          : `<fieldset class="letter5-pick">
+               <legend class="instrument-label">${esc(t.letter5_pick)}</legend>
+               <div class="pledge-list" role="radiogroup" aria-label="${esc(t.letter5_pick)}">
+                 ${options
+                   .map(
+                     (o) => `
+                   <button type="button" class="pledge" role="radio" aria-checked="${l5.choice === o.key}" data-l5-choice="${o.key}">
+                     <span class="pledge-dot" aria-hidden="true"></span>
+                     <span>${esc(o.label)}</span>
+                   </button>`
+                   )
+                   .join("")}
+               </div>
+               <div class="letter5-custom" ${l5.choice === "custom" ? "" : "hidden"}>
+                 <label for="letter5-custom-input" class="instrument-label">${esc(t.letter5_custom_label)}</label>
+                 <textarea id="letter5-custom-input" class="letter5-input" rows="2" maxlength="${max}"
+                   placeholder="${esc(String(t.letter5_custom_ph).replace("{n}", max))}" aria-describedby="letter5-count"></textarea>
+                 <p id="letter5-count" class="letter5-count" aria-live="polite"></p>
+               </div>
+             </fieldset>
+             <p class="game-feedback" aria-live="polite" data-l5-fb></p>
+             <div class="letter-actions">
+               <button type="button" class="btn-signal" data-l5-seal>${esc(t.letter5_seal)}</button>
+               <button type="button" class="btn-ghost game-skip" data-l5-skip title="${esc(t.letter5_skip_hint)}">${esc(t.skip_game)}</button>
+               <span class="game-skip-hint">${esc(t.letter5_skip_hint)}</span>
+             </div>`}
+        <p class="note letter5-privacy">${esc(t.letter5_privacy)}</p>
+      </article>`;
+
+    const lineEl = slot.querySelector("[data-l5-line]");
+    const fb = slot.querySelector("[data-l5-fb]");
+    const input = slot.querySelector("#letter5-custom-input");
+    const count = slot.querySelector("#letter5-count");
+
+    const refreshLine = () => {
+      if (lineEl) lineEl.textContent = letter5Line() || " ".repeat(12);
+      if (count && input) count.textContent = String(t.letter5_count).replace("{n}", max - input.value.length);
+    };
+
+    if (input) {
+      input.value = l5.custom;
+      input.addEventListener("input", () => {
+        state.letter5.custom = input.value.slice(0, max);
+        if (fb) fb.textContent = "";
+        refreshLine();
+        saveProgress();
+      });
+    }
+    refreshLine();
+
+    slot.querySelectorAll("[data-l5-choice]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const raw = btn.getAttribute("data-l5-choice");
+        state.letter5.choice = raw === "custom" ? "custom" : Number(raw);
+        saveProgress();
+        renderLetter5();
+        const again = slot.querySelector(`[data-l5-choice="${raw}"]`);
+        if (raw === "custom") {
+          const box = slot.querySelector("#letter5-custom-input");
+          if (box) box.focus();
+        } else if (again) again.focus();
+      });
+    });
+
+    const sealBtn = slot.querySelector("[data-l5-seal]");
+    if (sealBtn) {
+      sealBtn.addEventListener("click", () => {
+        if (!letter5Line()) {
+          if (fb) fb.textContent = t.letter5_empty;
+          if (input) input.focus();
+          return;
+        }
+        sealLetter5();
+      });
+    }
+    const skipBtn = slot.querySelector("[data-l5-skip]");
+    if (skipBtn) {
+      skipBtn.addEventListener("click", () => {
+        if (!letter5Line()) state.letter5.choice = 0;
+        sealLetter5();
+      });
+    }
+    const nextBtn = slot.querySelector("[data-l5-next]");
+    if (nextBtn) nextBtn.addEventListener("click", () => window.LunamarisBook && window.LunamarisBook.next());
+    const dl = slot.querySelector("[data-l5-download]");
+    if (dl) {
+      dl.addEventListener("click", () => {
+        if (window.LunamarisCertificate && window.LunamarisCertificate.downloadLetterPNG) {
+          window.LunamarisCertificate.downloadLetterPNG(letter5Export());
+        }
+      });
+    }
+    const reopen = slot.querySelector("[data-l5-reopen]");
+    if (reopen) {
+      reopen.addEventListener("click", () => {
+        state.letter5.sealed = false;
+        saveProgress();
+        updateGates();
+        renderLetter5();
+        renderFuture();
+        notifyBook();
+        const h = slot.querySelector("[data-scene-heading]");
+        if (h) h.focus({ preventScroll: true });
+      });
+    }
+  }
+
+  /** Cảnh 13: phong bì mở ra đúng lá thư người chơi đã niêm phong; chưa niêm phong thì dùng gợi ý đầu. */
+  function renderFuture() {
+    const slot = document.getElementById("future-slot");
+    if (!slot || !L5) return;
+    const t = tr();
+    const line = state.letter5.sealed ? letter5Line() || L(L5, "suggestions")[0] : L(L5, "suggestions")[0];
+    slot.innerHTML = `
+      <article class="future-view" style="--c: #10B981;">
+        <header class="scene-head">
+          <p class="scene-context">${esc(t.future_kicker)}</p>
+          <h2 class="scene-title" data-scene-heading tabindex="-1">${esc(t.scene_title_future)}</h2>
+        </header>
+        <div class="letter-body">
+          <div class="seal" aria-hidden="true"><span class="seal-half seal-half--l"></span><span class="seal-half seal-half--r"></span></div>
+          <div class="letter">${letter5BodyHtml(line, false)}</div>
+        </div>
+        <p class="future-tagline">${esc(t.future_tagline)}</p>
+        <div class="letter-actions future-actions">
+          <a class="btn-signal" href="#sources">${esc(t.future_sources)}</a>
+          <a class="btn-ghost" href="#teacher">${esc(t.future_teacher)}</a>
+        </div>
+        <p class="future-more">
+          <a class="link-quiet" href="#guardian">${esc(t.future_guardian)}</a>
+          <a class="link-quiet" href="#letter5">${esc(t.future_rewrite)}</a>
+        </p>
+      </article>`;
+  }
+
   /* ---------- Popup Hồ sơ Khoa học ---------- */
 
   function currentArtifact() {
@@ -817,6 +1054,25 @@
     const body = document.getElementById("dossier-sheet-body");
     if (!body) return;
     const art = currentArtifact();
+    const cur = window.LunamarisBook ? window.LunamarisBook.current() : null;
+    if (!art && cur === "letter5" && L5 && L5.dossier) {
+      // Sổ tay DUSTER: chỉ ghi điều nguồn NASA/LASP xác nhận, phần hư cấu nói rõ
+      const d = L5.dossier;
+      setTxt("dossier-sheet-title", t.letter5_dossier);
+      body.innerHTML = `
+        <section class="voice-panel" style="--c: #10B981;">
+          <div class="dossier">
+            <div>
+              <p class="dossier-log-k">${esc(L(d, "title"))}</p>
+              ${L(d, "body").map((para) => `<p>${esc(para)}</p>`).join("")}
+              <ul class="link-list">
+                ${d.links.map((lnk) => `<li><a href="${esc(lnk.url)}" target="_blank" rel="noopener noreferrer"><span>${esc(lnk.label)}</span><span aria-hidden="true">↗</span></a></li>`).join("")}
+              </ul>
+            </div>
+          </div>
+        </section>`;
+      return;
+    }
     setTxt("dossier-sheet-title", art ? `${t.dossier_title}: ${L(art, "name")}` : `${t.dossier_title}: ${t.scene_title_artemis}`);
     if (art) {
       body.innerHTML = `<div class="dossier-grid" style="--c: ${planetColor(art)};">${instrumentHtml(art)}${dossierHtml(art)}</div>`;
@@ -1121,6 +1377,8 @@
     renderChapters();
     renderDecisionStation();
     renderArtemisGame();
+    renderLetter5();
+    renderFuture();
     renderCertificateSection();
     renderClassroomAndFooter();
     renderSceneTitles();

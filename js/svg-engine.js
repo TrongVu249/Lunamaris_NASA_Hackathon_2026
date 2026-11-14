@@ -158,7 +158,7 @@
 
     /**
      * Chapter 02: Surveyor 3 & Apollo 12 LM Intrepid
-     * Variable D: Touchdown separation distance (50 m -> 2500 m, default 180 m)
+     * Variable D: Touchdown separation distance (50 m -> 2500 m, default 160 m)
      */
     function computeChapter2(distVal, lang) {
       const D = Math.round(Number(distVal));
@@ -197,11 +197,11 @@
         surfaceStateEn = "Severe Micro-Pitting & Tan Discoloration (NASA SP-284 Verified)";
         surfaceStateVi = "Rỗ Vi Mô Nghiêm Trọng & Đổi Màu Sơn Nâu Rám (Đã kiểm chứng NASA SP-284)";
         zoneColor = "#F97316";
-        badgeTextEn = D === 180
-          ? "180 m HISTORICAL APOLLO 12 TOUCHDOWN (NASA Surveyor 3 Page: ~197 yards)"
+        badgeTextEn = D === 160
+          ? "160 m HISTORICAL APOLLO 12 TOUCHDOWN (LRO imagery: 538 ft)"
           : "WARNING — Supersonic Sandblasting Zone (v = 300–2,000 m/s)";
-        badgeTextVi = D === 180
-          ? "MỐC LỊCH SỬ 180 m APOLLO 12 (Trang Surveyor 3 của NASA: ~197 yard)"
+        badgeTextVi = D === 160
+          ? "MỐC LỊCH SỬ 160 m APOLLO 12 (Ảnh LRO: 538 ft)"
           : "CẢNH BÁO CAM — Vùng Bắn Cát Siêu Thanh (v = 300–2.000 m/s)";
         sepiaAmount = 0.65;
         pitCount = 18;
@@ -345,7 +345,7 @@
           {
             label: lang === "vi" ? "Khoảng cách hạ cánh (D)" : "Separation distance (D)",
             value: `${D} m`,
-            sub: D === 180 ? "NASA: ~180 m (197 yards)" : "Range: 50 – 2,500 m"
+            sub: D === 160 ? "LRO: ~160 m (538 ft)" : "Range: 50 – 2,500 m"
           },
           {
             label: lang === "vi" ? "Vận tốc hạt bụi (v)" : "Ejecta velocity (v)",
@@ -363,19 +363,20 @@
 
     /**
      * Chapter 03: Opportunity Rover (MER-B)
-     * Variable tau: Atmospheric Optical Depth (1.0 -> 10.8, default 10.8)
-     * Piecewise linear interpolation across 5 JPL points:
-     * [(1.0, 700), (3.5, 280), (5.5, 120), (8.5, 45), (10.8, 22)]
+     * Variable tau: Atmospheric Optical Depth (0.6 -> 10.8, default 10.8)
+     * Piecewise linear interpolation; end points are the measured June 2018 values
+     * (June 2: tau 0.6, 645 Wh; June 10 / Sol 5111: tau 10.8, 22 Wh — SpaceNews / NASA JPL):
+     * [(0.6, 645), (3.5, 280), (5.5, 120), (8.5, 45), (10.8, 22)]
      */
     function calculateOpportunityPower(tau) {
       const pts = [
-        [1.0, 700],
+        [0.6, 645],
         [3.5, 280],
         [5.5, 120],
         [8.5, 45],
         [10.8, 22]
       ];
-      if (tau <= 1.0) return 700;
+      if (tau <= 0.6) return 645;
       if (tau >= 10.8) return 22;
       for (let i = 0; i < pts.length - 1; i++) {
         const [t1, e1] = pts[i];
@@ -390,7 +391,7 @@
     function computeChapter3(tauVal, lang) {
       const tau = Number(Number(tauVal).toFixed(1));
       const wattHours = calculateOpportunityPower(tau);
-      const batteryPct = Math.max(3, Math.round((wattHours / 700) * 100));
+      const batteryPct = Math.max(3, Math.round((wattHours / 645) * 100));
 
       let stateEn = "Nominal Operations — 90-Sol Design Baseline";
       let stateVi = "Hoạt động Bình thường — Thiết kế gốc 90 Sol";
@@ -510,7 +511,7 @@
           {
             label: lang === "vi" ? "Công suất điện (E)" : "Solar energy (E)",
             value: `${wattHours} Wh/sol`,
-            sub: `${batteryPct}% of 700 Wh Nominal`
+            sub: `${batteryPct}% of 645 Wh (June 2, 2018)`
           },
           {
             label: lang === "vi" ? "Quãng đường đã lăn bánh" : "Total odometer",

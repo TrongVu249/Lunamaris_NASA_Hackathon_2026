@@ -4,7 +4,8 @@
  *  - LUNAMARIS_FLOW.games   : cấu hình trò chơi của từng chương (giá trị bắt đầu, mục tiêu)
  *  - LUNAMARIS_FLOW.rules   : thẻ luật nhận được sau mỗi lá thư, dùng ở Game 5 (Artemis)
  *  - Bổ sung chữ giao diện vào window.UI_I18N (EN/VI)
- * Lời thoại lấy từ docs/Kich_ban_relic_Final_v2.md; số Surveyor 3 dùng 180 m (data.js đã đối chiếu NASA).
+ *  - LUNAMARIS_FLOW.letter5 : mẫu Lá thư thứ năm (DUSTER) + Sổ tay DUSTER cho popup Hồ sơ
+ * Lời thoại lấy từ docs/Kich_ban_relic_Final_v2.md; Surveyor 3 dùng 160 m (đo từ ảnh LRO 2011, NASA SVS).
  * Thêm ảnh cho một cảnh: điền `img: "assets/story/<tên>.webp"` — thiếu ảnh thì dùng nền vẽ bằng CSS.
  */
 (function () {
@@ -114,33 +115,105 @@
           text_en: "Wait. They answered this question a long time ago."
         }
       ],
+      /* Cảnh 11 (cú lật): kết bằng câu hỏi → cảnh Lá thư thứ năm (letter5) */
       ending: [
         {
           id: "end-1", world: "moon", speaker: null,
-          text_vi: "Các phi hành gia đặt trạm thiết bị DUSTER xuống vùng D, rồi quay lại tàu. Tàu cất cánh. DUSTER ở lại.",
-          text_en: "The astronauts set the DUSTER station down in zone D and walk back to the lander. The lander lifts off. DUSTER stays."
+          text_vi: "Trên bản đồ, con tàu ở vùng D đứng yên. Các phi hành gia đặt xuống chiếc xe nhỏ mang bộ đo bụi DUSTER, rồi quay lại tàu. Tàu cất cánh. DUSTER ở lại.",
+          text_en: "On the map, the lander in zone D sits still. The astronauts set down a small rover carrying the DUSTER dust instruments, then walk back to the lander. The lander lifts off. DUSTER stays."
         },
         {
-          id: "end-2", world: "moon", speaker: C,
-          text_vi: "Cái máy mới đó tên là DUSTER. Người ta đặt nó lại để đo bụi Mặt Trăng, đúng thứ bụi từng làm khổ cái gương, làm xước Surveyor và che mắt Opportunity.",
-          text_en: "That new machine is called DUSTER. It was left there to measure lunar dust, the same dust that troubled the mirror, scarred Surveyor and blinded Opportunity."
+          id: "end-2", world: "moon", speaker: null,
+          text_vi: "Columbina nhìn nó rất lâu.",
+          text_en: "Columbina watches it for a long time."
         },
         {
           id: "end-3", world: "moon", speaker: C,
+          text_vi: "Bạn thấy không?",
+          text_en: "Do you see it?"
+        },
+        {
+          id: "end-4", world: "moon", speaker: C,
+          text_vi: "Cái máy mới đó tên là DUSTER. Người ta để nó lại để đo bụi Mặt Trăng, đúng thứ bụi từng làm khổ cái gương, làm xước Surveyor và che mắt Oppy.",
+          text_en: "That new machine is called DUSTER. It was left there to measure lunar dust, the same dust that troubled the mirror, scarred Surveyor and blinded Oppy."
+        },
+        {
+          id: "end-5", world: "moon", speaker: C,
           text_vi: "Rồi DUSTER cũng sẽ nằm lại đó. Năm mươi năm nữa, sẽ có ai đó ngồi đúng chỗ này lúc hai giờ sáng, và nghe nó gọi.",
           text_en: "One day DUSTER will be an old machine too. Fifty years from now, someone will sit right here at two in the morning and hear it call."
         },
         {
-          id: "end-4", world: "earth", speaker: null,
-          text_vi: "Hà Nội, 02:40, năm 2076. Vẫn căn phòng đó. Máy thu kêu lên. Trên bản đồ Mặt Trăng, cạnh chấm sáng của cái gương, có thêm một chấm thứ năm mang tên DUSTER.",
-          text_en: "Hanoi, 02:40, the year 2076. The same room. The receiver beeps. On the lunar map, next to the mirror's light, a fifth light appears. It is called DUSTER."
+          id: "end-6", world: "earth", speaker: C,
+          text_vi: "Vậy nó nên nói gì với họ?",
+          text_en: "So what should it tell them?"
+        }
+      ],
+      /* Cảnh 13 (Hà Nội 2076): xong thì sang cảnh "future" hiện lại lá thư người chơi vừa niêm phong */
+      future: [
+        {
+          id: "fut-1", world: "earth", speaker: null,
+          text_vi: "Hà Nội, 02:40, năm 2076. Vẫn căn phòng đó. Màn hình mới hơn, ghế khác. Một người khác đang ngồi trực.",
+          text_en: "Hanoi, 02:40, the year 2076. The same room. Newer screens, a different chair. Someone else is on the night shift."
         },
         {
-          id: "end-5", world: "earth", speaker: null,
-          text_vi: "Lắng nghe những cỗ máy cũ để biết nên đặt bước chân mới ở đâu.",
-          text_en: "Listen to the old machines to know where to take the next step."
+          id: "fut-2", world: "earth", speaker: null,
+          text_vi: "Máy thu kêu lên. Tích… tích… tích…",
+          text_en: "The receiver starts to beep. Tick… tick… tick…"
+        },
+        {
+          id: "fut-3", world: "earth", speaker: null,
+          text_vi: "Trên bản đồ Mặt Trăng, cạnh chấm sáng của cái gương, có thêm một chấm sáng thứ năm mang tên DUSTER.",
+          text_en: "On the lunar map, next to the mirror's light, there is a fifth light. It is called DUSTER."
+        },
+        {
+          id: "fut-4", world: "earth", speaker: null,
+          text_vi: "Phong bì được mở. Đó là lá thư bạn vừa viết.",
+          text_en: "The envelope opens. It is the letter you just wrote."
         }
       ]
+    },
+
+    /* Lá thư thứ năm (Cảnh 12). Chỉ chỗ trống cuối là do người chơi chọn hoặc tự viết. */
+    letter5: {
+      max_len: 120,
+      greeting_vi: "Gửi người ở tương lai,",
+      greeting_en: "To whoever comes in the future,",
+      body_vi: [
+        "Tôi là DUSTER, được phi hành gia Artemis IV đặt xuống Mặt Trăng để canh chừng những hạt bụi. Người ta chọn chỗ này cho tôi vì nó cách các di tích cũ hơn 2 km, có nắng và có đủ điểm mốc để tàu tìm đường.",
+        "Chọn chỗ này là nhờ bốn người đi trước: một cái gương vẫn còn trả lời, một cỗ máy từng bị bụi làm bị thương, một chiếc xe đã chạy theo mặt trời, và một chiếc trực thăng từng bị lạc."
+      ],
+      body_en: [
+        "I am DUSTER. The Artemis IV astronauts set me down on the Moon to keep watch over the dust. They chose this spot for me because it is more than 2 km from the old relics, it gets sunlight, and it has enough landmarks for landers to find their way.",
+        "I owe this spot to four who came before me: a mirror that still answers, a machine once hurt by dust, a rover that chased the Sun, and a helicopter that once got lost."
+      ],
+      ask_vi: "Nếu bạn đến đây, xin hãy",
+      ask_en: "If you come here, please",
+      sign_vi: "DUSTER, Artemis IV",
+      sign_en: "DUSTER, Artemis IV",
+      suggestions_vi: ["đáp thật xa", "bắn laser chào cái gương bên cạnh", "kể cho tôi nghe Trái Đất giờ ra sao"],
+      suggestions_en: ["land far away", "fire a laser to say hello to the mirror next door", "tell me what Earth is like now"],
+      /* Sổ tay DUSTER (popup Hồ sơ Khoa học ở cảnh letter5) — chỉ ghi điều nguồn xác nhận */
+      dossier: {
+        title_vi: "DUSTER và sứ mệnh Artemis IV",
+        title_en: "DUSTER and the Artemis IV mission",
+        body_vi: [
+          "DUSTER (DUst and plaSma environmenT survEyoR) là bộ thiết bị đo bụi và plasma do phòng thí nghiệm LASP, Đại học Colorado Boulder, chế tạo. Bộ này gồm máy phân tích bụi tĩnh điện (EDA) đo các hạt bụi bị bốc lên khỏi mặt đất, và máy dò RESOLVE đo mật độ electron phía trên bề mặt.",
+          "Bộ thiết bị gắn trên một xe tự hành nhỏ (MAPP của công ty Lunar Outpost) và sẽ được phi hành gia triển khai ở gần cực Nam Mặt Trăng. Nó đo xem bụi và plasma phản ứng thế nào khi con người và tàu vũ trụ hoạt động, để giảm nguy hiểm cho sức khỏe và thiết bị của các sứ mệnh sau.",
+          "Tháng 12/2025, NASA chọn DUSTER cùng trạm địa chấn SPSS để tiếp tục phát triển cho Artemis IV. NASA cho biết danh sách thiết bị cuối cùng của sứ mệnh sẽ được quyết định sau.",
+          "Trong câu chuyện này, bãi đáp vùng D và việc DUSTER ở lại suốt 50 năm là phần hư cấu, dựng trên những dữ kiện trên."
+        ],
+        body_en: [
+          "DUSTER (DUst and plaSma environmenT survEyoR) is a dust and plasma instrument suite built by the LASP laboratory at the University of Colorado Boulder. It pairs an Electrostatic Dust Analyzer (EDA), which measures dust grains lofted off the ground, with the RESOLVE sounder, which measures electron density above the surface.",
+          "The suite rides on a small rover (Lunar Outpost's MAPP) that astronauts will deploy near the lunar south pole. It measures how dust and plasma respond when people and spacecraft are active, to reduce the hazard to the health and hardware of later missions.",
+          "In December 2025, NASA selected DUSTER, together with the SPSS seismic station, for further development for Artemis IV. NASA says the mission's final manifest will be decided at a later date.",
+          "In this story, the zone D landing site and DUSTER staying for 50 years are fiction, built on the facts above."
+        ],
+        links: [
+          { label: "NASA: NASA Selects 2 Instruments for Artemis IV Lunar Surface Science", url: "https://science.nasa.gov/missions/artemis/artemis-4/nasa-selects-2-instruments-for-artemis-iv-lunar-surface-science/" },
+          { label: "LASP: instruments target a trip to the Moon aboard Artemis IV", url: "https://lasp.colorado.edu/2025/12/05/lasp-instruments-target-a-trip-to-the-moon-aboard-nasas-artemis-iv-mission/" },
+          { label: "NASA (2011): Recommendations to protect historic lunar sites (2 km)", url: "https://www.nasa.gov/wp-content/uploads/2017/10/617743main_nasa-usg_lunar_historic_sites_reva-508.pdf" }
+        ]
+      }
     },
 
     /* Trò chơi của từng chương. kind: "hold" (nhấn giữ) | "slider" (thanh trượt tới mục tiêu). */
@@ -158,18 +231,18 @@
       "surveyor-3": {
         kind: "slider",
         start: 2500,
-        target: 180,
+        target: 160,
         tolerance: 15,
         cue_vi: "Năm 1969, tàu Intrepid của Apollo 12 hạ xuống gần Surveyor 3. Bụi từ động cơ bắn ngang mặt đất như cát phun.",
         cue_en: "In 1969, Apollo 12's lander Intrepid came down near Surveyor 3. Engine exhaust blasted dust sideways like a sandblaster.",
-        goal_vi: "Kéo thanh để đưa tàu Intrepid tới đúng chỗ nó đã đáp: cách Surveyor 3 khoảng 180 m.",
-        goal_en: "Drag the slider to bring Intrepid to where it really landed: about 180 m from Surveyor 3.",
+        goal_vi: "Kéo thanh để đưa tàu Intrepid tới đúng chỗ nó đã đáp: cách Surveyor 3 khoảng 160 m.",
+        goal_en: "Drag the slider to bring Intrepid to where it really landed: about 160 m from Surveyor 3.",
         far_vi: "Còn xa. Kéo tàu lại gần hơn.",
         far_en: "Still far. Bring the lander closer.",
         near_vi: "Gần hơn cả năm 1969 rồi. Lùi ra một chút.",
         near_en: "That's closer than in 1969. Back off a little.",
-        win_vi: "180 m. Lớp sơn trắng của Surveyor 3 ngả nâu, ống kính bị rỗ. Vẫn chưa đủ xa.",
-        win_en: "180 m. Surveyor 3's white paint turns brown and its lens gets pitted. Still not far enough."
+        win_vi: "160 m. Lớp sơn trắng của Surveyor 3 ngả nâu, ống kính bị rỗ. Vẫn chưa đủ xa.",
+        win_en: "160 m. Surveyor 3's white paint turns brown and its lens gets pitted. Still not far enough."
       },
       "opportunity-rover": {
         kind: "slider",
@@ -200,25 +273,25 @@
       "apollo11-lrrr": {
         zone: "A", effect: "reveal",
         title_vi: "Di tích vẫn đang làm việc", title_en: "The relic is still working",
-        sub_vi: "Đừng phủ bụi lên nó.", sub_en: "Don't cover it in dust.",
+        sub_vi: "“Tôi chỉ sợ bụi.”", sub_en: "“I am only afraid of dust.”",
         say_vi: "Ở vùng A có một thứ vẫn đang làm việc: cái gương.", say_en: "Something in zone A is still working: the mirror."
       },
       "surveyor-3": {
         zone: "A", effect: "cross",
         title_vi: "Cách di tích ít nhất 2 km", title_en: "Stay at least 2 km away",
-        sub_vi: "180 m vẫn chưa đủ xa.", sub_en: "180 m was not far enough.",
+        sub_vi: "“160 m vẫn chưa đủ xa.”", sub_en: "“160 m was still not far enough.”",
         say_vi: "Vùng A nằm trọn trong vòng 2 km. Gần quá, bụi sẽ phủ lên nó.", say_en: "Zone A is inside the 2 km ring. Too close, the dust would bury it."
       },
       "opportunity-rover": {
         zone: "B", effect: "cross",
         title_vi: "Phải có nắng", title_en: "There must be sunlight",
-        sub_vi: "Không đáp chỗ khuất nắng.", sub_en: "Never land in shadow.",
+        sub_vi: "“Không đủ để thức.”", sub_en: "“Not enough to stay awake.”",
         say_vi: "Đáy hố B khuất nắng quanh năm. Không có mặt trời thì pin nào cũng cạn.", say_en: "Crater B sits in shadow all year. Without the Sun, every battery runs dry."
       },
       "ingenuity-helicopter": {
         zone: "C", effect: "cross",
         title_vi: "Phải có điểm mốc", title_en: "There must be landmarks",
-        sub_vi: "Mặt đất phẳng lì thì tàu bị lạc.", sub_en: "On featureless ground, landers get lost.",
+        sub_vi: "“…không tìm được viên đá nào làm mốc.”", sub_en: "“…couldn't find a single rock to hold on to.”",
         say_vi: "Đồng bằng C phẳng lì, không có hố nhỏ hay đá nào làm mốc. Tàu sẽ trượt giống Ingenuity.", say_en: "Plain C is flat, with no small craters or rocks to track. The lander would slip, like Ingenuity."
       }
     }
@@ -236,7 +309,32 @@
       skip_story: "Skip",
       story_tap: "Tap to continue",
       story_label: "Story",
-      story_titles: { intro: "Prologue", to_ch2: "Interlude", to_ch3: "Interlude", to_ch4: "Interlude", to_artemis: "Interlude", ending: "Epilogue" },
+      story_titles: { intro: "Prologue", to_ch2: "Interlude", to_ch3: "Interlude", to_ch4: "Interlude", to_artemis: "Interlude", ending: "The twist", future: "Hanoi, 2076" },
+      dossier_log_title: "Technical log (the long version of the letter)",
+      letter5_title: "The fifth letter",
+      letter5_lead: "One day DUSTER will be a machine left behind too. Finish its last line for the night-shift worker of 2076.",
+      letter5_pick: "Choose the last line",
+      letter5_custom: "Write my own",
+      letter5_custom_label: "Your line",
+      letter5_custom_ph: "Up to {n} characters",
+      letter5_count: "{n} characters left",
+      letter5_seal: "Seal the letter",
+      letter5_sealed: "Sealed. This letter will wait here for the future.",
+      letter5_reopen: "Unseal and edit",
+      letter5_download: "Download",
+      letter5_privacy: "The letter stays on this device only. Nothing is sent anywhere and we never ask for your name.",
+      letter5_continue: "Continue",
+      letter5_empty: "Write your line first, or choose a suggestion.",
+      letter5_skip_hint: "Skipping still seals the letter. If you haven't written anything, it uses the first suggestion.",
+      letter5_dossier: "Science dossier: DUSTER",
+      future_kicker: "The envelope opens",
+      future_tagline: "Listen to the old machines to know where to take the next step.",
+      future_sources: "NASA data sources",
+      future_teacher: "Teacher's corner",
+      future_guardian: "Next: Space Heritage Guardian card",
+      future_rewrite: "Rewrite the letter",
+      scene_title_letter5: "The fifth letter",
+      scene_title_future: "Hanoi, 2076",
       game_open_letter: "Open the letter",
       game_replay: "Play again",
       game_reread: "Read the letter again",
@@ -268,6 +366,9 @@
       art_wrong_d: "Zone D has sunlight, rocks for landmarks, and is over 2 km from the relic. No rule rules it out.",
       art_done_zone: "This zone is already ruled out.",
       art_all_clear: "So it's D.",
+      art_soil: "Surveyor 3's letter lights up once more: the ground here is firm enough.",
+      game_send_packet: "Send the last packet",
+      game_packet_sent: "The last 0s and 1s reach the antenna.",
       art_land_btn: "Land in zone D",
       art_land_wait: "Rule out zones A, B and C first.",
       art_laser_btn: "Fire the laser once more",
@@ -285,7 +386,32 @@
       skip_story: "Bỏ qua",
       story_tap: "Chạm để tiếp",
       story_label: "Truyện",
-      story_titles: { intro: "Mở đầu", to_ch2: "Chuyển cảnh", to_ch3: "Chuyển cảnh", to_ch4: "Chuyển cảnh", to_artemis: "Chuyển cảnh", ending: "Kết" },
+      story_titles: { intro: "Mở đầu", to_ch2: "Chuyển cảnh", to_ch3: "Chuyển cảnh", to_ch4: "Chuyển cảnh", to_artemis: "Chuyển cảnh", ending: "Cú lật", future: "Hà Nội, 2076" },
+      dossier_log_title: "Nhật ký kỹ thuật (bản dài của lá thư)",
+      letter5_title: "Lá thư thứ năm",
+      letter5_lead: "Rồi DUSTER cũng sẽ thành một cỗ máy bị bỏ lại. Hãy viết giúp nó lời nhắn cuối cho người trực đêm năm 2076.",
+      letter5_pick: "Chọn lời nhắn cuối",
+      letter5_custom: "Tự viết",
+      letter5_custom_label: "Lời nhắn của bạn",
+      letter5_custom_ph: "Tối đa {n} ký tự",
+      letter5_count: "Còn {n} ký tự",
+      letter5_seal: "Niêm phong",
+      letter5_sealed: "Đã niêm phong. Lá thư sẽ chờ ở đây cho tương lai.",
+      letter5_reopen: "Mở niêm phong để sửa",
+      letter5_download: "Tải về",
+      letter5_privacy: "Lá thư chỉ lưu trên máy này. Không gửi đi đâu và không hỏi tên bạn.",
+      letter5_continue: "Đi tiếp",
+      letter5_empty: "Viết lời nhắn trước, hoặc chọn một gợi ý.",
+      letter5_skip_hint: "Bỏ qua vẫn niêm phong thư. Nếu bạn chưa viết gì, thư dùng gợi ý đầu tiên.",
+      letter5_dossier: "Hồ sơ Khoa học: DUSTER",
+      future_kicker: "Phong bì được mở",
+      future_tagline: "Lắng nghe những cỗ máy cũ để biết nên đặt bước chân mới ở đâu.",
+      future_sources: "Nguồn dữ liệu NASA",
+      future_teacher: "Góc giáo viên",
+      future_guardian: "Tiếp: Thẻ Space Heritage Guardian",
+      future_rewrite: "Viết lại lá thư",
+      scene_title_letter5: "Lá thư thứ năm",
+      scene_title_future: "Hà Nội, 2076",
       game_open_letter: "Mở lá thư",
       game_replay: "Chơi lại",
       game_reread: "Đọc lại thư",
@@ -317,6 +443,9 @@
       art_wrong_d: "Vùng D có nắng, có đá làm mốc và cách di tích hơn 2 km. Không thẻ nào loại được nó.",
       art_done_zone: "Vùng này đã bị loại rồi.",
       art_all_clear: "Vậy là D.",
+      art_soil: "Lá thư Surveyor 3 sáng lên lần nữa: đất ở đây đủ chắc.",
+      game_send_packet: "Gửi gói tin cuối",
+      game_packet_sent: "Những số 0 và 1 cuối cùng đã tới ăng-ten.",
       art_land_btn: "Hạ cánh ở vùng D",
       art_land_wait: "Loại xong các vùng A, B và C trước đã.",
       art_laser_btn: "Bắn laser lần nữa",

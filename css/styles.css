@@ -2701,9 +2701,14 @@ body:not(.book-paged) .book-scene[data-story] {
   transition: border-color 0.4s ease, box-shadow 0.4s ease;
 }
 
-.game-stage > svg {
+.game-stage > svg,
+.game-stage > [data-svg] > svg {
   display: block;
   width: 100%;
+  height: 100%;
+}
+
+.game-stage > [data-svg] {
   height: 100%;
 }
 
@@ -3204,6 +3209,48 @@ body:not(.book-paged) .book-scene[data-story] {
   opacity: 1;
 }
 
+/* Thẻ Surveyor: vòng 160 m (đỏ) hiện trước, rồi vòng an toàn nở ra 2 km */
+.art-ring-near {
+  fill: rgba(239, 68, 68, 0.12);
+  stroke: #EF4444;
+  stroke-width: 2;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.art-ring-near-label {
+  fill: #FCA5A5;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.is-crossed-A .art-ring-near,
+.is-crossed-A .art-ring-near-label {
+  opacity: 1;
+}
+
+@keyframes art-ring-grow {
+  from { transform: scale(0.09); }
+  to { transform: scale(1); }
+}
+
+.art-ring {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.is-crossed-A .art-ring {
+  animation: art-ring-grow 1.3s cubic-bezier(0.3, 0.7, 0.3, 1) 0.5s both;
+}
+
+/* Thẻ LRRR: một lần bắn laser tới cái gương, như ở Chương 1 */
+.is-pinging .art-beam {
+  animation: art-beam 2.56s linear both;
+}
+
 .art-relic-glow {
   fill: var(--moon);
   opacity: 0;
@@ -3243,6 +3290,12 @@ body:not(.book-paged) .book-scene[data-story] {
 .is-landed .art-lm-d {
   opacity: 1;
   transition: opacity 0.4s ease 1s;
+}
+
+/* Thẻ Ingenuity: camera bám được vào đá ở vùng D trong khi vùng C tắt hết */
+.is-crossed-C .art-lm-d {
+  opacity: 1;
+  transition: opacity 0.4s ease 0.9s;
 }
 
 .art-cross {
@@ -3543,6 +3596,8 @@ body:not(.book-paged) .dossier-btn {
   .signal-map .map-pin.is-next .pin-halo,
   .gate-nudge .game-skip,
   .is-crossed-C .art-lm-c,
+  .is-crossed-A .art-ring,
+  .is-pinging .art-beam,
   .is-firing .art-beam,
   .dossier-sheet {
     animation: none !important;
@@ -3621,4 +3676,332 @@ body:not(.book-paged) .dossier-btn {
   top: calc(var(--topbar-h) + env(safe-area-inset-top, 0px) + 12px);
   bottom: auto;
   pointer-events: none;
+}
+
+/* =========================================================================
+   LÁ THƯ: đoạn văn + chữ ký (thư ngắn theo kịch bản, 2026-11-15)
+   ========================================================================= */
+.letter p {
+  margin: 0 0 0.75em;
+}
+
+.letter p:last-child {
+  margin-bottom: 0;
+}
+
+.letter .letter-sign {
+  margin-top: 1em;
+  font-family: 'Fira Sans', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--ink-2);
+}
+
+/* Popup Hồ sơ: nhật ký kỹ thuật (bản dài của thư) và Sổ tay DUSTER */
+.dossier-log {
+  padding-top: 18px;
+  border-top: 1px solid var(--rule);
+}
+
+.dossier-log-k {
+  margin: 0 0 6px;
+  font-family: 'Fira Sans', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--ink);
+}
+
+/* =========================================================================
+   LÁ THƯ THỨ NĂM (Cảnh 12)
+   ========================================================================= */
+.letter5 {
+  display: grid;
+  gap: 18px;
+  max-width: 72ch;
+}
+
+.letter5 .scene-lead {
+  margin: 0;
+}
+
+.letter5-paper {
+  position: relative;
+}
+
+/* Con dấu: ẩn khi chưa niêm phong, đóng xuống khi vừa niêm phong */
+.letter5-seal {
+  position: absolute;
+  z-index: 2;
+  top: -14px;
+  right: 0;
+  margin: 0;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.letter5.is-sealed .letter5-seal {
+  opacity: 1;
+}
+
+.letter5.is-just-sealed .letter5-seal {
+  animation: stamp-land 0.45s cubic-bezier(0.2, 1.2, 0.4, 1) both;
+}
+
+.letter5-blank {
+  display: inline;
+  padding: 0 4px;
+  border-bottom: 2px dashed var(--signal);
+  color: var(--signal);
+  overflow-wrap: anywhere;
+}
+
+.letter5-blank.is-filled,
+.letter5.is-sealed .letter5-blank {
+  border-bottom-style: solid;
+}
+
+.letter5-pick {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.letter5-pick legend {
+  padding: 0;
+  margin-bottom: 8px;
+}
+
+.letter5-custom {
+  display: grid;
+  gap: 6px;
+  padding-top: 6px;
+}
+
+.letter5-custom[hidden] {
+  display: none;
+}
+
+.letter5-input {
+  width: 100%;
+  min-height: 3.2em;
+  padding: 12px 14px;
+  border: 1px solid var(--ink-2);
+  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.6);
+  color: var(--ink);
+  font-family: 'Overpass', sans-serif;
+  font-size: 1rem; /* ≥ 16px: iOS không tự phóng to khi gõ */
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.letter5-input:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 2px;
+}
+
+.letter5-count {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--ink-2);
+}
+
+.letter5-status {
+  margin: 0;
+  color: var(--safe);
+  font-weight: 600;
+}
+
+.letter5-privacy {
+  margin: 0;
+}
+
+/* =========================================================================
+   HÀ NỘI 2076 (Cảnh 13): phong bì mở → lá thư → màn tối dần → câu chốt
+   ========================================================================= */
+.future-view {
+  position: relative;
+  display: grid;
+  gap: 22px;
+  max-width: 72ch;
+}
+
+.future-view .seal-half--l { animation: seal-l 0.7s cubic-bezier(0.5, 0, 0.7, 0.4) 0.35s both; }
+.future-view .seal-half--r { animation: seal-r 0.7s cubic-bezier(0.5, 0, 0.7, 0.4) 0.35s both; }
+.future-view .letter { animation: letter-in 0.6s ease 0.7s both; }
+
+.future-tagline {
+  margin: 8px 0 0;
+  font-family: 'Fira Sans', sans-serif;
+  font-weight: 800;
+  font-size: clamp(1.25rem, 4.5vw, 1.75rem);
+  line-height: 1.3;
+  color: var(--ink);
+  animation: future-tagline 1.2s ease 2.2s both;
+}
+
+/* "Màn hình tối dần": lá thư lùi vào bóng tối trước khi câu chốt hiện ra */
+@keyframes future-dim { to { opacity: 0.45; } }
+@keyframes future-tagline { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+.future-view .letter-body {
+  animation: future-dim 1.4s ease 2s forwards;
+}
+
+.future-actions,
+.future-more {
+  animation: letter-in 0.5s ease 3s both;
+}
+
+.future-more {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 22px;
+  margin: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .letter5.is-just-sealed .letter5-seal,
+  .future-view .seal-half--l,
+  .future-view .seal-half--r,
+  .future-view .letter,
+  .future-view .letter-body,
+  .future-tagline,
+  .future-actions,
+  .future-more {
+    animation: none !important;
+  }
+
+  .future-view .seal {
+    display: none;
+  }
+}
+
+/* =========================================================================
+   Chương 3: gói tin 0/1 cuối cùng bay lên ăng-ten
+   Chương 4: góc nhìn camera định vị ở chuyến 72 (chấm mốc tắt dần → rung → im lặng)
+   ========================================================================= */
+.game-bits {
+  position: absolute;
+  left: 50%;
+  bottom: 16%;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: rgba(5, 8, 18, 0.75);
+  color: var(--signal);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  transform: translateX(-50%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.game-stage.is-won .game-bits {
+  opacity: 1;
+}
+
+@keyframes bits-up {
+  0% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+  100% { opacity: 0; transform: translate(10%, -260%) scale(0.35); }
+}
+
+.game-stage.is-sending .game-bits {
+  animation: bits-up 1.2s cubic-bezier(0.5, 0, 0.6, 1) both;
+}
+
+.game-stage.is-sent .game-bits {
+  opacity: 0;
+}
+
+.game-packet[hidden] {
+  display: none;
+}
+
+.game-navcam {
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(172deg, rgba(180, 83, 9, 0.18) 0 14px, rgba(120, 53, 15, 0.12) 14px 30px),
+    linear-gradient(180deg, #7c4a1e, #5b3412);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.navcam-label {
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  color: #d1fae5;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.navcam-dot {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  margin: -6px 0 0 -6px;
+  border: 2px solid var(--safe);
+  border-radius: 50%;
+  background: rgba(16, 185, 129, 0.35);
+}
+
+@keyframes navcam-show {
+  0% { opacity: 0; visibility: visible; }
+  8%, 82% { opacity: 1; visibility: visible; }
+  100% { opacity: 0; visibility: hidden; }
+}
+
+@keyframes navcam-dot-off {
+  to { opacity: 0; transform: scale(0.3); }
+}
+
+@keyframes navcam-shake {
+  0%, 100% { transform: none; }
+  20% { transform: translate(-6px, 3px) rotate(-1deg); }
+  40% { transform: translate(5px, -4px) rotate(1deg); }
+  60% { transform: translate(-4px, 2px); }
+  80% { transform: translate(3px, -2px); }
+}
+
+.game-stage.is-crash .game-navcam {
+  animation: navcam-show 3.4s ease both, navcam-shake 0.5s ease 2.3s both;
+}
+
+.game-stage.is-crash .navcam-dot {
+  animation: navcam-dot-off 0.3s ease calc(0.5s + var(--i) * 0.2s) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .game-stage.is-sending .game-bits,
+  .game-stage.is-crash .game-navcam,
+  .game-stage.is-crash .navcam-dot {
+    animation: none !important;
+  }
+}
+
+/* Lá thư thứ năm: một cột (không dùng lưới 2 cột của .chapter) */
+.chapter.letter5 {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 1024px) {
+  .chapter.letter5 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Điện thoại: chừa chỗ cho nút nổi "Hồ sơ Khoa học" ở cuối cảnh */
+@media (max-width: 767px) {
+  .letter5,
+  .future-view {
+    padding-bottom: 64px;
+  }
 }

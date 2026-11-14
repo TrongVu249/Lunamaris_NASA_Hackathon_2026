@@ -81,8 +81,8 @@ Truy cập: `http://localhost:8000`
 | Chương | Thiết bị & Mã COSPAR | Biến điều khiển Thanh trượt | Công thức Vật lý & Trạng thái Đích |
 | :--- | :--- | :--- | :--- |
 | **01** | **Apollo 11 Eagle & LRRR**<br>`1969-059C` (Mặt Trăng) | Năm quan trắc $Y \in [1969, 2026]$ | $\Delta t = Y - 1969$ năm<br>$\Delta d = \Delta t \times 3.8\text{ cm/năm}$ $\rightarrow$ **`+216.6 cm (2.17 m)`** tại năm 2026. Khứ hồi laser: `2.56 s`. |
-| **02** | **Surveyor 3 & Apollo 12**<br>`1967-035A` / `1969-099C` | Khoảng cách đáp $D \in [50, 2500]\text{ m}$ | Tại mốc lịch sử **`155 m`** (LROC; tài liệu 1969 ghi `160–180 m`): Bão cát siêu thanh $v = 300\text{–}2000\text{ m/s}$ làm rỗ kính và nhuộm nâu sơn trắng (NASA SP-284). |
-| **03** | **Opportunity Rover (MER-B)**<br>`2003-032A` (Sao Hỏa) | Độ mờ khí quyển $\tau \in [1.0, 10.8]$ | Nội suy tuyến tính từng đoạn qua 5 mốc JPL `[(1.0, 700), (3.5, 280), (5.5, 120), (8.5, 45), (10.8, 22)]` $\rightarrow$ **`22 Wh/sol`** tại Sol 5111 ($\tau = 10.8$). |
+| **02** | **Surveyor 3 & Apollo 12**<br>`1967-035A` / `1969-099C` | Khoảng cách đáp $D \in [50, 2500]\text{ m}$ | Tại mốc lịch sử **`160 m`** (ảnh LRO 2011: 538 ft ≈ 164 m; NASA SVS ghi 160 m): Bão cát siêu thanh $v = 300\text{–}2000\text{ m/s}$ làm rỗ kính và nhuộm nâu sơn trắng (NASA SP-284). |
+| **03** | **Opportunity Rover (MER-B)**<br>`2003-032A` (Sao Hỏa) | Độ mờ khí quyển $\tau \in [0.6, 10.8]$ | Nội suy tuyến tính từng đoạn qua 5 mốc JPL `[(0.6, 645), (3.5, 280), (5.5, 120), (8.5, 45), (10.8, 22)]` (hai đầu là số đo thật ngày 2/6 và 10/6/2018) $\rightarrow$ **`22 Wh/sol`** tại Sol 5111 ($\tau = 10.8$). |
 | **04** | **Ingenuity Mars Helicopter**<br>`2020-052B` (Sao Hỏa) | Chuyến bay $F \in [1, 72]$ | Quay đồng trục `2,537 RPM` ($F < 72$). Tại **`Flight 72`** (Sol 1036): Quãng đường **`17.0 km`**, `128.8 min`, gãy đầu cánh quạt và tái sinh thành trạm thời tiết tĩnh `~20 năm`. |
 
 ---
