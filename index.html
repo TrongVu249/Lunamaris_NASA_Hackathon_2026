@@ -8,6 +8,12 @@
   <meta name="description"
     content="Interactive Telemetry & Dual-Voice Storytelling about NASA's Forgotten Hardware on the Moon and Mars — Built for the 2026 NASA International Space Apps Challenge." />
 
+  <!-- Logo chính thức của nhóm LUNAMARIS: icon thẻ trình duyệt + icon ở header (assets/) -->
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/favicon-192.png" />
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+
   <!-- Google Fonts CDN: Fira Sans (700/900), Overpass (400/600), JetBrains Mono (400/700) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -29,17 +35,18 @@
        ===================================================================== -->
   <header class="sticky top-0 z-50 bg-[#151622]/90 backdrop-blur-md border-b border-white/12">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
-      <!-- Left: Project Brand & Pulsing Beacon (Custom SVG Vector — Zero NASA Logos) -->
-      <a href="#hero-top" class="flex items-center gap-2.5 group">
-        <div
-          class="relative flex items-center justify-center w-8 h-8 rounded-lg bg-[#1B2B85] border border-[#E7F434]/40">
-          <svg viewBox="0 0 24 24" class="w-5 h-5 text-[#E7F434]" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="3" fill="#E7F434" />
-            <path d="M4.93 4.93a10 10 0 0 1 14.14 0" stroke="#38BDF8" />
-            <path d="M7.76 7.76a6 6 0 0 1 8.48 0" stroke="#E7F434" />
-            <path d="M19.07 19.07a10 10 0 0 1-14.14 0" stroke="#F97316" />
-          </svg>
-        </div>
+      <!-- Left: Project Brand (logo chính thức của nhóm — Zero NASA Logos).
+           Logo kiêm nút "về đầu trang": bấm vào sẽ cuộn về #hero-top. -->
+      <a href="#hero-top" id="brand-home-btn" class="flex items-center gap-2.5 group"
+         title="Về đầu trang / Back to top"
+         aria-label="LUNAMARIS — về đầu trang / back to top">
+        <img
+          src="assets/lunamaris-logo.png"
+          alt="LUNAMARIS"
+          width="40"
+          height="40"
+          class="w-10 h-10 sm:w-11 sm:h-11 rounded-full shrink-0 bg-[#1B2B85] ring-1 ring-white/10 transition group-hover:ring-[#E7F434]/70"
+        />
         <div class="flex items-center gap-2">
           <span
             class="font-heading text-lg sm:text-xl font-black tracking-wider text-white group-hover:text-[#E7F434] transition">
