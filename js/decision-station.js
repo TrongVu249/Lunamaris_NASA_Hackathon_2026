@@ -10,7 +10,7 @@ window.RelicDecisionStation = (function () {
     0: 76,      // Heritage Artifact (0 m)
     50: 158,    // < 75 m / 225 m Red Zone
     75: 190,    // 75 m Apollo 11 Artifact Boundary
-    155: 295,   // 155 m Apollo 12 Historical Touchdown
+    180: 295,   // 180 m Apollo 12 Historical Touchdown
     225: 365,   // 225 m Apollo 17 Artifact Boundary
     500: 475,   // 500 m (0.5 km) Impact Site Rule
     2000: 648   // >= 2,000 m (2.0 km) Artemis Heritage Safe Buffer
@@ -25,7 +25,7 @@ window.RelicDecisionStation = (function () {
     // In 1/6g vacuum, plume ejecta travels ~1.8 km horizontally before hitting the ground
     let plumeEndX = 76;
     if (dist === 50) plumeEndX = 48; // Direct blast sweeps past artifact
-    else if (dist === 155) plumeEndX = 68; // Sandblasts artifact directly
+    else if (dist === 180) plumeEndX = 68; // Sandblasts artifact directly
     else if (dist === 500) plumeEndX = 74; // Fine dust settles on LRRR
     else if (dist >= 2000) plumeEndX = 240; // Falls harmlessly to ground before 225m/75m boundary!
 
@@ -59,8 +59,8 @@ window.RelicDecisionStation = (function () {
         <text x="380" y="22" text-anchor="middle" fill="#94A3B8" font-family="JetBrains Mono, monospace" font-size="10" font-weight="700">
           ${
             lang === "vi"
-              ? "SƠ ĐỒ MẶT CẮT ĐẠN ĐẠO CHÂN KHÔNG (THANG ĐO BẬC THANG: 0 m → 75 m → 155 m → 225 m → 500 m → 2.000 m)"
-              : "VACUUM BALLISTICS CROSS-SECTION (STEPPED SCALE: 0 m → 75 m → 155 m → 225 m → 500 m → 2,000 m)"
+              ? "SƠ ĐỒ MẶT CẮT ĐẠN ĐẠO CHÂN KHÔNG (THANG ĐO BẬC THANG: 0 m → 75 m → 180 m → 225 m → 500 m → 2.000 m)"
+              : "VACUUM BALLISTICS CROSS-SECTION (STEPPED SCALE: 0 m → 75 m → 180 m → 225 m → 500 m → 2,000 m)"
           }
         </text>
 
@@ -137,7 +137,7 @@ window.RelicDecisionStation = (function () {
             <text x="0" y="13" text-anchor="middle" fill="#94A3B8" font-size="7.5">Apollo 11 Ring</text>
           </g>
           <g transform="translate(295, 224)">
-            <text x="0" y="0" text-anchor="middle" fill="#F97316" font-weight="700">155 m</text>
+            <text x="0" y="0" text-anchor="middle" fill="#F97316" font-weight="700">180 m</text>
             <text x="0" y="13" text-anchor="middle" fill="#94A3B8" font-size="7.5">Apollo 12 (1969)</text>
           </g>
           <g transform="translate(365, 224)">

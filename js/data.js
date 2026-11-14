@@ -195,7 +195,7 @@ window.LUNAMARIS_DATA = {
       "name_en": "Surveyor 3 & Apollo 12 (LM Intrepid)",
       "name_vi": "Tàu Đổ bộ Surveyor 3 & Apollo 12 (LM Intrepid)",
       "cospar_id": "1967-035A (Surveyor 3) / 1969-099C (Intrepid)",
-      "location_name": "Oceanus Procellarum (Ocean of Storms — 3.01° S, 23.42° W)",
+      "location_name": "Oceanus Procellarum (Ocean of Storms — 3° S, 23.41° W)",
       "functionality_status_en": "INACTIVE LANDER (Camera & Scoop Returned to Earth in 1969)",
       "functionality_status_vi": "ĐÃ NGỪNG HOẠT ĐỘNG (Camera & Gầu xúc được mang về Trái Đất năm 1969)",
       "kid_fact_en": "This very camera flew home aboard Apollo 12 in 1969 — the only lunar camera ever retired to a museum on Earth (the Smithsonian).",
@@ -207,18 +207,18 @@ window.LUNAMARIS_DATA = {
       "narrative_voice": {
         "epistemic_label_en": "NARRATIVE INTERPRETATION GROUNDED IN TELEMETRY",
         "epistemic_label_vi": "DIỄN GIẢI VĂN HỌC DỰA TRÊN DỮ LIỆU ĐO XA",
-        "letter_en": "For thirty-one months, I sat alone inside a shallow crater on the Ocean of Storms. Between April and May 1967, my mechanical scoop dug trenches into the gray regolith, while my television camera transmitted 6,315 images to prove the Moon would not swallow future astronauts in dust. When the lunar night froze my batteries, I thought my watch had ended. Then, on November 19, 1969, the silent vacuum roared. Lunar Module Intrepid descended just 155 meters from my rim. Its rocket plume blasted hyper-velocity dust across my white paint, turning my shell tan and pitting my mirror. Hours later, two silver figures walked down the slope. Pete Conrad and Alan Bean gently detached my camera—taking my eyes back to Earth, while my three legs guard this crater forever.",
-        "letter_vi": "Suốt ba mươi mốt tháng ròng, tôi ngồi đơn độc bên sườn một miệng hố nông giữa Đại dương Bão tố. Từ tháng 4 đến tháng 5 năm 1967, chiếc gầu xúc cơ học của tôi đã đào những rãnh đất xám, còn camera truyền hình gửi về 6.315 bức ảnh để chứng minh Mặt Trăng sẽ không nhấn chìm các phi hành gia tương lai trong bụi lún. Khi đêm trường Mặt Trăng đóng băng ắc-quy, tôi ngỡ ca trực của mình đã khép lại. Rồi ngày 19/11/1969, khoảng chân không câm lặng bỗng gầm vang. Tàu đổ bộ Intrepid đáp xuống chỉ cách mép hố của tôi 155 mét. Luồng phụt tên lửa bắn những hạt bụi siêu tốc vào lớp sơn trắng, nhuộm vỏ tôi sang màu nâu rám và làm rỗ gương phản xạ. Vài giờ sau, hai bóng người ánh bạc bước xuống dốc. Pete Conrad và Alan Bean nhẹ nhàng tháo chiếc camera—mang đôi mắt tôi về lại Trái Đất, để ba chân đáp của tôi canh giữ miệng hố này mãi mãi."
+        "letter_en": "For thirty-one months, I sat alone inside a shallow crater on the Ocean of Storms. Between April and May 1967, my mechanical scoop dug trenches into the gray regolith, while my television camera transmitted 6,326 images to prove the Moon would not swallow future astronauts in dust. When the lunar night froze my batteries, I thought my watch had ended. Then, on November 18, 1969, the silent vacuum roared. Lunar Module Intrepid descended just 180 meters from my rim. Its rocket plume blasted hyper-velocity dust across my white paint, turning my shell tan and pitting my mirror. The next day, two silver figures walked down the slope. Pete Conrad and Alan Bean gently detached my camera—taking my eyes back to Earth, while my three legs guard this crater forever.",
+        "letter_vi": "Suốt ba mươi mốt tháng ròng, tôi ngồi đơn độc bên sườn một miệng hố nông giữa Đại dương Bão tố. Từ tháng 4 đến tháng 5 năm 1967, chiếc gầu xúc cơ học của tôi đã đào những rãnh đất xám, còn camera truyền hình gửi về 6.326 bức ảnh để chứng minh Mặt Trăng sẽ không nhấn chìm các phi hành gia tương lai trong bụi lún. Khi đêm trường Mặt Trăng đóng băng ắc-quy, tôi ngỡ ca trực của mình đã khép lại. Rồi ngày 18/11/1969, khoảng chân không câm lặng bỗng gầm vang. Tàu đổ bộ Intrepid đáp xuống chỉ cách mép hố của tôi 180 mét. Luồng phụt tên lửa bắn những hạt bụi siêu tốc vào lớp sơn trắng, nhuộm vỏ tôi sang màu nâu rám và làm rỗ gương phản xạ. Hôm sau, hai bóng người ánh bạc bước xuống dốc. Pete Conrad và Alan Bean nhẹ nhàng tháo chiếc camera—mang đôi mắt tôi về lại Trái Đất, để ba chân đáp của tôi canh giữ miệng hố này mãi mãi."
       },
       "archaeologist_dossier": {
         "epistemic_label_en": "VERIFIED SCIENTIFIC & LEGAL RECORD",
         "epistemic_label_vi": "HỒ SƠ KHOA HỌC & PHÁP LÝ ĐÃ KIỂM CHỨNG",
-        "how_it_operated_en": "Landed on April 20, 1967, Surveyor 3 used an electric surface-sampler scoop and a 600-line television camera to measure lunar soil bearing strength, directly validating the landing gear design for Apollo Lunar Modules. On November 19, 1969, Apollo 12 astronauts Charles 'Pete' Conrad and Alan Bean executed the first precision pinpoint landing, touching down ~155 meters away. During their second EVA, the crew retrieved ~10 kg of Surveyor 3 hardware—including its TV camera, scoop, and aluminum tubing—after 950 Earth days of lunar exposure.",
-        "how_it_operated_vi": "Đáp xuống ngày 20/04/1967, Surveyor 3 dùng gầu xúc lấy mẫu bề mặt và camera truyền hình 600 dòng quét để đo sức chịu tải của đất Mặt Trăng, xác nhận trực tiếp thiết kế chân đáp cho tàu Apollo. Ngày 19/11/1969, phi hành đoàn Apollo 12 (Pete Conrad và Alan Bean) thực hiện cú hạ cánh chính xác đầu tiên, đáp cách đó ~155 mét. Trong chuyến đi bộ thứ hai (EVA 2), họ đã tháo dỡ và mang về Trái Đất ~10 kg bộ phận của Surveyor 3 (gồm camera, gầu xúc và ống nhôm) sau 950 ngày phơi nhiễm môi trường Mặt Trăng.",
+        "how_it_operated_en": "Landed on April 20, 1967, Surveyor 3 used an electric surface-sampler scoop and a 600-line television camera to measure lunar soil bearing strength, directly validating the landing gear design for Apollo Lunar Modules. On November 18, 1969, Apollo 12 astronauts Charles 'Pete' Conrad and Alan Bean executed the first precision pinpoint landing, touching down ~180 meters away. During their surface EVAs (from November 19), the crew retrieved ~10 kg of Surveyor 3 hardware—including its TV camera, scoop, and aluminum tubing—after 31 months of lunar exposure.",
+        "how_it_operated_vi": "Đáp xuống ngày 20/04/1967, Surveyor 3 dùng gầu xúc lấy mẫu bề mặt và camera truyền hình 600 dòng quét để đo sức chịu tải của đất Mặt Trăng, xác nhận trực tiếp thiết kế chân đáp cho tàu Apollo. Ngày 18/11/1969, phi hành đoàn Apollo 12 (Pete Conrad và Alan Bean) thực hiện cú hạ cánh chính xác đầu tiên, đáp cách đó ~180 mét. Trong các chuyến đi bộ trên bề mặt sau đó (từ 19/11), họ đã tháo dỡ và mang về Trái Đất ~10 kg bộ phận của Surveyor 3 (gồm camera, gầu xúc và ống nhôm) sau 31 tháng phơi nhiễm môi trường Mặt Trăng.",
         "conservation_law_en": "Post-flight laboratory examination documented in NASA Special Publication SP-284 (1972) revealed that Apollo 12's descent engine blast accelerated lunar dust grains into a hyper-velocity spray that sandblasted, micro-pitted, and discolored Surveyor 3's surfaces. This exact discovery prompted NASA's 2011 Recommendations to establish a 2.0 km approach and landing exclusion radius around soft-landing heritage sites (and 0.5 km for hard impact sites).",
         "conservation_law_vi": "Phân tích hậu kiểm trong ấn phẩm đặc biệt NASA SP-284 (1972) phát hiện luồng phụt động cơ hạ cánh của Apollo 12 đã gia tốc các hạt bụi Mặt Trăng thành luồng bắn cát siêu tốc, làm rỗ vi mô và biến đổi màu sắc bề mặt Surveyor 3. Phát hiện lịch sử này chính là cơ sở khoa học để Khuyến nghị năm 2011 của NASA thiết lập bán kính vùng cấm tiếp cận hạ cánh 2,0 km quanh các bãi đáp di sản (và 0,5 km cho các điểm va chạm cứng).",
-        "discrepancy_note_en": "Historical vs. Satellite Measurement Note: Modern high-resolution Lunar Reconnaissance Orbiter Camera (LROC) imagery measures the center-to-center distance between LM Intrepid and Surveyor 3 at ~155 meters, whereas 1969 preliminary NASA/NSSDCA logs estimated 160 to 180 meters (520–600 feet).",
-        "discrepancy_note_vi": "Ghi chú Đối chiếu Số liệu: Ảnh chụp độ phân giải cao từ vệ tinh LROC hiện đại đo khoảng cách tâm-tới-tâm giữa LM Intrepid và Surveyor 3 là ~155 mét, trong khi các báo cáo sơ bộ năm 1969 trên cổng NASA/NSSDCA ước tính từ 160 đến 180 mét (520–600 feet).",
+        "discrepancy_note_en": "Source Alignment Note (audited 2026-11-14 against NASA's Surveyor 3 mission page): Apollo 12's LM Intrepid touched down approximately 197 yards (180 meters) from Surveyor 3 — this site uses 180 m as the historical separation. Conrad & Bean walked over to the lander on November 19, 1969. Earlier drafts of this site quoted 155 m and a Nov 19 landing; both were corrected to match the source.",
+        "discrepancy_note_vi": "Ghi chú Đối chiếu Nguồn (kiểm toán ngày 14/11/2026 với trang sứ mệnh Surveyor 3 của NASA): tàu Intrepid của Apollo 12 đáp cách Surveyor 3 khoảng 197 yard (180 mét) — website dùng 180 m làm cự ly lịch sử. Conrad và Bean đi bộ tới tàu vào ngày 19/11/1969. Các bản thảo trước từng ghi 155 m và ngày đáp 19/11; cả hai đã được sửa theo nguồn.",
         "source_links": [
           {
             "label": "NASA SP-284 (1972): Analysis of Surveyor 3 Material Returned by Apollo 12",
@@ -237,7 +237,7 @@ window.LUNAMARIS_DATA = {
         "min_val": 50,
         "max_val": 2500,
         "step": 5,
-        "default_val": 155,
+        "default_val": 180,
         "stops": [
           {
             "value": 2000,
@@ -254,11 +254,11 @@ window.LUNAMARIS_DATA = {
             "desc_vi": "0,5 km chỉ đủ cho điểm va chạm cứng. Động cơ tên lửa hạ cánh ở cự ly này vẫn thổi bụi mịn phủ mờ gương quang học."
           },
           {
-            "value": 155,
-            "label_en": "155 m: 1969 Apollo 12 Touchdown (LROC)",
-            "label_vi": "155 m: Cự ly Đáp Apollo 12 1969 (LROC)",
-            "desc_en": "Historical Apollo 12 distance (LROC verified; 1969 docs noted 160–180 m). High-velocity regolith spray pits camera glass and turns white paint tan (NASA SP-284).",
-            "desc_vi": "Khoảng cách thực tế của Apollo 12 (theo LROC; tài liệu 1969 ghi 160–180 m). Bão cát siêu tốc bắn rỗ kính camera và nhuộm nâu lớp sơn trắng (NASA SP-284)."
+            "value": 180,
+            "label_en": "180 m: 1969 Apollo 12 Touchdown",
+            "label_vi": "180 m: Cự ly Đáp Apollo 12 1969",
+            "desc_en": "Historical Apollo 12 distance per NASA's Surveyor 3 mission page (~197 yards / 180 m). High-velocity regolith spray pits camera glass and turns white paint tan (NASA SP-284).",
+            "desc_vi": "Khoảng cách thực tế của Apollo 12 theo trang sứ mệnh Surveyor 3 của NASA (~197 yard / 180 m). Bão cát siêu tốc bắn rỗ kính camera và nhuộm nâu lớp sơn trắng (NASA SP-284)."
           }
         ]
       },
@@ -270,8 +270,8 @@ window.LUNAMARIS_DATA = {
         "steps": [
           {
             "svg_value": 2000,
-            "text_en": "In April 1967, Surveyor 3 touched down inside a shallow crater on the Ocean of Storms. Its scoop dug trenches and its camera sent home 6,315 pictures: the Moon will not swallow astronauts in dust.",
-            "text_vi": "Tháng 4/1967, Surveyor 3 đáp xuống một miệng hố nông ở Đại dương Bão tố. Gầu xúc của nó đào rãnh, còn camera gửi về 6.315 bức ảnh: Mặt Trăng sẽ không nuốt phi hành gia trong bụi."
+            "text_en": "In April 1967, Surveyor 3 touched down inside a shallow crater on the Ocean of Storms. Its scoop dug trenches and its camera sent home 6,326 pictures: the Moon will not swallow astronauts in dust.",
+            "text_vi": "Tháng 4/1967, Surveyor 3 đáp xuống một miệng hố nông ở Đại dương Bão tố. Gầu xúc của nó đào rãnh, còn camera gửi về 6.326 bức ảnh: Mặt Trăng sẽ không nuốt phi hành gia trong bụi."
           },
           {
             "svg_value": 500,
@@ -279,9 +279,9 @@ window.LUNAMARIS_DATA = {
             "text_vi": "Hai năm rưỡi sau, tàu Intrepid của Apollo 12 hạ cánh gần đó. Câu hỏi của tập này: đáp cách bao xa thì thật sự an toàn?"
           },
           {
-            "svg_value": 155,
-            "text_en": "The real 1969 answer: 155 meters. Intrepid's rocket plume blasted super-fast dust into Surveyor 3, tanning its white paint and pitting its camera glass.",
-            "text_vi": "Câu trả lời thật của năm 1969: 155 mét. Luồng phụt tên lửa của Intrepid bắn bụi siêu tốc vào Surveyor 3, nhuộm sơn trắng thành nâu rám và rỗ kính camera."
+            "svg_value": 180,
+            "text_en": "The real 1969 answer: 180 meters. Intrepid's rocket plume blasted super-fast dust into Surveyor 3, tanning its white paint and pitting its camera glass.",
+            "text_vi": "Câu trả lời thật của năm 1969: 180 mét. Luồng phụt tên lửa của Intrepid bắn bụi siêu tốc vào Surveyor 3, nhuộm sơn trắng thành nâu rám và rỗ kính camera."
           },
           {
             "svg_value": 2000,
@@ -311,17 +311,17 @@ window.LUNAMARIS_DATA = {
           "question_vi": "Một tàu mới phải đáp cách bao xa để luồng bụi của nó không làm xước Surveyor 3?",
           "options_en": [
             "At least 2,000 m (2 km)",
-            "155 m is close enough",
+            "180 m is close enough",
             "Any distance — the Moon has no air to carry dust"
           ],
           "options_vi": [
             "Ít nhất 2.000 m (2 km)",
-            "155 m là đủ gần",
+            "180 m là đủ gần",
             "Xa nào cũng được — Mặt Trăng không có không khí để mang bụi"
           ],
           "answer_index": 0,
-          "reveal_en": "NASA's 2011 rule: ≥ 2.0 km. At 155 m — the real 1969 distance! — supersonic dust tan-painted Surveyor 3. Slide the distance in the engineer's notebook and watch the paint change colour.",
-          "reveal_vi": "Chuẩn NASA 2011: ≥ 2,0 km. Ở 155 m — đúng cự ly năm 1969! — bụi siêu tốc đã nhuộm rám sơn Surveyor 3. Kéo khoảng cách trong sổ tay kỹ sư để xem lớp sơn đổi màu."
+          "reveal_en": "NASA's 2011 rule: ≥ 2.0 km. At 180 m — the real 1969 distance! — supersonic dust tan-painted Surveyor 3. Slide the distance in the engineer's notebook and watch the paint change colour.",
+          "reveal_vi": "Chuẩn NASA 2011: ≥ 2,0 km. Ở 180 m — đúng cự ly năm 1969! — bụi siêu tốc đã nhuộm rám sơn Surveyor 3. Kéo khoảng cách trong sổ tay kỹ sư để xem lớp sơn đổi màu."
         }
       }
     },
@@ -350,8 +350,8 @@ window.LUNAMARIS_DATA = {
       "archaeologist_dossier": {
         "epistemic_label_en": "VERIFIED SCIENTIFIC & LEGAL RECORD",
         "epistemic_label_vi": "HỒ SƠ KHOA HỌC & PHÁP LÝ ĐÃ KIỂM CHỨNG",
-        "how_it_operated_en": "Landing on January 25, 2004, Opportunity was designed for a 90-sol mission and a 1 km drive. Powered by gallium-arsenide triple-junction solar arrays, it operated for 5,111 sols (55 times its design life) and drove 45.16 km (28.06 miles). Using its Panoramic Camera (Pancam) and Mössbauer/APXS spectrometers, Opportunity discovered spherical hematite concretions ('blueberries') and clay minerals, proving ancient Mars once hosted habitable, neutral-pH liquid water.",
-        "how_it_operated_vi": "Đáp xuống ngày 25/01/2004, Opportunity chỉ được thiết kế cho sứ mệnh 90 sol và quãng đường 1 km. Nhờ hệ thống pin mặt trời ba lớp tiếp giáp gallium-arsenide, xe đã hoạt động suốt 5.111 sol (gấp 55 lần tuổi thọ thiết kế) và đi được 45,16 km. Bằng camera toàn cảnh Pancam và các máy quang phổ trên cánh tay robot, Opportunity đã phát hiện các kết hạch hematit hình cầu và khoáng vật sét, chứng minh Sao Hỏa cổ đại từng có nước lỏng ấm áp.",
+        "how_it_operated_en": "Landing on January 24, 2004, Opportunity was designed for a 90-sol mission and a 1 km drive. Powered by gallium-arsenide triple-junction solar arrays, it operated for 5,111 sols (55 times its design life) and drove 45.16 km (28.06 miles). Using its Panoramic Camera (Pancam) and Mössbauer/APXS spectrometers, Opportunity discovered spherical hematite concretions ('blueberries') and clay minerals, proving ancient Mars once hosted habitable, neutral-pH liquid water.",
+        "how_it_operated_vi": "Đáp xuống ngày 24/01/2004, Opportunity chỉ được thiết kế cho sứ mệnh 90 sol và quãng đường 1 km. Nhờ hệ thống pin mặt trời ba lớp tiếp giáp gallium-arsenide, xe đã hoạt động suốt 5.111 sol (gấp 55 lần tuổi thọ thiết kế) và đi được 45,16 km. Bằng camera toàn cảnh Pancam và các máy quang phổ trên cánh tay robot, Opportunity đã phát hiện các kết hạch hematit hình cầu và khoáng vật sét, chứng minh Sao Hỏa cổ đại từng có nước lỏng ấm áp.",
         "conservation_law_en": "During the June 2018 global dust storm, atmospheric optical depth (Tau, τ) reached a historic peak of 10.8 (compared to ~5.5 in the 2007 storm). Solar energy dropped to ~22 Wh on Sol 5109–5111 (June 10, 2018), triggering a low-power fault and mission clock loss. After sending over 1,000 recovery commands, NASA officially declared the mission complete on February 13, 2019.",
         "conservation_law_vi": "Trong cơn bão bụi toàn cầu tháng 6/2018, độ mờ quang học khí quyển (Tau, τ) đạt đỉnh kỷ lục 10,8 (so với mức ~5,5 trong cơn bão năm 2007). Năng lượng mặt trời tụt xuống ~22 Wh trong đợt liên lạc cuối cùng từ Sol 5109–5111 (kết thúc ngày 10/06/2018), kích hoạt chế độ ngắt nguồn khẩn cấp. Sau hơn 1.000 lệnh gọi đánh thức không hồi âm, NASA chính thức tuyên bố kết thúc sứ mệnh vào ngày 13/02/2019.",
         "discrepancy_note_en": "Fact-Checking the Viral Quote: Opportunity did NOT transmit the text 'My battery is low and it's getting dark.' That poetic phrase was a metaphorical summary tweeted by science reporter Jacob Margolis (KPCC/LAist) on Feb 13, 2019, translating JPL's raw engineering telemetry (22 Wh battery charge & τ = 10.8 atmospheric opacity).",
@@ -603,8 +603,8 @@ window.LUNAMARIS_DATA = {
   "decision_station": {
     "title_en": "THE ARTEMIS LANDING SITE DECISION STATION",
     "title_vi": "TRẠM QUYẾT ĐỊNH BÃI ĐÁP SỨ MỆNH ARTEMIS",
-    "physics_callout_en": "Vacuum Ballistics Physics: Why does landing 155 meters away still damage a spacecraft? Because the Moon has NO atmosphere to slow down dust and 1/6th Earth's gravity. Rocket exhaust plumes accelerate jagged lunar regolith grains to 300–2,000 m/s (faster than a rifle bullet), creating a supersonic sandblasting spray across kilometers!",
-    "physics_callout_vi": "Vật lý Đạn đạo trong Chân không: Tại sao đáp cách xa 155 mét vẫn làm hỏng tàu vũ trụ? Vì Mặt Trăng KHÔNG có không khí cản bụi lại và trọng lực chỉ bằng 1/6 Trái Đất. Luồng phụt tên lửa gia tốc các hạt bụi sắc nhọn tới vận tốc 300–2.000 m/s (nhanh hơn đạn súng trường), tạo ra cơn bão bắn cát siêu thanh văng xa hàng kilomet!",
+    "physics_callout_en": "Vacuum Ballistics Physics: Why does landing 180 meters away still damage a spacecraft? Because the Moon has NO atmosphere to slow down dust and 1/6th Earth's gravity. Rocket exhaust plumes accelerate jagged lunar regolith grains to 300–2,000 m/s (faster than a rifle bullet), creating a supersonic sandblasting spray across kilometers!",
+    "physics_callout_vi": "Vật lý Đạn đạo trong Chân không: Tại sao đáp cách xa 180 mét vẫn làm hỏng tàu vũ trụ? Vì Mặt Trăng KHÔNG có không khí cản bụi lại và trọng lực chỉ bằng 1/6 Trái Đất. Luồng phụt tên lửa gia tốc các hạt bụi sắc nhọn tới vận tốc 300–2.000 m/s (nhanh hơn đạn súng trường), tạo ra cơn bão bắn cát siêu thanh văng xa hàng kilomet!",
     "zones": [
       {
         "id": "zone-red",
@@ -621,15 +621,15 @@ window.LUNAMARIS_DATA = {
       },
       {
         "id": "zone-orange",
-        "distance_label": "155 m (Apollo 12 Historical)",
-        "distance_num": 155,
+        "distance_label": "180 m (Apollo 12 Historical)",
+        "distance_num": 180,
         "status_badge_en": "WARNING — SUPERSONIC PLUME SANDBLASTING",
         "status_badge_vi": "CẢNH BÁO CAM — HIỆU ỨNG BÃO CÁT BẮN RỖ",
         "color_hex": "#F97316",
         "impact_en": "Replicates Apollo 12 LM Intrepid landing near Surveyor 3. Hyper-velocity dust spray micro-pits optical glass and turns white thermal paint tan.",
         "impact_vi": "Tái hiện đúng khoảng cách tàu Intrepid (Apollo 12) đáp cạnh Surveyor 3 năm 1969. Luồng bụi siêu tốc bắn rỗ kính quang học và làm ố nâu lớp sơn cách nhiệt.",
-        "law_citation_en": "Proven empirically by post-flight laboratory analysis in NASA Special Publication SP-284 (1972); separation measured at 155 m via LROC imagery.",
-        "law_citation_vi": "Được chứng minh thực nghiệm qua phân tích phòng thí nghiệm trong báo cáo NASA SP-284 (1972); khoảng cách 155 m đo bằng vệ tinh LROC.",
+        "law_citation_en": "Proven empirically by post-flight laboratory analysis in NASA Special Publication SP-284 (1972); separation stated at ~180 m (197 yards) on NASA's Surveyor 3 mission page.",
+        "law_citation_vi": "Được chứng minh thực nghiệm qua phân tích phòng thí nghiệm trong báo cáo NASA SP-284 (1972); khoảng cách ~180 m (197 yard) theo trang sứ mệnh Surveyor 3 của NASA.",
         "unlocks_badge": false
       },
       {
@@ -798,6 +798,14 @@ window.UI_I18N = {
     help_got: "Got it!",
     slider_hint: "Drag to explore freely. Scrolling the story on the right snaps the number back to each beat.",
     laser_hint: "Press the button: light races to the Moon and back in 2.56 seconds.",
+    /* [MOBILE 2026-11-14] Phone mode: beat-by-beat cards + sticky picture stage */
+    prev_btn: "← Previous beat",
+    next_btn: "Next beat →",
+    finish_btn: "Read the letter & answer →",
+    slider_hint_mobile: "Drag to explore freely. Tap “Next beat” to keep reading the story.",
+    help_m1: "Tap “Next beat”: the picture and the three numbers change with every beat.",
+    help_m2: "Drag the slider right under the picture to try things yourself — everything reacts at once.",
+    help_m3: "Tap the pulsing dot and the bright buttons on the picture to collect discovery stickers.",
     footer_sources_title: "VERIFIED NASA OPEN DATA & LEGAL ARCHIVES",
     footer_si_title: "SUPER INTELLIGENCE (SI) DISCLOSURE — SPACE APPS 2026",
     footer_si_btn: "Open Full SI Disclosure Modal",
@@ -940,6 +948,14 @@ window.UI_I18N = {
     help_got: "Đã hiểu!",
     slider_hint: "Kéo để tự do khám phá. Cuộn truyện bên phải sẽ đưa số về theo từng nhịp.",
     laser_hint: "Bấm nút: ánh sáng sẽ chạy khứ hồi Mặt Trăng trong 2,56 giây.",
+    /* [MOBILE 2026-11-14] Chế độ điện thoại: thẻ theo nhịp + khung hình dính */
+    prev_btn: "← Nhịp trước",
+    next_btn: "Nhịp sau →",
+    finish_btn: "Đọc lá thư & trả lời →",
+    slider_hint_mobile: "Kéo để tự do khám phá. Bấm “Nhịp sau” để đọc tiếp câu chuyện.",
+    help_m1: "Bấm “Nhịp sau”: hình vẽ và ba ô số liệu sẽ đổi theo từng nhịp.",
+    help_m2: "Kéo con trượt ngay dưới hình để tự thử — mọi thứ phản ứng ngay lập tức.",
+    help_m3: "Bấm chấm nhấp nháy và các nút sáng trên hình để sưu tầm sticker khám phá.",
     footer_sources_title: "DANH MỤC NGUỒN DỮ LIỆU MỞ NASA & HỒ SƠ PHÁP LÝ",
     footer_si_title: "KHAI BÁO SUPER INTELLIGENCE (SI DISCLOSURE 2026)",
     footer_si_btn: "Mở Cửa sổ Chi tiết SI Disclosure",

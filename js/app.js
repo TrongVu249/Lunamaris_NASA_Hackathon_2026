@@ -53,6 +53,13 @@
     },
     photonCount: 0,
     laserBusy: false,
+    /* [MOBILE 2026-11-14] Chế độ điện thoại (≤900px): mỗi lần chỉ hiện MỘT
+       nhịp truyện, đi tới/lùi bằng nút bấm để khung hình + con trượt luôn nằm
+       trong tầm mắt (bố cục 1 cột cũ đẩy con trượt ra xa hình).
+         beatIndex[id]      = nhịp đang đọc (0..3)
+         mobileRevealed[id] = đã đọc xong 4 nhịp → mở lá thư + sổ tay + câu hỏi */
+    beatIndex: {},
+    mobileRevealed: {},
     /* [KIDS 2026-11-13 • v2] Dải "cách khám phá" chỉ hiện tới khi bấm "Đã hiểu!" */
     helpDismissed: false,
     collectedStamps: {
@@ -79,6 +86,9 @@
     state.sliderValues[art.id] = firstStep ? firstStep.svg_value : art.slider_config.default_val;
     state.quizPicked[art.id] = null;
     state.guessPicked[art.id] = null;
+    /* [MOBILE 2026-11-14] Mỗi hiện vật bắt đầu ở nhịp 1, lá thư còn đóng */
+    state.beatIndex[art.id] = 0;
+    state.mobileRevealed[art.id] = false;
   });
 
   /* ------------------------------------------------------------------------
@@ -109,6 +119,27 @@
   /** [REDESIGN] Tôn trọng cài đặt "giảm chuyển động" của hệ điều hành */
   function prefersReducedMotion() {
     return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  }
+
+  /* ------------------------------------------------------------------------
+     [MOBILE 2026-11-14] PHÁT HIỆN MÀN HÌNH HẸP (≤900px)
+     Trên điện thoại, bố cục 2 cột gộp còn 1 cột nên khung hình + con trượt nằm
+     CÁCH XA các nhịp truyện: học sinh không thể vừa kéo vừa nhìn máy chạy.
+     Cách xử lý: khung hình DÍNH (sticky) ngay dưới header, mỗi lần chỉ hiện một
+     nhịp, có nút "← Nhịp trước / Nhịp sau →". Máy tính (>900px) GIỮ NGUYÊN
+     scrollytelling cũ — mọi hàm mobile đều `return` sớm nếu không phải mobile.
+     ------------------------------------------------------------------------ */
+  const mqMobile = window.matchMedia ? window.matchMedia("(max-width: 900px)") : null;
+
+  function isMobile() {
+    return !!(mqMobile && mqMobile.matches);
+  }
+
+  /** Đo chiều cao header để khung hình sticky không bị header đè lên */
+  function syncStickyOffset() {
+    const header = document.querySelector("header.sticky");
+    const h = header ? Math.ceil(header.getBoundingClientRect().height) : 0;
+    document.documentElement.style.setProperty("--ep-sticky-top", `${h + 6}px`);
   }
 
   /** Tìm mốc preset gần giá trị hiện tại nhất (để hiện câu giải thích số liệu) */
@@ -255,11 +286,15 @@
     state.quizPicked[artifactId] = null;
     // Vào tập phim luôn bắt đầu từ nhịp 1 để câu chuyện đi đúng trình tự
     state.sliderValues[artifactId] = art.episode.steps[0].svg_value;
+    /* [MOBILE 2026-11-14] Điện thoại cũng vào từ nhịp 1, lá thư đóng lại */
+    state.beatIndex[artifactId] = 0;
+    state.mobileRevealed[artifactId] = false;
 
     const hero = document.getElementById("hero-top");
     if (hero) hero.style.display = "none";
 
     renderHeaderProgress();
+    syncStickyOffset();
     renderEpisode();
 
     const root = document.getElementById("episode-root");
@@ -281,6 +316,23 @@
     renderHeaderProgress();
     renderMailbox();
 
+    if (hero) {
+      hero.scrollIntoView({ behavior: prefersReducedMotion() ? "auto" : "smooth", block: "start" });
+    }
+  }
+
+  /* ------------------------------------------------------------------------
+     [HOME-BUTTON 2026-11-14] Bấm logo LUNAMARIS trên header:
+     quay về màn hình hộp thư 4 lá thư mà KHÔNG reset tiến độ.
+     closeEpisode() chỉ đóng tập phim đang mở; tem, sticker, phong bì đã thu
+     đều nằm trong state nên được giữ nguyên khi quay lại.
+     ------------------------------------------------------------------------ */
+  function goHome() {
+    if (state.openArtifactId) {
+      closeEpisode(); // tự cuộn về đầu trang + vẽ lại hộp thư, giữ nguyên state
+      return;
+    }
+    const hero = document.getElementById("hero-top");
     if (hero) {
       hero.scrollIntoView({ behavior: prefersReducedMotion() ? "auto" : "smooth", block: "start" });
     }
@@ -318,7 +370,21 @@
     const quiz = art.episode.quiz;
     const guessHtml = guessBlockHtml(art);
 
-    /* --- Dải dẫn đường 3 bước cho người mới (tự khám phá, 10–18 tuổi) --- */
+    /* --- [MOBILE 2026-11-14] Trạng thái chế độ điện thoại của tập phim này --- */
+    const mobile = isMobile();
+    const revealed = !!state.mobileRevealed[art.id];
+    const totalSteps = steps.length;
+    let beat = Number(state.beatIndex[art.id] || 0);
+    if (!Number.isFinite(beat)) beat = 0;
+    beat = Math.min(Math.max(beat, 0), totalSteps - 1);
+    state.beatIndex[art.id] = beat;
+
+    /* --- Dải dẫn đường 3 bước cho người mới (tự khám phá, 10–18 tuổi) ---
+       [MOBILE] Điện thoại dùng bộ chữ help_m*: nói về NÚT BẤM thay vì "cuộn",
+       vì trên mobile học sinh đi từng nhịp bằng nút chứ không cuộn dài. */
+    const helpLine1 = mobile ? tt.help_m1 : tt.help_step1;
+    const helpLine2 = mobile ? tt.help_m2 : tt.help_step2;
+    const helpLine3 = mobile ? tt.help_m3 : tt.help_step3;
     const helpHtml = state.helpDismissed
       ? ""
       : `
@@ -328,9 +394,9 @@
             <button type="button" id="ep-help-close" class="ep-help-close">${tt.help_got}</button>
           </div>
           <ol class="ep-help-steps">
-            <li>${tt.help_step1}</li>
-            <li>${tt.help_step2}</li>
-            <li>${tt.help_step3}</li>
+            <li>${helpLine1}</li>
+            <li>${helpLine2}</li>
+            <li>${helpLine3}</li>
           </ol>
         </div>
       `;
@@ -350,15 +416,33 @@
           value="${state.sliderValues[art.id]}"
           class="telemetry-slider ${isMoon ? "" : "mars-slider"}"
         />
-        <div class="ep-slider-hint">💡 ${tt.slider_hint}</div>
+        <div class="ep-slider-hint">💡 ${mobile ? tt.slider_hint_mobile : tt.slider_hint}</div>
       </div>
     `;
 
-    /* --- Cột phải: các nhịp truyện --- */
+    /* --- [MOBILE 2026-11-14] Thanh điều khiển nhịp, đặt NGAY dưới con trượt
+           trong khung hình sticky: ngón tay cái với tới được mà mắt vẫn thấy
+           hình + 3 ô số liệu đổi theo. Máy tính: CSS ẩn hoàn toàn thanh này. --- */
+    const beatbarHtml = `
+      <div class="ep-beatbar ${mobile && !revealed ? "" : "is-hidden"}" id="ep-beatbar">
+        <button type="button" id="ep-prev-beat" class="ep-beat-btn">${tt.prev_btn}</button>
+        <span class="ep-beat-count" id="ep-beat-count">${tt.step_word} ${beat + 1} / ${totalSteps}</span>
+        <button type="button" id="ep-next-beat" class="ep-beat-btn is-primary ${
+          beat >= totalSteps - 1 ? "is-finish" : ""
+        }">${beat >= totalSteps - 1 ? tt.finish_btn : tt.next_btn}</button>
+      </div>
+    `;
+
+    /* --- Cột phải: các nhịp truyện ---
+       [MOBILE] Chỉ nhịp đang đọc mới hiện; các nhịp khác `is-hidden` (display:none)
+       để học sinh không phải cuộn qua khoảng trống 30vh như bố cục cũ.
+       Sau khi mở lá thư (revealed) thì hiện lại TẤT CẢ nhịp để đọc ôn. */
     const stepsHtml = steps
       .map((st, i) => {
+        const mobileHidden = mobile && !revealed && i !== beat;
+        const activeCls = mobile ? (i === beat ? "is-active" : "") : i === 0 ? "is-active" : "";
         return `
-          <section class="ep-step ${i === 0 ? "is-active" : ""}" data-step-index="${i}" data-svg-value="${st.svg_value}">
+          <section class="ep-step ${activeCls} ${mobileHidden ? "is-hidden" : ""}" data-step-index="${i}" data-svg-value="${st.svg_value}">
             <div class="ep-step-index">${tt.step_word} ${String(i + 1).padStart(2, "0")} / ${String(steps.length).padStart(2, "0")}</div>
             <p class="ep-step-text">${f(st, "text")}</p>
           </section>
@@ -511,7 +595,7 @@
 
         <!-- Cột hình sticky (trái) + cột truyện (phải) -->
         <div class="episode-shell">
-          <div class="ep-visual">
+          <div class="ep-visual ${mobile && revealed ? "is-static" : ""}">
             <div class="ep-visual-frame">
               <img
                 src="${art.media.primary_image_url}"
@@ -529,24 +613,30 @@
             <div id="ep-metrics" class="ep-metrics"></div>
             <div id="ep-status" class="ep-status"></div>
             ${sliderBoxHtml}
+            ${beatbarHtml}
           </div>
 
           <div>
             ${guessHtml}
             <div class="ep-steps">${stepsHtml}</div>
 
-            <!-- Lá thư của di vật (phương án B) -->
-            <div class="ep-letter" id="ep-letter">
-              <div class="ep-letter-title">${tt.letter_heading}</div>
-              <p class="ep-letter-body">${letterHtml}</p>
-              <div class="mt-4 pt-3 border-t border-[rgba(35,38,46,0.18)] font-mono-tech" style="font-size: 11px; color: rgba(35,38,46,0.65)">
-                ${tt.postmark_from} ${f(art.narrative_voice, "epistemic_label")}<br />
-                ${tt.postmark_to}
+            <!-- [MOBILE 2026-11-14] Khối "đọc lá thư + sổ tay + câu hỏi":
+                 trên điện thoại chỉ MỞ sau khi học sinh đọc xong nhịp cuối,
+                 để giai đoạn xem hình/kéo con trượt không bị chen chúc. -->
+            <div id="ep-after" class="ep-after ${mobile && !revealed ? "is-hidden" : ""}">
+              <!-- Lá thư của di vật (phương án B) -->
+              <div class="ep-letter ${mobile && revealed ? "is-open" : ""}" id="ep-letter">
+                <div class="ep-letter-title">${tt.letter_heading}</div>
+                <p class="ep-letter-body">${letterHtml}</p>
+                <div class="mt-4 pt-3 border-t border-[rgba(35,38,46,0.18)] font-mono-tech" style="font-size: 11px; color: rgba(35,38,46,0.65)">
+                  ${tt.postmark_from} ${f(art.narrative_voice, "epistemic_label")}<br />
+                  ${tt.postmark_to}
+                </div>
               </div>
-            </div>
 
-            ${dossierHtml}
-            ${quizHtml}
+              ${dossierHtml}
+              ${quizHtml}
+            </div>
           </div>
         </div>
       </article>
@@ -554,7 +644,17 @@
 
     wireEpisode(art);
     applyTelemetry(art.id);
-    setupObservers(art);
+
+    /* [MOBILE 2026-11-14] Điện thoại KHÔNG dùng IntersectionObserver (cuộn
+       không còn là cách đi qua các nhịp) → thay bằng thanh nút "Nhịp trước /
+       Nhịp sau". Máy tính giữ nguyên observer cũ. */
+    if (mobile) {
+      teardownObservers();
+      syncStickyOffset();
+      updateBeatUI(art);
+    } else {
+      setupObservers(art);
+    }
   }
 
   /* ------------------------------------------------------------------------
@@ -599,9 +699,152 @@
       btn.addEventListener("click", () => gradeQuiz(art, Number(btn.getAttribute("data-option-index"))));
     });
 
+    /* [MOBILE 2026-11-14] Hai nút đi từng nhịp (chỉ hiện trên màn hình ≤900px) */
+    const prevBeatBtn = document.getElementById("ep-prev-beat");
+    if (prevBeatBtn) prevBeatBtn.addEventListener("click", () => stepBeat(art, -1));
+    const nextBeatBtn = document.getElementById("ep-next-beat");
+    if (nextBeatBtn) nextBeatBtn.addEventListener("click", () => stepBeat(art, 1));
+
     /* [KIDS 2026-11-13] Đoán trước–kiểm tra sau + lớp chạm vào cảnh SVG */
     wireGuess(art);
     setupPlayLayer(art);
+  }
+
+  /* ------------------------------------------------------------------------
+     [MOBILE 2026-11-14] CHẾ ĐỘ "THẺ THEO NHỊP" TRÊN ĐIỆN THOẠI
+     stepBeat(art, ±1) : lùi/tới một nhịp; ở nhịp CUỐI nút "tới" mở lá thư.
+     setBeat(art, i)   : áp svg_value của nhịp i → applyTelemetry() (engine cũ).
+     revealAfterBeats(): mở #ep-after (lá thư + sổ tay + câu hỏi), thôi sticky.
+     updateBeatUI(art) : đồng bộ chữ đếm nhịp, trạng thái nút, thẻ đang hiện.
+     Mọi hàm đều return sớm nếu không phải mobile → máy tính không đổi gì cả.
+     ------------------------------------------------------------------------ */
+  function stepBeat(art, delta) {
+    if (!isMobile()) return;
+
+    const steps = art.episode.steps;
+    const current = Math.min(Math.max(Number(state.beatIndex[art.id] || 0), 0), steps.length - 1);
+
+    /* Đang ở nhịp cuối mà bấm "tới" → mở lá thư + câu hỏi */
+    if (delta > 0 && current >= steps.length - 1) {
+      revealAfterBeats(art);
+      return;
+    }
+
+    const next = Math.min(Math.max(current + delta, 0), steps.length - 1);
+    state.beatIndex[art.id] = next;
+
+    if (next !== current) {
+      /* Đúng engine cũ: đổi giá trị con trượt → SVG + 3 ô số liệu đổi theo */
+      state.sliderValues[art.id] = steps[next].svg_value;
+      applyTelemetry(art.id);
+    }
+    updateBeatUI(art);
+    scrollBeatIntoView(next);
+  }
+
+  /**
+   * [MOBILE 2026-11-14] Đưa thẻ nhịp đang đọc lên NGAY DƯỚI khung hình dính.
+   * Không có bước này thì trên màn hình dọc thẻ nhịp có thể nằm dưới nếp gấp,
+   * học sinh bấm "Nhịp sau" mà không thấy chữ đổi.
+   * Lưu ý: phải tính theo vị trí KHI ĐÃ DÍNH (stickyTop + chiều cao khung),
+   * chứ không theo vị trí hiện tại — lúc chưa cuộn thì khung hình còn nằm thấp
+   * hơn, tính theo nó sẽ cuộn hụt (đã đo thực tế 2026-11-14).
+   */
+  function scrollBeatIntoView(index) {
+    if (!isMobile() || state.mobileRevealed[state.openArtifactId]) return;
+
+    const card = document.querySelector(`.ep-step[data-step-index="${index}"]`);
+    const visual = document.querySelector(".ep-visual");
+    const shell = document.querySelector(".episode-shell");
+    if (!card || !visual) return;
+
+    const stickyTop = parseFloat(getComputedStyle(visual).top) || 0;
+    const stageH = visual.getBoundingClientRect().height;
+    const cardAbsTop = card.getBoundingClientRect().top + window.pageYOffset;
+
+    let y = cardAbsTop - (stickyTop + stageH + 12);
+
+    /* Không cuộn quá "đất" trượt của sticky (cuối khung shell),
+       nếu không khung hình sẽ bị đẩy lên và che mất thẻ nhịp. */
+    if (shell) {
+      const shellAbsBottom = shell.getBoundingClientRect().bottom + window.pageYOffset;
+      const maxStick = shellAbsBottom - stageH - stickyTop;
+      y = Math.min(y, maxStick);
+    }
+
+    if (y < 0) y = 0;
+    if (Math.abs(y - window.pageYOffset) < 4) return;
+    window.scrollTo({ top: y, behavior: prefersReducedMotion() ? "auto" : "smooth" });
+  }
+
+  function setBeat(art, index) {
+    if (!isMobile()) return;
+    const steps = art.episode.steps;
+    const i = Math.min(Math.max(Number(index) || 0, 0), steps.length - 1);
+    state.beatIndex[art.id] = i;
+    state.sliderValues[art.id] = steps[i].svg_value;
+    applyTelemetry(art.id);
+    updateBeatUI(art);
+  }
+
+  /** Mở lá thư + sổ tay + câu hỏi sau khi đọc xong nhịp cuối (chỉ mobile) */
+  function revealAfterBeats(art) {
+    state.mobileRevealed[art.id] = true;
+
+    const after = document.getElementById("ep-after");
+    if (after) after.classList.remove("is-hidden");
+
+    /* Thôi dính khung hình: giai đoạn đọc lá thư cần hết chiều cao màn hình */
+    const visual = document.querySelector(".ep-visual");
+    if (visual) visual.classList.add("is-static");
+
+    /* "Mực chạy" ra ngay (desktop làm việc này bằng letterObserver) */
+    const letter = document.getElementById("ep-letter");
+    if (letter) letter.classList.add("is-open");
+
+    updateBeatUI(art);
+
+    const target = letter || after;
+    if (target) {
+      const top = target.getBoundingClientRect().top + window.pageYOffset - 14;
+      window.scrollTo({ top, behavior: prefersReducedMotion() ? "auto" : "smooth" });
+    }
+  }
+
+  function updateBeatUI(art) {
+    if (!isMobile()) return;
+
+    const tt = t();
+    const steps = art.episode.steps;
+    const revealed = !!state.mobileRevealed[art.id];
+    const beat = Math.min(Math.max(Number(state.beatIndex[art.id] || 0), 0), steps.length - 1);
+
+    /* Chỉ hiện đúng nhịp đang đọc; sau khi mở lá thư thì hiện lại tất cả */
+    document.querySelectorAll(".ep-step").forEach((el) => {
+      const i = Number(el.getAttribute("data-step-index"));
+      el.classList.toggle("is-hidden", !revealed && i !== beat);
+      el.classList.toggle("is-active", i === beat);
+    });
+
+    const count = document.getElementById("ep-beat-count");
+    if (count) count.textContent = `${tt.step_word} ${beat + 1} / ${steps.length}`;
+
+    const prevBtn = document.getElementById("ep-prev-beat");
+    if (prevBtn) prevBtn.disabled = beat === 0;
+
+    const nextBtn = document.getElementById("ep-next-beat");
+    if (nextBtn) {
+      const atLast = beat >= steps.length - 1;
+      nextBtn.textContent = atLast ? tt.finish_btn : tt.next_btn;
+      nextBtn.classList.toggle("is-finish", atLast);
+    }
+
+    /* Thanh nhịp hết cần thiết khi lá thư đã mở */
+    const bar = document.getElementById("ep-beatbar");
+    if (bar) bar.classList.toggle("is-hidden", revealed);
+
+    const visual = document.querySelector(".ep-visual");
+    if (visual) visual.classList.toggle("is-static", revealed);
   }
 
   /* ------------------------------------------------------------------------
@@ -1463,6 +1706,30 @@
    */
   function initApp() {
     renderAll();
+
+    /* [MOBILE 2026-11-14] Xoay màn hình / đổi cỡ cửa sổ qua mốc 900px → vẽ lại
+       tập phim theo đúng chế độ: điện thoại (khung hình dính + thẻ theo nhịp)
+       hoặc máy tính (scrollytelling 2 cột như cũ). */
+    syncStickyOffset();
+    if (mqMobile) {
+      const onViewportModeChange = () => {
+        syncStickyOffset();
+        if (state.openArtifactId) renderEpisode();
+      };
+      if (mqMobile.addEventListener) mqMobile.addEventListener("change", onViewportModeChange);
+      else if (mqMobile.addListener) mqMobile.addListener(onViewportModeChange);
+    }
+    window.addEventListener("resize", syncStickyOffset);
+
+    /* [HOME-BUTTON 2026-11-14] Logo trên header = nút về hộp thư.
+       Chặn hành vi nhảy anchor mặc định để tự điều khiển cuộn + đóng tập phim. */
+    const brandHome = document.getElementById("brand-home-btn");
+    if (brandHome) {
+      brandHome.addEventListener("click", (e) => {
+        e.preventDefault();
+        goHome();
+      });
+    }
 
     // Language Switcher Buttons
     const langEn = document.getElementById("lang-btn-en");

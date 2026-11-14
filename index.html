@@ -36,8 +36,13 @@
        ===================================================================== -->
   <header class="sticky top-0 z-50 bg-[#0e1120]/92 backdrop-blur-md border-b border-white/10">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
-      <!-- Trái: thương hiệu dự án (vector tự vẽ — không dùng logo NASA) -->
-      <a href="#hero-top" class="flex items-center gap-2.5 group">
+      <!-- Trái: thương hiệu dự án (vector tự vẽ — không dùng logo NASA).
+           [HOME-BUTTON 2026-11-14] Logo kiêm nút "về hộp thư": bấm vào sẽ đóng
+           tập phim đang mở và quay lại màn hình 4 lá thư, KHÔNG reset tiến độ
+           (tem / sticker nằm trong state nên vẫn còn nguyên). -->
+      <a href="#hero-top" id="brand-home-btn" class="flex items-center gap-2.5 group"
+         title="Về hộp thư / Back to the mailbox"
+         aria-label="LUNAMARIS — về hộp thư, giữ nguyên tiến độ / back to the mailbox, progress kept">
         <div class="relative flex items-center justify-center w-8 h-8 rounded-lg bg-[#1b2136] border border-[#e7f434]/40">
           <svg viewBox="0 0 24 24" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="3" fill="#e7f434" />

@@ -170,7 +170,7 @@ window.RelicSVGEngine = (function () {
 
   /**
    * Chapter 02: Surveyor 3 & Apollo 12 LM Intrepid
-   * Variable D: Touchdown separation distance (50 m -> 2500 m, default 155 m)
+   * Variable D: Touchdown separation distance (50 m -> 2500 m, default 180 m)
    */
   function computeChapter2(distVal, lang) {
     const D = Math.round(Number(distVal));
@@ -209,11 +209,11 @@ window.RelicSVGEngine = (function () {
       surfaceStateEn = "Severe Micro-Pitting & Tan Discoloration (NASA SP-284 Verified)";
       surfaceStateVi = "Rỗ Vi Mô Nghiêm Trọng & Đổi Màu Sơn Nâu Rám (Đã kiểm chứng NASA SP-284)";
       zoneColor = "#F97316";
-      badgeTextEn = D === 155
-        ? "155 m HISTORICAL APOLLO 12 TOUCHDOWN (LROC Verified; 1969 Logs: 160–180 m)"
+      badgeTextEn = D === 180
+        ? "180 m HISTORICAL APOLLO 12 TOUCHDOWN (NASA Surveyor 3 Page: ~197 yards)"
         : "WARNING — Supersonic Sandblasting Zone (v = 300–2,000 m/s)";
-      badgeTextVi = D === 155
-        ? "MỐC LỊCH SỬ 155 m APOLLO 12 (Vệ tinh LROC; Tài liệu 1969 ghi 160–180 m)"
+      badgeTextVi = D === 180
+        ? "MỐC LỊCH SỬ 180 m APOLLO 12 (Trang Surveyor 3 của NASA: ~197 yard)"
         : "CẢNH BÁO CAM — Vùng Bắn Cát Siêu Thanh (v = 300–2.000 m/s)";
       sepiaAmount = 0.65;
       pitCount = 18;
@@ -357,7 +357,7 @@ window.RelicSVGEngine = (function () {
         {
           label: lang === "vi" ? "KHOẢNG CÁCH HẠ CÁNH (D)" : "SEPARATION DISTANCE (D)",
           value: `${D} m`,
-          sub: D === 155 ? "LROC: 155m (1969: 160-180m)" : "Range: 50 – 2,500 m",
+          sub: D === 180 ? "NASA: ~180 m (197 yards)" : "Range: 50 – 2,500 m",
           tip:
             lang === "vi"
               ? "Khoảng cách từ tàu mới tới Surveyor 3 — kéo con trượt để thấy bụi ngừng chạm tới ở 2 km."
