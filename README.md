@@ -26,9 +26,9 @@ Dự án còn tích hợp 2 Module thực chiến độc lập:
 
 ```text
 Lunamaris_NASA_Hackathon_2026/
-├── index.html                           # Giao diện chính 6 phân khu (Semantic HTML5, Mobile-First)
+├── index.html                           # Giao diện "quyển sách": bìa, mục lục, 4 chương, Artemis, Guardian, Giáo viên, Nguồn
 ├── css/
-│   └── styles.css                       # Hệ thống thiết kế NASA Space Apps Palette, Range Sliders, Keyframes SVG
+│   └── styles.css                       # Hệ thống thiết kế NASA Space Apps Palette, khung sách & hiệu ứng lật trang, Keyframes SVG
 ├── data/
 │   └── content.json                     # Dữ liệu chuẩn hóa gốc (Song ngữ EN/VI) đối chiếu NASA Open Data
 ├── js/
@@ -36,7 +36,8 @@ Lunamaris_NASA_Hackathon_2026/
 │   ├── svg-engine.js                    # Công thức Toán học & Đồ họa Interactive SVG cho 4 Chương Di vật
 │   ├── decision-station.js              # Sơ đồ Mặt cắt Đạn đạo Chân không & 4 Vùng Bãi đáp Artemis
 │   ├── certificate.js                   # Bộ tạo Thẻ Chứng nhận Space Heritage Guardian (Zero-PII Canvas PNG)
-│   └── app.js                           # Điều phối State, Mission Stamps, Bộ lọc Hành tinh, Chuyển đổi EN/VI
+│   ├── app.js                           # Điều phối State, Mission Stamps, Bộ lọc Hành tinh, Chuyển đổi EN/VI
+│   └── book.js                          # Bộ máy lật trang: trang mới vào từ phải, vuốt/phím ←→, hash #ch1…, chế độ đọc cuộn
 ├── types/
 │   └── dataset.types.ts                 # Kiểu dữ liệu TypeScript chuẩn hóa khớp 1:1 với NASA Open Data
 ├── docs/
