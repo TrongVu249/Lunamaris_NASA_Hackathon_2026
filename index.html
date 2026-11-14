@@ -1,19 +1,24 @@
 <!DOCTYPE html>
 <html lang="vi" class="dark">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>LUNAMARIS: Letters Across the Silent Seas | NASA Space Apps 2026</title>
-  <meta name="description"
-    content="Interactive Telemetry & Dual-Voice Storytelling about NASA's Forgotten Hardware on the Moon and Mars — Built for the 2026 NASA International Space Apps Challenge." />
+  <meta
+    name="description"
+    content="Interactive Telemetry & Dual-Voice Storytelling about NASA's Forgotten Hardware on the Moon and Mars — Built for the 2026 NASA International Space Apps Challenge."
+  />
 
-  <!-- Google Fonts CDN: Fira Sans (700/900), Overpass (400/600), JetBrains Mono (400/700) -->
+  <!-- [REDESIGN 2026-11-13 • A+B HYBRID] Đổi hệ chữ cho học sinh:
+       Baloo 2 (tiêu đề tròn trịa), Nunito (nội dung dễ đọc),
+       JetBrains Mono (chỉ dùng cho khoảnh khắc số liệu),
+       Dancing Script (chữ viết tay của "lá thư"). -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@700;800;900&family=JetBrains+Mono:wght@400;600;700&family=Overpass:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap"
-    rel="stylesheet" />
+    href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;600;700&family=Dancing+Script:wght@600;700&display=swap"
+    rel="stylesheet"
+  />
 
   <!-- Tailwind CSS v3 CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -21,51 +26,46 @@
   <!-- Custom Design System & SVG Animations -->
   <link rel="stylesheet" href="css/styles.css" />
 </head>
-
-<body class="min-h-screen bg-[#151622] text-[#F8FAFC] selection:bg-[#E7F434] selection:text-[#151622]">
+<body class="min-h-screen bg-[#0e1120] text-[#f5f7ff] selection:bg-[#e7f434] selection:text-[#0e1120]">
 
   <!-- =====================================================================
-       SECTION 1: STICKY HEADER & MISSION STAMP COLLECTOR
+       [REDESIGN 2026-11-13 • A+B HYBRID] SECTION 1: HEADER GỌN
+       Bỏ: hàng tem chi tiết (#mission-stamps-bar) + bộ lọc hành tinh
+           (#planet-filter-bar) — hai thứ này khiến header có tới 51 nút bấm.
+       Thêm: 4 CHẤM TIẾN ĐỘ (#progress-dots) = "còn mấy lá thư chưa mở".
        ===================================================================== -->
-  <header class="sticky top-0 z-50 bg-[#151622]/90 backdrop-blur-md border-b border-white/12">
+  <header class="sticky top-0 z-50 bg-[#0e1120]/92 backdrop-blur-md border-b border-white/10">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
-      <!-- Left: Project Brand & Pulsing Beacon (Custom SVG Vector — Zero NASA Logos) -->
+      <!-- Trái: thương hiệu dự án (vector tự vẽ — không dùng logo NASA) -->
       <a href="#hero-top" class="flex items-center gap-2.5 group">
-        <div
-          class="relative flex items-center justify-center w-8 h-8 rounded-lg bg-[#1B2B85] border border-[#E7F434]/40">
-          <svg viewBox="0 0 24 24" class="w-5 h-5 text-[#E7F434]" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="3" fill="#E7F434" />
-            <path d="M4.93 4.93a10 10 0 0 1 14.14 0" stroke="#38BDF8" />
-            <path d="M7.76 7.76a6 6 0 0 1 8.48 0" stroke="#E7F434" />
-            <path d="M19.07 19.07a10 10 0 0 1-14.14 0" stroke="#F97316" />
+        <div class="relative flex items-center justify-center w-8 h-8 rounded-lg bg-[#1b2136] border border-[#e7f434]/40">
+          <svg viewBox="0 0 24 24" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3" fill="#e7f434" />
+            <path d="M4.93 4.93a10 10 0 0 1 14.14 0" stroke="#7fd4ff" />
+            <path d="M7.76 7.76a6 6 0 0 1 8.48 0" stroke="#e7f434" />
+            <path d="M19.07 19.07a10 10 0 0 1-14.14 0" stroke="#ff8a4c" />
           </svg>
         </div>
         <div class="flex items-center gap-2">
-          <span
-            class="font-heading text-lg sm:text-xl font-black tracking-wider text-white group-hover:text-[#E7F434] transition">
+          <span class="font-heading text-lg sm:text-xl font-extrabold tracking-wide text-[#f5f7ff] group-hover:text-[#e7f434] transition">
             LUNAMARIS
           </span>
-          <span class="w-2.5 h-2.5 rounded-full bg-[#E7F434] animate-pulse shadow-[0_0_10px_#E7F434]"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-[#e7f434] animate-pulse"></span>
         </div>
       </a>
 
-      <!-- Center: 4 Mission Stamps Collector Bar -->
-      <div
-        class="flex flex-wrap items-center gap-1.5 order-3 xl:order-2 w-full xl:w-auto justify-center pt-1 xl:pt-0 border-t xl:border-t-0 border-white/10">
-        <span id="nav-stamps-label" class="text-[11px] font-mono-tech text-slate-400 mr-1 hidden sm:inline">
-          TEM TÍN HIỆU:
+      <!-- Giữa: 4 chấm tiến độ (mỗi chấm = 1 lá thư / 1 con tem) -->
+      <div class="flex flex-wrap items-center gap-2 order-3 xl:order-2 w-full xl:w-auto justify-center pt-1 xl:pt-0 border-t xl:border-t-0 border-white/10">
+        <span id="nav-progress-label" class="text-[11px] font-mono-tech text-slate-400 hidden sm:inline">
+          HÀNH TRÌNH:
         </span>
-        <div id="mission-stamps-bar" class="flex flex-wrap items-center justify-center gap-1.5"></div>
+        <div id="progress-dots" class="progress-dots" role="group" aria-label="Tiến độ 4 lá thư"></div>
+        <span id="progress-count" class="text-[11px] font-mono-tech text-[#e7f434]">0/4</span>
       </div>
 
-      <!-- Right: Quick Planet Filter & Bilingual Toggle [EN | VI] -->
+      <!-- Phải: chuyển ngôn ngữ [EN | VI] -->
       <div class="flex items-center gap-2.5 order-2 xl:order-3">
-        <!-- Quick Filter: [All (4)] | [Moon (2)] | [Mars (2)] -->
-        <div id="planet-filter-bar" class="flex items-center bg-[#1E2030] p-1 rounded-lg border border-white/12"></div>
-
-        <!-- Language Switcher: [EN | VI] -->
-        <div class="flex items-center bg-[#1E2030] p-1 rounded-lg border border-white/12" role="group"
-          aria-label="Language Switcher">
+        <div class="flex items-center bg-[#1b2136] p-1 rounded-lg border border-white/10" role="group" aria-label="Language Switcher">
           <button id="lang-btn-en" type="button">EN</button>
           <span class="text-slate-600 text-xs px-0.5">|</span>
           <button id="lang-btn-vi" type="button">VI</button>
@@ -75,124 +75,84 @@
   </header>
 
   <!-- =====================================================================
-       SECTION 2: HERO SECTION (HANOI GROUND STATION TELEMETRY ANCHOR)
+       [REDESIGN 2026-11-13 • A+B HYBRID] SECTION 2: HỘP THƯ VŨ TRỤ
+       Thay hero "bảng telemetry Hà Nội + 2 nút CTA + đoạn văn dài" bằng:
+         tiêu đề ngắn → 4 PHONG BÌ → gợi ý cuộn.
+       Mỗi phong bì mở ĐÚNG MỘT tập phim, nên học sinh không bị ngợp.
+       Toàn bộ chữ trong khu vực này do js/app.js nạp từ js/data.js.
        ===================================================================== -->
-  <section id="hero-top"
-    class="relative hero-starfield py-14 sm:py-20 px-4 sm:px-6 border-b border-white/10 overflow-hidden">
-    <!-- Concentric Radar Waves SVG Background -->
-    <div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-35">
-      <svg viewBox="0 0 600 600" class="w-[620px] h-[620px]">
-        <circle cx="300" cy="300" r="95" fill="none" stroke="#38BDF8" stroke-width="1.2" class="radar-ring-1" />
-        <circle cx="300" cy="300" r="165" fill="none" stroke="#E7F434" stroke-width="1" class="radar-ring-2" />
-        <circle cx="300" cy="300" r="235" fill="none" stroke="#F97316" stroke-width="1" class="radar-ring-3" />
-        <circle cx="300" cy="300" r="280" fill="none" stroke="rgba(255,255,255,0.08)" stroke-dasharray="4 6" />
-        <line x1="300" y1="20" x2="300" y2="580" stroke="rgba(56,189,248,0.12)" stroke-width="1" />
-        <line x1="20" y1="300" x2="580" y2="300" stroke="rgba(56,189,248,0.12)" stroke-width="1" />
-      </svg>
-    </div>
+  <section id="hero-top" class="relative mailbox-starfield py-12 sm:py-16 px-4 sm:px-6 border-b border-white/10 overflow-hidden">
+    <div class="relative z-10 max-w-5xl mx-auto space-y-7">
+      <div class="space-y-3 text-center">
+        <div
+          id="mailbox-eyebrow"
+          class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1b2136] border border-[#7fd4ff]/40 text-[#e7f434] text-xs font-mono-tech font-bold"
+        ></div>
 
-    <div class="relative z-10 max-w-4xl mx-auto text-center space-y-6">
-      <!-- Challenge Subtitle Pill -->
-      <div
-        class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1B2B85]/80 border border-[#38BDF8]/40 text-[#E7F434] text-xs font-mono-tech font-bold">
-        <span>🛰️</span>
-        <span id="hero-badge-text">2026 NASA INTERNATIONAL SPACE APPS CHALLENGE • ABANDONED BUT NOT FORGOTTEN</span>
+        <h1 id="mailbox-title" class="font-heading text-4xl sm:text-6xl font-extrabold tracking-tight text-[#f5f7ff] leading-[1.08]"></h1>
+
+        <p id="mailbox-sub" class="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto"></p>
       </div>
 
-      <!-- Main Hero Title -->
-      <h1 id="hero-main-title"
-        class="font-heading text-3xl sm:text-5xl md:text-6xl font-black tracking-tight text-white leading-tight">
-        LETTERS ACROSS THE SILENT SEAS
-      </h1>
-      <p id="hero-subtitle" class="text-base sm:text-xl text-slate-300 max-w-3xl mx-auto font-body">
-        Kể chuyện Hai Giọng &amp; Mô phỏng Thông số Đo xa về những Thiết bị NASA Bị Bỏ lại
-      </p>
-
-      <!-- Local Telemetry Anchor Box (Hanoi Coordinates 21.0285° N, 105.8542° E) -->
-      <div
-        class="surface-card rounded-2xl p-4 sm:p-6 max-w-3xl mx-auto text-left border border-[#38BDF8]/40 shadow-2xl space-y-3">
-        <div class="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-white/10">
-          <span id="hero-receiver-label" class="text-xs font-mono-tech text-slate-400 uppercase">
-            DEEP-SPACE RECEIVER ARRAY:
-          </span>
-          <button id="receiver-toggle-btn" type="button"
-            class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900 border border-[#10B981]/50 text-xs font-mono-tech font-bold text-[#10B981] cursor-pointer hover:bg-slate-800 transition"></button>
-        </div>
-
-        <div class="space-y-1.5 font-mono-tech text-xs sm:text-sm">
-          <div class="flex items-center gap-2 text-[#E7F434] font-bold">
-            <span>📍</span>
-            <span id="hero-station-line1">RECEIVING STATION: HANOI, VIETNAM (21.0285° N, 105.8542° E)</span>
-          </div>
-          <div class="flex items-center gap-2 text-[#38BDF8]">
-            <span>⏱️</span>
-            <span id="hero-station-line2">LUNAR LASER ROUND-TRIP: 2.56 SECONDS | MARTIAN RADIO DELAY: 4 TO 24
-              MINUTES</span>
-          </div>
-        </div>
+      <!-- Dòng neo trạm mặt đất + lối tắt sang trạm Artemis (gọn 1 hàng) -->
+      <div class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
+        <span id="mailbox-station" class="text-xs sm:text-sm font-mono-tech text-[#7fd4ff]"></span>
+        <a id="cta-artemis-btn" href="#artemis-station" class="btn-ghost !py-1.5 !px-3.5 !text-xs font-mono-tech"></a>
       </div>
 
-      <!-- Bilingual Intro Hook Paragraph -->
-      <p id="hero-hook-text"
-        class="text-base sm:text-lg text-slate-200 max-w-3xl mx-auto leading-relaxed bg-[#1E2030]/75 p-4 sm:p-5 rounded-xl border border-white/10">
-        Ngước nhìn bầu trời đêm thu Hà Nội, chúng ta thường ngỡ những sứ mệnh vũ trụ đã khép lại chỉ còn là sắt vụn vô
-        tri. Hãy bật công tắc thu sóng bên dưới: khắp các biển lặng Mặt Trăng và bình nguyên bụi đỏ Sao Hỏa, những thiết
-        bị bị bỏ lại của NASA vẫn đang gửi về hàng thập kỷ chân lý khoa học.
-      </p>
+      <!-- Banner chúc mừng khi thu đủ 4 tem (app.js bật/tắt) -->
+      <div id="mailbox-done-banner" class="hidden max-w-2xl mx-auto"></div>
 
-      <!-- Call-To-Action (CTA) Buttons -->
-      <div class="flex flex-wrap items-center justify-center gap-4 pt-2">
-        <a id="cta-tune-in-btn" href="#relic-chapters-container"
-          class="px-6 py-3.5 rounded-xl bg-[#E7F434] hover:bg-[#d8e622] text-[#151622] font-heading font-black text-sm sm:text-base shadow-[0_0_24px_rgba(231,244,52,0.4)] transition">
-          Thu sóng 4 Tín hiệu Di vật ↓
-        </a>
-        <a id="cta-artemis-btn" href="#artemis-station"
-          class="px-6 py-3.5 rounded-xl bg-[#1B2B85] hover:bg-[#2539a8] text-white border border-[#38BDF8]/50 font-heading font-bold text-sm sm:text-base transition">
-          Trạm Mô phỏng Hạ cánh Artemis ⚡
-        </a>
+      <!-- 4 phong bì — app.js render từ LUNAMARIS_DATA.artifacts -->
+      <div id="relic-mailbox" class="mailbox-grid"></div>
+
+      <div class="flex justify-center pt-1">
+        <span id="mailbox-scroll-hint" class="scroll-hint"></span>
       </div>
     </div>
   </section>
 
   <!-- =====================================================================
-       SECTION 3: THE 4 RELIC SCROLLYTELLING CHAPTERS
+       [REDESIGN 2026-11-13 • A+B HYBRID] SECTION 3: SÂN KHẤU TẬP PHIM
+       #relic-chapters-container cũ xếp cả 4 chương dọc ~13.000px (quá tải).
+       Nay chỉ còn #episode-root: js/app.js đổ vào ĐÚNG MỘT tập phim đang mở,
+       gồm cột hình sticky + 4 nhịp truyện + lá thư + sổ tay + câu hỏi mở tem.
        ===================================================================== -->
   <main class="px-4 sm:px-6 py-6">
-    <div id="relic-chapters-container"></div>
+    <div id="episode-root"></div>
 
     <!-- ===================================================================
          SECTION 4: MODULE 1 — THE ARTEMIS LANDING SITE DECISION STATION
          =================================================================== -->
-    <section id="artemis-station"
-      class="surface-card max-w-6xl mx-auto my-16 p-5 sm:p-8 rounded-2xl border-2 border-[#38BDF8]/40 space-y-6">
+    <section
+      id="artemis-station"
+      class="surface-card max-w-6xl mx-auto my-16 p-5 sm:p-8 rounded-2xl border-2 border-[#7fd4ff]/40 space-y-6"
+    >
       <div class="space-y-2">
-        <div
-          class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-[#1B2B85] text-[#E7F434] font-mono-tech text-xs font-bold">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-[#24306b] text-[#E7F434] font-mono-tech text-xs font-bold">
           <span>🚀</span>
           <span id="artemis-tag">MODULE ĐỘC LẬP 01 • TRẠM QUYẾT ĐỊNH CHỈ HUY</span>
         </div>
-        <h2 id="artemis-title" class="font-heading text-2xl sm:text-3xl font-black text-white">
+        <h2 id="artemis-title" class="font-heading text-2xl sm:text-3xl font-extrabold text-white">
           TRẠM QUYẾT ĐỊNH BÃI ĐÁP SỨ MỆNH ARTEMIS
         </h2>
         <p id="artemis-subtitle" class="text-sm sm:text-base text-slate-300">
-          Nhập vai Chỉ huy Đổ bộ tàu Artemis. Hãy chọn khoảng cách hạ cánh xuống gần một di sản lịch sử trên Mặt Trăng
-          và quan sát hệ quả đạn đạo trong chân không.
+          Nhập vai Chỉ huy Đổ bộ tàu Artemis. Hãy chọn khoảng cách hạ cánh xuống gần một di sản lịch sử trên Mặt Trăng và quan sát hệ quả đạn đạo trong chân không.
         </p>
       </div>
 
       <!-- Vacuum Ballistics Physics Callout Box -->
-      <div
-        class="p-4 sm:p-5 rounded-xl bg-gradient-to-r from-[#1B2B85]/60 to-slate-900/90 border border-[#E7F434]/40 flex items-start gap-3.5">
+      <div class="p-4 sm:p-5 rounded-xl bg-gradient-to-r from-[#24306b]/60 to-slate-900/90 border border-[#E7F434]/40 flex items-start gap-3.5">
         <span class="text-2xl">⚡</span>
         <p id="artemis-physics-callout" class="text-sm sm:text-base text-slate-100 leading-relaxed font-body"></p>
       </div>
 
       <!-- Interactive Cross-Section SVG Diagram -->
-      <div id="artemis-svg-container" class="rounded-xl overflow-hidden border border-white/15 bg-[#0F111C]"></div>
+      <div id="artemis-svg-container" class="rounded-xl overflow-hidden border border-white/15 bg-[#0a0d18]"></div>
 
       <!-- 4 Landing Distance Selection Buttons -->
       <div class="space-y-2.5">
-        <div id="artemis-select-prompt" class="text-xs sm:text-sm font-mono-tech font-bold text-[#38BDF8]">
+        <div id="artemis-select-prompt" class="text-xs sm:text-sm font-mono-tech font-bold text-[#7fd4ff]">
           Chọn Khoảng cách Hạ cánh (4 Vùng Quy chuẩn):
         </div>
         <div id="artemis-zone-buttons" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3"></div>
@@ -205,15 +165,16 @@
     <!-- ===================================================================
          SECTION 5: MODULE 2 — ZERO-PII GUARDIAN CERTIFICATE & 15-MIN CLASSROOM
          =================================================================== -->
-    <section id="guardian-certificate-section"
-      class="surface-card max-w-6xl mx-auto my-16 p-5 sm:p-8 rounded-2xl border border-[#E7F434]/40 space-y-8">
+    <section
+      id="guardian-certificate-section"
+      class="surface-card max-w-6xl mx-auto my-16 p-5 sm:p-8 rounded-2xl border border-[#E7F434]/40 space-y-8"
+    >
       <div class="space-y-2">
-        <div
-          class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-[#10B981]/20 text-[#10B981] border border-[#10B981]/40 font-mono-tech text-xs font-bold">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-[#10B981]/20 text-[#10B981] border border-[#10B981]/40 font-mono-tech text-xs font-bold">
           <span>🛡️</span>
           <span id="cert-section-tag">MODULE ĐỘC LẬP 02 • THẺ CHỨNG NHẬN ZERO-PII</span>
         </div>
-        <h2 id="cert-section-title" class="font-heading text-2xl sm:text-3xl font-black text-white">
+        <h2 id="cert-section-title" class="font-heading text-2xl sm:text-3xl font-extrabold text-white">
           THẺ CHỨNG NHẬN SPACE HERITAGE GUARDIAN
         </h2>
         <p id="cert-section-desc" class="text-sm sm:text-base text-slate-300"></p>
@@ -233,23 +194,37 @@
           </div>
 
           <div class="space-y-2">
-            <label id="cert-step2-label" for="guardian-name-input"
-              class="block text-xs sm:text-sm font-mono-tech font-bold text-[#38BDF8]">
+            <label
+              id="cert-step2-label"
+              for="guardian-name-input"
+              class="block text-xs sm:text-sm font-mono-tech font-bold text-[#7fd4ff]"
+            >
               2. Nhập Biệt danh / Tên hiển thị (Tùy chọn — Zero PII):
             </label>
-            <input id="guardian-name-input" type="text" maxlength="48" placeholder="VD: Chỉ huy Minh - Trạm Hà Nội"
-              class="w-full px-4 py-2.5 rounded-xl bg-[#151622] border border-white/20 focus:border-[#E7F434] focus:outline-none font-mono-tech text-sm text-white" />
+            <input
+              id="guardian-name-input"
+              type="text"
+              maxlength="48"
+              placeholder="VD: Chỉ huy Minh - Trạm Hà Nội"
+              class="w-full px-4 py-2.5 rounded-xl bg-[#0e1120] border border-white/20 focus:border-[#E7F434] focus:outline-none font-mono-tech text-sm text-white"
+            />
             <p id="cert-privacy-note" class="text-xs text-slate-400 leading-relaxed"></p>
           </div>
 
           <!-- Download PNG & Print Buttons -->
           <div class="flex flex-wrap gap-3 pt-2">
-            <button id="cert-download-btn" type="button"
-              class="flex-1 px-4 py-3 rounded-xl bg-[#E7F434] hover:bg-[#d8e622] text-[#151622] font-mono-tech text-xs sm:text-sm font-bold shadow-lg transition cursor-pointer">
+            <button
+              id="cert-download-btn"
+              type="button"
+              class="flex-1 px-4 py-3 rounded-xl bg-[#E7F434] hover:bg-[#d8e622] text-[#0e1120] font-mono-tech text-xs sm:text-sm font-bold shadow-lg transition cursor-pointer"
+            >
               ⬇ Tải Ảnh Chứng nhận (PNG)
             </button>
-            <button id="cert-print-btn" type="button"
-              class="px-4 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white border border-white/15 font-mono-tech text-xs sm:text-sm font-semibold transition cursor-pointer">
+            <button
+              id="cert-print-btn"
+              type="button"
+              class="px-4 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white border border-white/15 font-mono-tech text-xs sm:text-sm font-semibold transition cursor-pointer"
+            >
               🖨️ In / Lưu PDF
             </button>
           </div>
@@ -257,32 +232,30 @@
 
         <!-- Right 7 Cols: Live Digital Guardian Badge Preview (Zero NASA Logos) -->
         <div class="lg:col-span-7">
-          <div id="guardian-certificate-card"
-            class="rounded-2xl p-6 sm:p-8 bg-gradient-to-br from-[#151622] via-[#1E2030] to-[#13172B] border-2 border-[#E7F434] shadow-2xl space-y-5 relative overflow-hidden">
+          <div
+            id="guardian-certificate-card"
+            class="rounded-2xl p-6 sm:p-8 bg-gradient-to-br from-[#0e1120] via-[#1b2136] to-[#141a2e] border-2 border-[#E7F434] shadow-2xl space-y-5 relative overflow-hidden"
+          >
             <!-- Badge Top Header with Custom Vector Moon/Mars/Radar Emblem -->
             <div class="flex items-center justify-between gap-4 border-b border-white/15 pb-4">
               <div class="flex items-center gap-3.5">
-                <div
-                  class="w-12 h-12 rounded-xl bg-[#1B2B85] border border-[#E7F434] flex items-center justify-center shrink-0">
+                <div class="w-12 h-12 rounded-xl bg-[#24306b] border border-[#E7F434] flex items-center justify-center shrink-0">
                   <svg viewBox="0 0 40 40" class="w-8 h-8">
                     <circle cx="20" cy="20" r="16" fill="none" stroke="#E7F434" stroke-width="2" />
-                    <circle cx="20" cy="20" r="10" fill="none" stroke="#38BDF8" stroke-width="1.5"
-                      stroke-dasharray="3 2" />
+                    <circle cx="20" cy="20" r="10" fill="none" stroke="#7fd4ff" stroke-width="1.5" stroke-dasharray="3 2" />
                     <circle cx="20" cy="20" r="4" fill="#10B981" />
                   </svg>
                 </div>
                 <div>
-                  <h3 id="cert-badge-header"
-                    class="font-heading text-lg sm:text-xl font-black text-[#E7F434] tracking-wide">
+                  <h3 id="cert-badge-header" class="font-heading text-lg sm:text-xl font-extrabold text-[#E7F434] tracking-wide">
                     SPACE HERITAGE GUARDIAN • CHỨNG NHẬN BẢO TỒN
                   </h3>
-                  <p id="cert-badge-subheader" class="text-xs font-mono-tech text-[#38BDF8]">
+                  <p id="cert-badge-subheader" class="text-xs font-mono-tech text-[#7fd4ff]">
                     2026 NASA International Space Apps Challenge • Abandoned But Not Forgotten
                   </p>
                 </div>
               </div>
-              <span
-                class="hidden sm:inline-block px-2.5 py-1 rounded bg-[#10B981]/20 text-[#10B981] border border-[#10B981]/40 font-mono-tech text-[11px] font-bold">
+              <span class="hidden sm:inline-block px-2.5 py-1 rounded bg-[#10B981]/20 text-[#10B981] border border-[#10B981]/40 font-mono-tech text-[11px] font-bold">
                 2.0 KM SAFE STANDARD
               </span>
             </div>
@@ -292,16 +265,14 @@
               <div id="cert-issued-to" class="text-xs font-mono-tech text-slate-400 uppercase">
                 BIỆT DANH NGƯỜI BẢO VỆ:
               </div>
-              <div id="cert-preview-name"
-                class="font-heading text-2xl sm:text-3xl font-black text-white mt-0.5 tracking-wide">
+              <div id="cert-preview-name" class="font-heading text-2xl sm:text-3xl font-extrabold text-white mt-0.5 tracking-wide">
                 CHỈ HUY ARTEMIS (TRẠM MẶT ĐẤT HÀ NỘI)
               </div>
             </div>
 
             <!-- Chosen Conservation Pledge -->
             <div class="p-4 rounded-xl bg-slate-950/85 border border-[#10B981]/50">
-              <p id="cert-preview-pledge" class="text-sm sm:text-base italic text-slate-100 leading-relaxed font-body">
-              </p>
+              <p id="cert-preview-pledge" class="text-sm sm:text-base italic text-slate-100 leading-relaxed font-body"></p>
             </div>
 
             <!-- 4 Collected Mission Stamps Status Grid -->
@@ -312,10 +283,17 @@
               <div id="cert-preview-stamps" class="grid grid-cols-1 sm:grid-cols-2 gap-2"></div>
             </div>
 
+            <!-- [KIDS 2026-11-13] Discovery Stickers collected from SVG hotspots -->
+            <div class="space-y-2">
+              <div id="cert-stickers-title" class="text-xs font-mono-tech text-slate-400 uppercase">
+                STICKER KHÁM PHÁ:
+              </div>
+              <div id="cert-preview-stickers" class="grid grid-cols-2 sm:grid-cols-4 gap-2"></div>
+            </div>
+
             <!-- Certificate Footer Compliance Anchor -->
-            <div
-              class="pt-3 border-t border-white/10 flex flex-wrap items-center justify-between gap-2 text-[11px] font-mono-tech text-slate-400">
-              <span class="text-[#38BDF8]">ANCHOR: HANOI, VIETNAM (21.0285° N, 105.8542° E)</span>
+            <div class="pt-3 border-t border-white/10 flex flex-wrap items-center justify-between gap-2 text-[11px] font-mono-tech text-slate-400">
+              <span class="text-[#7fd4ff]">ANCHOR: HANOI, VIETNAM (21.0285° N, 105.8542° E)</span>
               <span>PUBLIC LAW 116-275 • ZERO PII</span>
             </div>
           </div>
@@ -323,12 +301,12 @@
       </div>
 
       <!-- 15-Minute STEM Classroom Module (Inside Section 5) -->
-      <div class="pt-8 border-t border-white/12 space-y-5">
+      <div class="pt-8 border-t border-white/10 space-y-5">
         <div class="space-y-1.5">
-          <div id="teacher-tag" class="text-xs font-mono-tech font-bold text-[#38BDF8] uppercase">
+          <div id="teacher-tag" class="text-xs font-mono-tech font-bold text-[#7fd4ff] uppercase">
             GIÁO DỤC STEM • GÓC GIÁO VIÊN 15 PHÚT
           </div>
-          <h3 id="teacher-title" class="font-heading text-xl sm:text-2xl font-black text-white">
+          <h3 id="teacher-title" class="font-heading text-xl sm:text-2xl font-extrabold text-white">
             GÓC GIÁO VIÊN STEM 15 PHÚT (DÀNH CHO HỌC SINH 11–15 TUỔI)
           </h3>
           <p id="teacher-desc" class="text-sm text-slate-300"></p>
@@ -342,7 +320,7 @@
   <!-- =====================================================================
        SECTION 6: NASA OPEN DATA ARCHIVES & SUPER INTELLIGENCE (SI) DISCLOSURE
        ===================================================================== -->
-  <footer class="bg-[#0F111A] border-t border-white/12 py-12 px-4 sm:px-6 mt-12">
+  <footer class="bg-[#0a0d18] border-t border-white/10 py-12 px-4 sm:px-6 mt-12">
     <div class="max-w-6xl mx-auto space-y-10">
       <!-- Official NASA Sources Grid -->
       <div class="space-y-4">
@@ -350,37 +328,57 @@
           DANH MỤC NGUỒN DỮ LIỆU MỞ NASA &amp; HỒ SƠ PHÁP LÝ
         </h3>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs font-mono-tech">
-          <a href="https://ilrs.gsfc.nasa.gov/lw19/docs/2014/Papers/3127_Faller_paper.pdf" target="_blank"
+          <a
+            href="https://ilrs.gsfc.nasa.gov/lw19/docs/2014/Papers/3127_Faller_paper.pdf"
+            target="_blank"
             rel="noopener noreferrer"
-            class="p-3 rounded-xl bg-[#1E2030] hover:bg-slate-800 border border-white/10 text-[#38BDF8] transition flex items-center justify-between">
+            class="p-3 rounded-xl bg-[#1b2136] hover:bg-slate-800 border border-white/10 text-[#7fd4ff] transition flex items-center justify-between"
+          >
             <span>1. ILRS / NASA LRRR Paper (Faller 2014)</span>
             <span>↗</span>
           </a>
-          <a href="https://ntrs.nasa.gov/citations/19720019081" target="_blank" rel="noopener noreferrer"
-            class="p-3 rounded-xl bg-[#1E2030] hover:bg-slate-800 border border-white/10 text-[#38BDF8] transition flex items-center justify-between">
+          <a
+            href="https://ntrs.nasa.gov/citations/19720019081"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="p-3 rounded-xl bg-[#1b2136] hover:bg-slate-800 border border-white/10 text-[#7fd4ff] transition flex items-center justify-between"
+          >
             <span>2. NASA SP-284: Surveyor 3 Analysis (1972)</span>
             <span>↗</span>
           </a>
-          <a href="https://www.nasa.gov/wp-content/uploads/2017/10/617743main_nasa-usg_lunar_historic_sites_reva-508.pdf"
-            target="_blank" rel="noopener noreferrer"
-            class="p-3 rounded-xl bg-[#1E2030] hover:bg-slate-800 border border-white/10 text-[#38BDF8] transition flex items-center justify-between">
+          <a
+            href="https://www.nasa.gov/wp-content/uploads/2017/10/617743main_nasa-usg_lunar_historic_sites_reva-508.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="p-3 rounded-xl bg-[#1b2136] hover:bg-slate-800 border border-white/10 text-[#7fd4ff] transition flex items-center justify-between"
+          >
             <span>3. NASA 2011 Recommendations (2.0 km Rule)</span>
             <span>↗</span>
           </a>
-          <a href="https://www.govinfo.gov/app/details/STATUTE-134/context" target="_blank" rel="noopener noreferrer"
-            class="p-3 rounded-xl bg-[#1E2030] hover:bg-slate-800 border border-white/10 text-[#38BDF8] transition flex items-center justify-between">
+          <a
+            href="https://www.govinfo.gov/app/details/STATUTE-134/context"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="p-3 rounded-xl bg-[#1b2136] hover:bg-slate-800 border border-white/10 text-[#7fd4ff] transition flex items-center justify-between"
+          >
             <span>4. Public Law 116-275: One Small Step Act</span>
             <span>↗</span>
           </a>
-          <a href="https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2003-032A" target="_blank"
+          <a
+            href="https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2003-032A"
+            target="_blank"
             rel="noopener noreferrer"
-            class="p-3 rounded-xl bg-[#1E2030] hover:bg-slate-800 border border-white/10 text-[#38BDF8] transition flex items-center justify-between">
+            class="p-3 rounded-xl bg-[#1b2136] hover:bg-slate-800 border border-white/10 text-[#7fd4ff] transition flex items-center justify-between"
+          >
             <span>5. NSSDCA Opportunity Archive (2003-032A)</span>
             <span>↗</span>
           </a>
-          <a href="https://science.nasa.gov/mission/mars-2020-perseverance/ingenuity-mars-helicopter/" target="_blank"
+          <a
+            href="https://science.nasa.gov/mission/mars-2020-perseverance/ingenuity-mars-helicopter/"
+            target="_blank"
             rel="noopener noreferrer"
-            class="p-3 rounded-xl bg-[#1E2030] hover:bg-slate-800 border border-white/10 text-[#38BDF8] transition flex items-center justify-between">
+            class="p-3 rounded-xl bg-[#1b2136] hover:bg-slate-800 border border-white/10 text-[#7fd4ff] transition flex items-center justify-between"
+          >
             <span>6. NASA JPL Ingenuity Flight Log (2020-052B)</span>
             <span>↗</span>
           </a>
@@ -388,18 +386,21 @@
       </div>
 
       <!-- Super Intelligence (SI) Disclosure 2026 Section -->
-      <div class="surface-card rounded-2xl p-5 sm:p-6 border border-[#38BDF8]/30 space-y-4">
+      <div class="surface-card rounded-2xl p-5 sm:p-6 border border-[#7fd4ff]/30 space-y-4">
         <div class="flex flex-wrap items-center justify-between gap-3">
           <div class="flex items-center gap-2">
-            <span class="px-2.5 py-0.5 rounded bg-[#1B2B85] text-[#E7F434] font-mono-tech text-xs font-bold">
+            <span class="px-2.5 py-0.5 rounded bg-[#24306b] text-[#E7F434] font-mono-tech text-xs font-bold">
               2026 RULEBOOK COMPLIANT
             </span>
             <h3 id="footer-si-title" class="font-heading text-base sm:text-lg font-bold text-white">
               SUPER INTELLIGENCE (SI) DISCLOSURE — SPACE APPS 2026
             </h3>
           </div>
-          <button id="footer-si-btn" type="button"
-            class="px-3.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-xs font-mono-tech text-[#E7F434] font-semibold transition cursor-pointer">
+          <button
+            id="footer-si-btn"
+            type="button"
+            class="px-3.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-xs font-mono-tech text-[#E7F434] font-semibold transition cursor-pointer"
+          >
             Open Full SI Disclosure Modal
           </button>
         </div>
@@ -408,8 +409,7 @@
       </div>
 
       <!-- Mandatory Brand Compliance Footer Text -->
-      <div
-        class="pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+      <div class="pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
         <p id="footer-compliance-notice" class="leading-relaxed"></p>
         <p class="font-mono-tech text-slate-500 shrink-0">
           LUNAMARIS • HANOI 2026
@@ -421,16 +421,23 @@
   <!-- =====================================================================
        SUPER INTELLIGENCE (SI) DISCLOSURE MODAL
        ===================================================================== -->
-  <div id="si-disclosure-modal"
-    class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-xs p-4" role="dialog"
-    aria-modal="true" aria-labelledby="modal-si-title">
+  <div
+    id="si-disclosure-modal"
+    class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-xs p-4"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modal-si-title"
+  >
     <div class="surface-card max-w-3xl w-full rounded-2xl p-6 sm:p-8 border-2 border-[#E7F434] space-y-5 shadow-2xl">
       <div class="flex items-center justify-between gap-4 border-b border-white/15 pb-3">
-        <h3 id="modal-si-title" class="font-heading text-xl font-black text-[#E7F434]">
+        <h3 id="modal-si-title" class="font-heading text-xl font-extrabold text-[#E7F434]">
           SUPER INTELLIGENCE (SI) DISCLOSURE — SPACE APPS 2026
         </h3>
-        <button id="close-si-modal-btn" type="button"
-          class="px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-sm font-mono-tech text-white cursor-pointer">
+        <button
+          id="close-si-modal-btn"
+          type="button"
+          class="px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-sm font-mono-tech text-white cursor-pointer"
+        >
           ✕ ESC
         </button>
       </div>
@@ -438,8 +445,7 @@
       <div id="modal-si-table-box"></div>
 
       <div class="p-3.5 rounded-xl bg-slate-950 border border-white/10 text-xs font-mono-tech text-slate-300">
-        ✓ Human Verification Gate: 100% of physical constants, COSPAR IDs, landing separation distances, and legal
-        citations were manually audited against NASA SP-284, NASA 2011 Recommendations, NSSDCA, and ILRS archives.
+        ✓ Human Verification Gate: 100% of physical constants, COSPAR IDs, landing separation distances, and legal citations were manually audited against NASA SP-284, NASA 2011 Recommendations, NSSDCA, and ILRS archives.
       </div>
     </div>
   </div>
@@ -453,5 +459,5 @@
   <script src="js/certificate.js"></script>
   <script src="js/app.js"></script>
 </body>
-
 </html>
+

@@ -1,682 +1,1053 @@
 /**
  * LUNAMARIS: Letters Across the Silent Seas
- * Main Application Controller (State, Bilingual UI, Scrollytelling Chapters, Filters & Modals)
+ * Main Application Controller (State, Bilingual UI, Mailbox, Episode Engine)
  * NASA International Space Apps Challenge 2026
+ *
+ * ============================================================================
+ * [REDESIGN 2026-11-13 • A+B HYBRID: "COSMIC MAILBOX + EPISODES"]
+ * NỬA ĐẦU FILE ĐƯỢC VIẾT LẠI HOÀN TOÀN. Ba thay đổi lớn:
+ *
+ *   1) BỎ renderChaptersList() (4 chương xếp dọc ~13.000px, 51 nút bấm)
+ *      → THAY bằng renderMailbox() (4 phong bì) + renderEpisode()
+ *        (MỖI LẦN CHỈ HIỆN MỘT tập phim).
+ *
+ *   2) THÊM IntersectionObserver: cuộn tới "nhịp truyện" nào thì hình SVG và
+ *      3 ô số liệu đổi theo nhịp đó. Trang cũ KHÔNG có scroll trigger nào.
+ *
+ *   3) TEM SỨ MỆNH không còn tự thu khi kéo con trượt, mà phải TRẢ LỜI ĐÚNG
+ *      câu hỏi (quiz gate) → học sinh buộc phải đọc câu chuyện.
+ *
+ * NHỮNG HÀM GIỮ NGUYÊN (nằm ở nửa sau file, không sửa):
+ *   renderDecisionStation(), renderCertificateSection(),
+ *   renderClassroomAndFooter()  (+ sửa nhỏ ở phần thẻ giáo viên).
+ *
+ * TOÀN BỘ chữ / ảnh / câu hỏi đọc từ js/data.js (khối `episode` của mỗi
+ * artifact), nên sau này cập nhật nội dung CHỈ CẦN SỬA data.js.
+ * ============================================================================
  */
 
 (function () {
   const DATA = window.LUNAMARIS_DATA || window.RELIC_DATA;
   const I18N = window.UI_I18N;
 
-  // Global Application State
+  /* ------------------------------------------------------------------------
+     [REDESIGN] STATE
+     Bỏ: `filter` (bộ lọc hành tinh), `receiverActive` (công tắc thu sóng),
+         `activeTabs` (tab 2 giọng), `openAccordions` (accordion cũ).
+     Thêm: `openArtifactId` — tập phim đang mở (null = đang đứng ở hộp thư)
+           `quizPicked`     — đáp án học sinh vừa chọn cho mỗi hiện vật
+     ------------------------------------------------------------------------ */
   const state = {
-    lang: "vi", // Default to Vietnamese ("vi") or toggleable to English ("en")
-    filter: "All", // "All" | "Moon" | "Mars"
-    receiverActive: true,
+    lang: "vi", // "vi" | "en"
+    openArtifactId: null,
     sliderValues: {},
-    activeTabs: {}, // "machine" | "dossier" | "both"
-    openAccordions: {}, // boolean per artifact id
+    quizPicked: {},
+    /* [KIDS 2026-11-13] Lớp tương tác trẻ em: dự đoán đầu tập phim,
+       sticker khám phá từ hotspot, bộ đếm photon của nút bắn laser. */
+    guessPicked: {},
+    stickers: {
+      "apollo11-lrrr": false,
+      "surveyor-3": false,
+      "opportunity-rover": false,
+      "ingenuity-helicopter": false
+    },
+    photonCount: 0,
+    laserBusy: false,
+    /* [KIDS 2026-11-13 • v2] Dải "cách khám phá" chỉ hiện tới khi bấm "Đã hiểu!" */
+    helpDismissed: false,
     collectedStamps: {
       "apollo11-lrrr": false,
       "surveyor-3": false,
       "opportunity-rover": false,
       "ingenuity-helicopter": false
     },
-    selectedZoneId: "zone-orange", // Default to 155 m historical Apollo 12 comparison
+    selectedZoneId: "zone-orange",
     badgeUnlocked: false,
     selectedPledgeIndex: 0,
-    guardianName: "",
-    siModalOpen: false
+    guardianName: ""
   };
 
-  // Initialize default slider values and tabs from RELIC_DATA
+  /* [REDESIGN] Hai observer: một cho nhịp truyện, một cho hiệu ứng mực lá thư */
+  let stepObserver = null;
+  let letterObserver = null;
+
+  /* [REDESIGN] Giá trị khởi điểm của con trượt = nhịp ĐẦU TIÊN của tập phim
+     (trước đây lấy slider_config.default_val khiến học sinh rơi vào giữa
+     câu chuyện mà chưa biết bối cảnh). */
   DATA.artifacts.forEach((art) => {
-    state.sliderValues[art.id] = art.slider_config.default_val;
-    state.activeTabs[art.id] = "machine";
-    state.openAccordions[art.id] = false;
+    const firstStep = art.episode && art.episode.steps && art.episode.steps[0];
+    state.sliderValues[art.id] = firstStep ? firstStep.svg_value : art.slider_config.default_val;
+    state.quizPicked[art.id] = null;
+    state.guessPicked[art.id] = null;
   });
 
-  /**
-   * Collects a Mission Stamp for a chapter and updates Sticky Header & Certificate
-   */
-  function collectStamp(artifactId) {
-    if (!state.collectedStamps[artifactId]) {
-      state.collectedStamps[artifactId] = true;
-      renderHeaderStamps();
-      renderCertificateSection();
-    }
-    const badgeEl = document.getElementById(`stamp-status-${artifactId}`);
-    if (badgeEl) {
-      const t = I18N[state.lang];
-      badgeEl.innerHTML = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono-tech font-bold bg-[#E7F434]/20 text-[#E7F434] border border-[#E7F434]/50">${t.stamp_collected_badge}</span>`;
-    }
+  /* ------------------------------------------------------------------------
+     [REDESIGN] CÁC HÀM TIỆN ÍCH NHỎ
+     ------------------------------------------------------------------------ */
+
+  /** Chuỗi giao diện theo ngôn ngữ hiện tại */
+  function t() {
+    return I18N[state.lang];
   }
 
   /**
-   * Renders the Sticky Header (Mission Stamps, Planet Filter, EN/VI Toggle)
+   * Lấy field song ngữ `_en` / `_vi` từ một object trong data.js.
+   * Mọi chữ của tập phim đều đi qua hàm này → sau này thêm ngôn ngữ mới
+   * chỉ cần thêm field `_xx` trong data.js, không phải sửa file này.
    */
-  function renderHeaderStamps() {
-    const t = I18N[state.lang];
-    const navStampsLabel = document.getElementById("nav-stamps-label");
-    if (navStampsLabel) navStampsLabel.textContent = t.nav_stamps_label;
+  function f(obj, key) {
+    if (!obj) return "";
+    return obj[`${key}_${state.lang}`] || obj[`${key}_en`] || "";
+  }
 
-    const stampShortNames = {
-      "apollo11-lrrr": "01: LRRR",
-      "surveyor-3": "02: SURVEYOR 3",
-      "opportunity-rover": "03: OPPORTUNITY",
-      "ingenuity-helicopter": "04: INGENUITY"
-    };
+  /** Gán textContent an toàn (bỏ qua nếu phần tử không tồn tại) */
+  function setText(id, value) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = value;
+  }
 
-    const container = document.getElementById("mission-stamps-bar");
-    if (container) {
-      const collectedCount = Object.values(state.collectedStamps).filter(Boolean).length;
-      container.innerHTML = DATA.artifacts
+  /** [REDESIGN] Tôn trọng cài đặt "giảm chuyển động" của hệ điều hành */
+  function prefersReducedMotion() {
+    return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  }
+
+  /** Tìm mốc preset gần giá trị hiện tại nhất (để hiện câu giải thích số liệu) */
+  function closestStop(art, value) {
+    const stops = art.slider_config.stops;
+    let best = stops[0];
+    let minDiff = Infinity;
+    stops.forEach((st) => {
+      const diff = Math.abs(Number(st.value) - Number(value));
+      if (diff < minDiff) {
+        minDiff = diff;
+        best = st;
+      }
+    });
+    return best;
+  }
+
+  /* ------------------------------------------------------------------------
+     [REDESIGN] TEM SỨ MỆNH — chỉ thu được khi trả lời ĐÚNG câu hỏi
+     ------------------------------------------------------------------------ */
+  function collectStamp(artifactId) {
+    if (state.collectedStamps[artifactId]) return;
+    state.collectedStamps[artifactId] = true;
+    renderHeaderProgress();
+    renderCertificateSection(); // cập nhật 4 ô tem trên thẻ chứng nhận
+  }
+
+  function collectedCount() {
+    return Object.values(state.collectedStamps).filter(Boolean).length;
+  }
+
+  /* ------------------------------------------------------------------------
+     [REDESIGN] HEADER: 4 CHẤM TIẾN ĐỘ (thay cho hàng tem + bộ lọc cũ)
+     ------------------------------------------------------------------------ */
+  function renderHeaderProgress() {
+    const navLabel = document.getElementById("nav-progress-label");
+    if (navLabel) navLabel.textContent = state.lang === "vi" ? "HÀNH TRÌNH:" : "PROGRESS:";
+
+    const dots = document.getElementById("progress-dots");
+    if (dots) {
+      dots.setAttribute("aria-label", state.lang === "vi" ? "Tiến độ 4 lá thư" : "Progress of the four letters");
+      dots.innerHTML = DATA.artifacts
         .map((art) => {
-          const isCollected = state.collectedStamps[art.id];
+          const done = !!state.collectedStamps[art.id];
+          const current = state.openArtifactId === art.id;
           return `
             <button
               type="button"
-              data-scroll-chapter="${art.id}"
-              title="${state.lang === "vi" ? art.name_vi : art.name_en}"
-              class="stamp-pill px-2.5 py-1 rounded-md border text-xs font-mono-tech font-bold transition-all duration-200 flex items-center gap-1.5 ${isCollected
-              ? "mission-stamp-collected"
-              : "opacity-40 border-slate-600 text-slate-300 hover:opacity-75 bg-slate-900/60"
-            }"
-            >
-              <span>${isCollected ? "★" : "○"}</span>
-              <span>[${stampShortNames[art.id]}]</span>
-            </button>
+              data-dot-artifact="${art.id}"
+              title="${f(art, "name")}"
+              aria-label="${f(art, "name")}${done ? " ✓" : ""}"
+              class="progress-dot ${done ? "is-done" : ""} ${current ? "is-current" : ""}"
+            ></button>
           `;
         })
-        .join("") +
-        `<span class="ml-1 px-2 py-0.5 rounded bg-slate-800/90 text-[11px] font-mono-tech text-[#E7F434] border border-white/10">${collectedCount}/4</span>`;
+        .join("");
 
-      container.querySelectorAll("[data-scroll-chapter]").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          const targetId = btn.getAttribute("data-scroll-chapter");
-          if (state.filter !== "All") {
-            state.filter = "All";
-            renderFilterButtons();
-            renderChaptersList();
-          }
-          const el = document.getElementById(`chapter-${targetId}`);
-          if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-        });
+      dots.querySelectorAll("[data-dot-artifact]").forEach((btn) => {
+        btn.addEventListener("click", () => openEpisode(btn.getAttribute("data-dot-artifact")));
       });
     }
+
+    setText("progress-count", `${collectedCount()}/${DATA.artifacts.length}`);
+
+    /* [REDESIGN] Tô sáng nút ngôn ngữ (trước đây việc này nằm trong
+       renderFilterButtons — hàm đã bị bỏ cùng bộ lọc hành tinh). */
+    const langEnBtn = document.getElementById("lang-btn-en");
+    const langViBtn = document.getElementById("lang-btn-vi");
+    const langCls = (on) =>
+      `px-2 py-1 text-xs font-mono-tech font-bold rounded transition ${
+        on ? "bg-[#7fd4ff] text-[#0e1120]" : "text-slate-400 hover:text-white"
+      }`;
+    if (langEnBtn) langEnBtn.className = langCls(state.lang === "en");
+    if (langViBtn) langViBtn.className = langCls(state.lang === "vi");
   }
 
-  function renderFilterButtons() {
-    const t = I18N[state.lang];
-    const filterContainer = document.getElementById("planet-filter-bar");
-    if (!filterContainer) return;
+  /* ------------------------------------------------------------------------
+     [REDESIGN] HỘP THƯ VŨ TRỤ: 4 PHONG BÌ
+     ------------------------------------------------------------------------ */
+  function renderMailbox() {
+    const tt = t();
 
-    const filters = [
-      { key: "All", label: t.filter_all },
-      { key: "Moon", label: t.filter_moon },
-      { key: "Mars", label: t.filter_mars }
-    ];
+    setText("mailbox-eyebrow", tt.mailbox_eyebrow);
+    setText("mailbox-title", tt.mailbox_title);
+    setText("mailbox-sub", tt.mailbox_sub);
+    setText("mailbox-station", tt.hero_station_line1);
+    setText("cta-artemis-btn", tt.cta_artemis);
 
-    filterContainer.innerHTML = filters
-      .map((f) => {
-        const active = state.filter === f.key;
+    const hint = document.getElementById("mailbox-scroll-hint");
+    if (hint) {
+      hint.innerHTML = `<span>${tt.scroll_hint}</span><span>↓</span>`;
+    }
+
+    const box = document.getElementById("relic-mailbox");
+    if (!box) return;
+
+    box.innerHTML = DATA.artifacts
+      .map((art) => {
+        const done = !!state.collectedStamps[art.id];
+        const isMoon = art.celestial_body === "Moon";
         return `
-          <button
-            type="button"
-            data-filter-key="${f.key}"
-            class="px-2.5 py-1 rounded text-xs font-mono-tech font-semibold transition-all ${active
-            ? "bg-[#E7F434] text-[#151622] font-bold shadow-sm"
-            : "text-slate-300 hover:text-white hover:bg-white/10"
-          }"
+          <div
+            class="envelope-card ${done ? "is-done" : ""}"
+            role="button"
+            tabindex="0"
+            data-envelope="${art.id}"
+            aria-label="${f(art, "name")} — ${done ? tt.envelope_done : tt.envelope_open}"
           >
-            ${f.label}
-          </button>
+            <span class="envelope-postmark">${done ? "✓" : art.chapter_num}</span>
+            <h2 class="envelope-name">${f(art, "name")}</h2>
+            <p class="envelope-teaser">${f(art.episode, "teaser")}</p>
+            <span class="envelope-meta">
+              <span class="body-chip ${isMoon ? "moon" : "mars"}">${isMoon ? tt.moon_badge : tt.mars_badge}</span>
+              <span class="font-mono-tech" style="color: rgba(35, 38, 46, 0.62)">${art.location_name}</span>
+            </span>
+            <span class="envelope-cta">${done ? tt.envelope_reopen : tt.envelope_open} →</span>
+          </div>
         `;
       })
       .join("");
 
-    filterContainer.querySelectorAll("[data-filter-key]").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        state.filter = btn.getAttribute("data-filter-key");
-        renderFilterButtons();
-        renderChaptersList();
+    box.querySelectorAll("[data-envelope]").forEach((card) => {
+      const id = card.getAttribute("data-envelope");
+      card.addEventListener("click", () => openEpisode(id));
+      /* [REDESIGN] Vì phong bì là <div role="button"> (để chứa được <h2>),
+         phải tự xử lý phím Enter / Space cho học sinh dùng bàn phím. */
+      card.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          openEpisode(id);
+        }
       });
     });
-
-    // Update language toggle button state
-    const langEnBtn = document.getElementById("lang-btn-en");
-    const langViBtn = document.getElementById("lang-btn-vi");
-    if (langEnBtn && langViBtn) {
-      langEnBtn.className = `px-2 py-1 text-xs font-mono-tech font-bold rounded transition ${state.lang === "en" ? "bg-[#38BDF8] text-[#151622]" : "text-slate-400 hover:text-white"
-        }`;
-      langViBtn.className = `px-2 py-1 text-xs font-mono-tech font-bold rounded transition ${state.lang === "vi" ? "bg-[#38BDF8] text-[#151622]" : "text-slate-400 hover:text-white"
-        }`;
-    }
   }
 
-  /**
-   * Renders Hero Section (Hanoi Ground Receiving Station Anchor & Intro Hook)
-   */
-  function renderHeroSection() {
-    const t = I18N[state.lang];
-    const setTxt = (id, val) => {
-      const el = document.getElementById(id);
-      if (el) el.textContent = val;
-    };
-
-    setTxt("hero-badge-text", t.hero_badge);
-    setTxt("hero-main-title", t.hero_title);
-    setTxt("hero-subtitle", t.hero_subtitle);
-    setTxt("hero-station-line1", t.hero_station_line1);
-    setTxt("hero-station-line2", t.hero_station_line2);
-    setTxt("hero-receiver-label", t.hero_receiver_label);
-    setTxt("hero-hook-text", t.hero_hook);
-    setTxt("cta-tune-in-btn", t.cta_tune_in);
-    setTxt("cta-artemis-btn", t.cta_artemis);
-
-    const receiverBtn = document.getElementById("receiver-toggle-btn");
-    if (receiverBtn) {
-      receiverBtn.innerHTML = state.receiverActive
-        ? `<span class="w-2.5 h-2.5 rounded-full bg-[#10B981] animate-ping"></span><span class="w-2.5 h-2.5 rounded-full bg-[#10B981] -ml-2.5"></span><span>${t.hero_receiver_on}</span>`
-        : `<span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span><span>${t.hero_receiver_off}</span>`;
-    }
-  }
-
-  /**
-   * Updates only the dynamic telemetry & SVG inside a single chapter when dragging its slider
-   */
-  function updateChapterTelemetryDOM(artifactId) {
+  /* ------------------------------------------------------------------------
+     [REDESIGN] MỞ / ĐÓNG TẬP PHIM
+     ------------------------------------------------------------------------ */
+  function openEpisode(artifactId) {
     const art = DATA.artifacts.find((a) => a.id === artifactId);
     if (!art) return;
 
-    const currentVal = state.sliderValues[artifactId];
-    const evalResult = window.RelicSVGEngine.evaluateArtifact(artifactId, currentVal, state.lang);
+    state.openArtifactId = artifactId;
+    state.quizPicked[artifactId] = null;
+    // Vào tập phim luôn bắt đầu từ nhịp 1 để câu chuyện đi đúng trình tự
+    state.sliderValues[artifactId] = art.episode.steps[0].svg_value;
 
-    // 1. Update SVG Overlay Viewport
-    const svgContainer = document.getElementById(`svg-viewport-${artifactId}`);
-    if (svgContainer) {
-      svgContainer.innerHTML = evalResult.svg;
+    const hero = document.getElementById("hero-top");
+    if (hero) hero.style.display = "none";
+
+    renderHeaderProgress();
+    renderEpisode();
+
+    const root = document.getElementById("episode-root");
+    if (root) {
+      root.scrollIntoView({ behavior: prefersReducedMotion() ? "auto" : "smooth", block: "start" });
+    }
+  }
+
+  function closeEpisode() {
+    state.openArtifactId = null;
+    teardownObservers();
+
+    const hero = document.getElementById("hero-top");
+    if (hero) hero.style.display = "";
+
+    const root = document.getElementById("episode-root");
+    if (root) root.innerHTML = "";
+
+    renderHeaderProgress();
+    renderMailbox();
+
+    if (hero) {
+      hero.scrollIntoView({ behavior: prefersReducedMotion() ? "auto" : "smooth", block: "start" });
+    }
+  }
+
+  function teardownObservers() {
+    if (stepObserver) {
+      stepObserver.disconnect();
+      stepObserver = null;
+    }
+    if (letterObserver) {
+      letterObserver.disconnect();
+      letterObserver = null;
+    }
+  }
+
+  /* ------------------------------------------------------------------------
+     [REDESIGN] VẼ TẬP PHIM: cột hình sticky + 4 nhịp truyện + lá thư
+                + sổ tay kỹ sư (nắp gập) + câu hỏi mở tem
+     ------------------------------------------------------------------------ */
+  function renderEpisode() {
+    const root = document.getElementById("episode-root");
+    if (!root) return;
+
+    const art = DATA.artifacts.find((a) => a.id === state.openArtifactId);
+    if (!art) {
+      root.innerHTML = "";
+      return;
     }
 
-    // 2. Update Live Telemetry Readout Cards
-    const metricsContainer = document.getElementById(`telemetry-metrics-${artifactId}`);
-    if (metricsContainer) {
-      metricsContainer.innerHTML = evalResult.metrics
+    const tt = t();
+    const isMoon = art.celestial_body === "Moon";
+    const done = !!state.collectedStamps[art.id];
+    const steps = art.episode.steps;
+    const quiz = art.episode.quiz;
+    const guessHtml = guessBlockHtml(art);
+
+    /* --- Dải dẫn đường 3 bước cho người mới (tự khám phá, 10–18 tuổi) --- */
+    const helpHtml = state.helpDismissed
+      ? ""
+      : `
+        <div class="ep-help" id="ep-help">
+          <div class="ep-help-head">
+            <span class="ep-help-title">🧭 ${tt.help_title}</span>
+            <button type="button" id="ep-help-close" class="ep-help-close">${tt.help_got}</button>
+          </div>
+          <ol class="ep-help-steps">
+            <li>${tt.help_step1}</li>
+            <li>${tt.help_step2}</li>
+            <li>${tt.help_step3}</li>
+          </ol>
+        </div>
+      `;
+
+    /* --- Con trượt tự khám phá đặt NGAY dưới khung hình (không giấu trong
+           nắp gập) để học sinh thấy ngay thứ mình chạm vào được. --- */
+    const sliderBoxHtml = `
+      <div class="ep-slider-box">
+        <div class="ep-slider-title">🎚️ ${tt.telemetry_station_title}</div>
+        <label for="ep-slider" class="block text-sm font-semibold">${f(art.slider_config, "parameter_name")}</label>
+        <input
+          id="ep-slider"
+          type="range"
+          min="${art.slider_config.min_val}"
+          max="${art.slider_config.max_val}"
+          step="${art.slider_config.step}"
+          value="${state.sliderValues[art.id]}"
+          class="telemetry-slider ${isMoon ? "" : "mars-slider"}"
+        />
+        <div class="ep-slider-hint">💡 ${tt.slider_hint}</div>
+      </div>
+    `;
+
+    /* --- Cột phải: các nhịp truyện --- */
+    const stepsHtml = steps
+      .map((st, i) => {
+        return `
+          <section class="ep-step ${i === 0 ? "is-active" : ""}" data-step-index="${i}" data-svg-value="${st.svg_value}">
+            <div class="ep-step-index">${tt.step_word} ${String(i + 1).padStart(2, "0")} / ${String(steps.length).padStart(2, "0")}</div>
+            <p class="ep-step-text">${f(st, "text")}</p>
+          </section>
+        `;
+      })
+      .join("");
+
+    /* --- Lá thư: tách từng câu để "mực chạy" lần lượt --- */
+    const letterRaw = f(art.narrative_voice, "letter");
+    const sentences = letterRaw.match(/[^.!?]+[.!?]+|\S+$/g) || [letterRaw];
+    const letterHtml = sentences
+      .map(
+        (s, i) =>
+          `<span class="ink" style="transition-delay: ${(i * 0.28).toFixed(2)}s">${s.trim()} </span>`
+      )
+      .join("");
+
+    /* --- Sổ tay kỹ sư (mặc định ĐÓNG để không ngập số liệu) ---
+       [KIDS v2] Con trượt vật lý được ĐƯA RA ngoài, nằm ngay dưới khung hình
+       để học sinh tự khám phá không phải tìm trong nắp gập; sổ tay giữ các mốc
+       preset + hồ sơ kiểm chứng. */
+    const dossierHtml = `
+      <details class="ep-dossier">
+        <summary>${tt.dossier_toggle}</summary>
+        <div class="ep-dossier-body">
+          <div class="space-y-2">
+            <div class="text-xs font-mono-tech text-slate-400">${tt.preset_label}</div>
+            <div id="ep-preset-btns" class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              ${art.slider_config.stops
+                .map(
+                  (st) => `
+                  <button
+                    type="button"
+                    data-preset-val="${st.value}"
+                    class="px-3 py-2 rounded-lg text-xs font-mono-tech font-semibold transition-all border text-left bg-[#0e1120]/90 text-slate-200 border-white/15 hover:border-[#e7f434]/60 hover:text-[#e7f434]"
+                  >
+                    ⚡ ${f(st, "label")}
+                  </button>
+                `
+                )
+                .join("")}
+            </div>
+          </div>
+
+          <div>
+            <div class="font-mono-tech text-[#7fd4ff] font-bold mb-1">${tt.dossier_sec1_title}</div>
+            <p>${f(art.archaeologist_dossier, "how_it_operated")}</p>
+          </div>
+
+          <div>
+            <div class="font-mono-tech text-[#7fd4ff] font-bold mb-1">${tt.dossier_sec3_title}</div>
+            <p>${f(art.archaeologist_dossier, "conservation_law")}</p>
+          </div>
+
+          <div>
+            <div class="font-mono-tech text-[#7fd4ff] font-bold mb-1">${tt.where_number_formula_title}</div>
+            <p>${f(art.archaeologist_dossier, "discrepancy_note")}</p>
+          </div>
+
+          <div>
+            <div class="font-mono-tech text-[#7fd4ff] font-bold mb-1">${tt.where_number_sources_title}</div>
+            <ul class="space-y-1.5">
+              ${art.archaeologist_dossier.source_links
+                .map(
+                  (s) => `
+                  <li>
+                    <a href="${s.url}" target="_blank" rel="noopener noreferrer" class="text-[#7fd4ff] hover:text-[#e7f434] underline underline-offset-2">
+                      ${s.label} ↗
+                    </a>
+                  </li>
+                `
+                )
+                .join("")}
+            </ul>
+          </div>
+        </div>
+      </details>
+    `;
+
+    /* --- Câu hỏi mở tem --- */
+    const quizHtml = `
+      <div class="ep-quiz" id="ep-quiz">
+        <div class="ep-step-index" style="color: var(--beacon)">${tt.quiz_title}</div>
+        <p class="ep-quiz-question">${f(quiz, "question")}</p>
+        <div class="ep-quiz-options">
+          ${(state.lang === "vi" ? quiz.options_vi : quiz.options_en)
+            .map(
+              (opt, i) => `
+              <button type="button" class="ep-quiz-option" data-option-index="${i}">${opt}</button>
+            `
+            )
+            .join("")}
+        </div>
+        <div id="ep-quiz-feedback" class="hidden"></div>
+        <!-- [REDESIGN] Ô con tem: để TRỐNG cho tới khi trả lời đúng,
+             lúc đó tem mới "đóng cộp" xuống (animation stamp-thunk). -->
+        <div id="ep-stamp-slot" class="mt-4">
+          ${done ? `<span class="postmark-stamp is-collected">${tt.stamp_collected_badge}</span>` : ""}
+        </div>
+      </div>
+    `;
+
+    /* --- Lắp ráp toàn bộ tập phim --- */
+    root.innerHTML = `
+      <article class="max-w-6xl mx-auto">
+        <!-- Thanh điều hướng trong tập phim -->
+        <div class="ep-topbar">
+          <button type="button" id="ep-back-btn" class="ep-back-btn">← ${tt.episode_back}</button>
+          <span class="font-mono-tech text-slate-400">${tt.episode_switch}</span>
+          ${DATA.artifacts
+            .map((a) => {
+              const isCurrent = a.id === art.id;
+              return `
+                <button
+                  type="button"
+                  data-switch-artifact="${a.id}"
+                  class="ep-switch-chip ${isCurrent ? "is-current" : ""}"
+                >
+                  ${state.collectedStamps[a.id] ? "★" : "○"} ${a.chapter_num}
+                </button>
+              `;
+            })
+            .join("")}
+        </div>
+
+        <!-- Tiêu đề tập phim -->
+        <header class="mb-7">
+          <div class="flex flex-wrap items-center gap-2.5 mb-3">
+            <span class="px-3 py-1 rounded-md bg-[#24306b] text-[#e7f434] font-mono-tech text-xs font-bold border border-[#e7f434]/30">
+              ${tt.chapter_prefix} ${art.chapter_num}
+            </span>
+            <span class="body-chip ${isMoon ? "moon" : "mars"}" style="color: ${isMoon ? "var(--moonbeam)" : "var(--rust)"}">
+              ${isMoon ? tt.moon_badge : tt.mars_badge}
+            </span>
+            <span class="font-mono-tech text-slate-400">
+              <strong class="text-slate-200">${tt.cospar_label}</strong> ${art.cospar_id}
+            </span>
+          </div>
+
+          <h2 class="font-heading text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
+            ${f(art, "name")}
+          </h2>
+          <p class="mt-2 text-sm sm:text-base text-slate-300 font-mono-tech">
+            ${tt.location_label} ${art.location_name} &nbsp;•&nbsp;
+            <span class="text-[#10b981]">${tt.status_label} ${f(art, "functionality_status")}</span>
+          </p>
+        </header>
+
+        ${helpHtml}
+
+        <!-- Cột hình sticky (trái) + cột truyện (phải) -->
+        <div class="episode-shell">
+          <div class="ep-visual">
+            <div class="ep-visual-frame">
+              <img
+                src="${art.media.primary_image_url}"
+                alt="${f(art, "name")}"
+                loading="lazy"
+                onerror="this.style.display='none'"
+              />
+              <div id="ep-svg" class="ep-svg-layer"></div>
+              <!-- [KIDS 2026-11-13] Lớp tương tác trẻ em (nút bắn laser, hotspot
+                   sticker, bộ đếm photon). Nằm NGOÀI #ep-svg vì #ep-svg bị vẽ lại
+                   mỗi lần applyTelemetry() chạy. -->
+              <div id="ep-play-layer" class="ep-play-layer"></div>
+              <div class="ep-photo-credit">📷 ${art.media.image_credit}</div>
+            </div>
+            <div id="ep-metrics" class="ep-metrics"></div>
+            <div id="ep-status" class="ep-status"></div>
+            ${sliderBoxHtml}
+          </div>
+
+          <div>
+            ${guessHtml}
+            <div class="ep-steps">${stepsHtml}</div>
+
+            <!-- Lá thư của di vật (phương án B) -->
+            <div class="ep-letter" id="ep-letter">
+              <div class="ep-letter-title">${tt.letter_heading}</div>
+              <p class="ep-letter-body">${letterHtml}</p>
+              <div class="mt-4 pt-3 border-t border-[rgba(35,38,46,0.18)] font-mono-tech" style="font-size: 11px; color: rgba(35,38,46,0.65)">
+                ${tt.postmark_from} ${f(art.narrative_voice, "epistemic_label")}<br />
+                ${tt.postmark_to}
+              </div>
+            </div>
+
+            ${dossierHtml}
+            ${quizHtml}
+          </div>
+        </div>
+      </article>
+    `;
+
+    wireEpisode(art);
+    applyTelemetry(art.id);
+    setupObservers(art);
+  }
+
+  /* ------------------------------------------------------------------------
+     [REDESIGN] GẮN SỰ KIỆN CHO TẬP PHIM VỪA VẼ
+     ------------------------------------------------------------------------ */
+  function wireEpisode(art) {
+    const backBtn = document.getElementById("ep-back-btn");
+    if (backBtn) backBtn.addEventListener("click", closeEpisode);
+
+    /* [KIDS v2] Tắt dải dẫn đường cho phần còn lại của phiên học */
+    const helpClose = document.getElementById("ep-help-close");
+    if (helpClose) {
+      helpClose.addEventListener("click", () => {
+        state.helpDismissed = true;
+        const box = document.getElementById("ep-help");
+        if (box) box.remove();
+      });
+    }
+
+    document.querySelectorAll("[data-switch-artifact]").forEach((btn) => {
+      btn.addEventListener("click", () => openEpisode(btn.getAttribute("data-switch-artifact")));
+    });
+
+    /* Con trượt "tự khám phá" trong sổ tay kỹ sư */
+    const slider = document.getElementById("ep-slider");
+    if (slider) {
+      slider.addEventListener("input", (e) => {
+        state.sliderValues[art.id] = Number(e.target.value);
+        applyTelemetry(art.id);
+      });
+    }
+
+    document.querySelectorAll("#ep-preset-btns [data-preset-val]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        state.sliderValues[art.id] = Number(btn.getAttribute("data-preset-val"));
+        applyTelemetry(art.id);
+      });
+    });
+
+    /* [REDESIGN] Quiz gate: bấm đáp án → chấm ngay → đúng thì "đóng cộp" tem */
+    document.querySelectorAll("#ep-quiz [data-option-index]").forEach((btn) => {
+      btn.addEventListener("click", () => gradeQuiz(art, Number(btn.getAttribute("data-option-index"))));
+    });
+
+    /* [KIDS 2026-11-13] Đoán trước–kiểm tra sau + lớp chạm vào cảnh SVG */
+    wireGuess(art);
+    setupPlayLayer(art);
+  }
+
+  /* ------------------------------------------------------------------------
+     [KIDS 2026-11-13] ĐOÁN TRƯỚC — KIỂM TRA SAU
+     Một dự đoán 3 lựa chọn đầu tập phim; chốt xong mới hiện số thật để học
+     sinh tự đối chiếu với các nhịp truyện và con trượt trong sổ tay kỹ sư.
+     ------------------------------------------------------------------------ */
+  function guessBlockHtml(art) {
+    const tt = t();
+    const g = art.episode && art.episode.guess;
+    if (!g) return "";
+
+    const picked = state.guessPicked[art.id];
+    const options = state.lang === "vi" ? g.options_vi : g.options_en;
+
+    return `
+      <div class="ep-guess" id="ep-guess">
+        <div class="ep-guess-title">🎲 ${tt.guess_title}</div>
+        <p class="ep-guess-q">${f(g, "question")}</p>
+        <div class="ep-guess-options">
+          ${options
+            .map((opt, i) => {
+              let cls = "";
+              if (picked !== null) {
+                if (i === g.answer_index) cls = "is-right";
+                else if (i === picked) cls = "is-wrong";
+                else cls = "is-dim";
+              }
+              return `
+                <button type="button" class="ep-guess-option ${cls}" data-guess-index="${i}" ${
+                  picked !== null ? "disabled" : ""
+                }>${opt}</button>
+              `;
+            })
+            .join("")}
+        </div>
+        ${
+          picked !== null
+            ? `
+          <div class="ep-guess-reveal ${picked === g.answer_index ? "is-right" : ""}">
+            <strong>${picked === g.answer_index ? tt.guess_right : tt.guess_miss}</strong>
+            <p>${f(g, "reveal")}</p>
+          </div>`
+            : ""
+        }
+      </div>
+    `;
+  }
+
+  function wireGuess(art) {
+    document.querySelectorAll("#ep-guess [data-guess-index]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        if (state.guessPicked[art.id] !== null) return;
+        state.guessPicked[art.id] = Number(btn.getAttribute("data-guess-index"));
+        const box = document.getElementById("ep-guess");
+        if (box) box.outerHTML = guessBlockHtml(art);
+        wireGuess(art);
+      });
+    });
+  }
+
+  /* ------------------------------------------------------------------------
+     [KIDS 2026-11-13] LỚP CHƠI TRÊN CẢNH SVG
+     - Chương 01: nút "Bắn laser nào!" — photon bay khứ hồi đúng 2,56 giây.
+     - Mọi chương: hotspot "Cái gì đây?" → fun-fact + sticker khám phá.
+     - Góc phải: khay đếm sticker n/4.
+     ------------------------------------------------------------------------ */
+  function stickerCount() {
+    return Object.values(state.stickers).filter(Boolean).length;
+  }
+
+  function playLayerHtml(art) {
+    const tt = t();
+    const isLrrr = art.id === "apollo11-lrrr";
+    const got = !!state.stickers[art.id];
+
+    return `
+      ${
+        isLrrr
+          ? `
+        <div id="ep-laser-status" class="play-status">
+          💡 ${tt.laser_hint}<br />
+          ${tt.laser_counter}: <strong id="ep-photon-count">${state.photonCount}</strong> ${tt.laser_ratio}
+        </div>
+        <button type="button" id="ep-laser-btn" class="play-laser-btn">🔦 ${tt.laser_btn}</button>`
+          : ""
+      }
+      <button
+        type="button"
+        id="ep-hotspot"
+        class="play-hotspot ${got ? "is-got" : ""}"
+        aria-label="${tt.spot_hint}"
+      >
+        <span>${got ? "★" : "?"}</span>
+        ${got ? "" : `<span class="play-hotspot-tag">${tt.spot_hint}</span>`}
+      </button>
+      <div id="ep-spot-pop" class="play-spot-pop hidden"></div>
+      <div id="ep-sticker-chip" class="play-sticker-chip" title="${tt.sticker_tray}">🔍 ${stickerCount()}/4</div>
+    `;
+  }
+
+  function setupPlayLayer(art) {
+    const layer = document.getElementById("ep-play-layer");
+    if (layer) layer.innerHTML = playLayerHtml(art);
+
+    const laserBtn = document.getElementById("ep-laser-btn");
+    if (laserBtn) laserBtn.addEventListener("click", () => fireLaser(art));
+
+    const spot = document.getElementById("ep-hotspot");
+    if (spot) spot.addEventListener("click", () => openSpotPop(art));
+
+    positionHotspot(art);
+  }
+
+  /* Toạ độ hotspot trong hệ SVG 480×260, bám theo giá trị hiện tại
+     (mảng lăng kính và trực thăng dịch chuyển theo con trượt). */
+  function hotspotAnchor(artifactId, value) {
+    switch (artifactId) {
+      case "apollo11-lrrr": {
+        const shift = Math.round(((Number(value) - 1969) / 57) * 54);
+        return { x: 290 + shift - 8, y: 166 };
+      }
+      case "surveyor-3":
+        return { x: 89, y: 130 };
+      case "opportunity-rover":
+        return { x: 230, y: 152 };
+      case "ingenuity-helicopter": {
+        const heliY = Math.round(Number(value)) === 72 ? 158 : 108;
+        return { x: 270, y: 104 + (heliY - 108) };
+      }
+      default:
+        return { x: 240, y: 130 };
+    }
+  }
+
+  function positionHotspot(art) {
+    const anchor = hotspotAnchor(art.id, state.sliderValues[art.id]);
+    const left = `${((anchor.x / 480) * 100).toFixed(2)}%`;
+    const top = `${((anchor.y / 260) * 100).toFixed(2)}%`;
+
+    const spot = document.getElementById("ep-hotspot");
+    if (spot) {
+      spot.style.left = left;
+      spot.style.top = top;
+    }
+
+    const pop = document.getElementById("ep-spot-pop");
+    if (pop) {
+      pop.style.left = left;
+      pop.style.top = top;
+      pop.classList.toggle("below", anchor.y / 260 < 0.42);
+    }
+  }
+
+  function openSpotPop(art) {
+    const tt = t();
+    const pop = document.getElementById("ep-spot-pop");
+    if (!pop) return;
+
+    if (!pop.classList.contains("hidden")) {
+      pop.classList.add("hidden");
+      return;
+    }
+
+    const firstTime = !state.stickers[art.id];
+    if (firstTime) {
+      state.stickers[art.id] = true;
+      const spot = document.getElementById("ep-hotspot");
+      if (spot) {
+        spot.classList.add("is-got");
+        spot.querySelector("span").textContent = "★";
+        const tag = spot.querySelector(".play-hotspot-tag");
+        if (tag) tag.remove();
+      }
+      renderStickerChip();
+      renderCertificateSection();
+    }
+
+    pop.innerHTML = `
+      <button type="button" id="ep-spot-close" class="play-spot-close" aria-label="×">×</button>
+      <div class="play-spot-title">🔍 ${tt.spot_hint}</div>
+      <p>${f(art, "kid_fact")}</p>
+      <div class="play-spot-star">★ ${tt.spot_got}</div>
+    `;
+    pop.classList.remove("hidden");
+
+    const closeBtn = document.getElementById("ep-spot-close");
+    if (closeBtn) closeBtn.addEventListener("click", () => pop.classList.add("hidden"));
+  }
+
+  function renderStickerChip() {
+    const chip = document.getElementById("ep-sticker-chip");
+    if (chip) chip.textContent = `🔍 ${stickerCount()}/4`;
+  }
+
+  /* Xung photon bay Trái Đất → lăng kính → về lại, đúng 2,56 giây thời gian thật */
+  function fireLaser(art) {
+    const layer = document.getElementById("ep-play-layer");
+    if (!layer || state.laserBusy) return;
+
+    const tt = t();
+    const btn = document.getElementById("ep-laser-btn");
+    const status = document.getElementById("ep-laser-status");
+    state.laserBusy = true;
+    if (btn) btn.disabled = true;
+
+    const finish = () => {
+      state.photonCount += 1;
+      state.laserBusy = false;
+      if (btn) btn.disabled = false;
+      const counter = document.getElementById("ep-photon-count");
+      if (counter) counter.textContent = String(state.photonCount);
+      if (status) status.textContent = `${tt.laser_ping} ${tt.laser_counter}: ${state.photonCount}`;
+    };
+
+    if (prefersReducedMotion()) {
+      if (status) status.textContent = tt.laser_flying;
+      finish();
+      return;
+    }
+
+    const value = Number(state.sliderValues[art.id]);
+    const shift = Math.round(((value - 1969) / 57) * 54);
+    const moonX = 290 + shift;
+    const from = { x: (62 / 480) * 100, y: (122 / 260) * 100 };
+    const to = { x: ((moonX - 15) / 480) * 100, y: (172 / 260) * 100 };
+
+    if (status) status.textContent = tt.laser_flying;
+
+    const dot = document.createElement("div");
+    dot.className = "photon-dot";
+    layer.appendChild(dot);
+
+    /* Hẹn giờ thường thay vì anim.onfinish: timeline hoạt ảnh bị trình duyệt
+       tạm dừng khi tab ẩn, khiến bộ đếm photon kẹt nếu học sinh chuyển tab. */
+    dot.animate(
+      [
+        { left: `${from.x}%`, top: `${from.y}%`, offset: 0 },
+        { left: `${to.x}%`, top: `${to.y}%`, offset: 0.5 },
+        { left: `${to.x}%`, top: `${to.y}%`, offset: 0.55 },
+        { left: `${from.x}%`, top: `${from.y}%`, offset: 1 }
+      ],
+      { duration: 2560, easing: "linear" }
+    );
+    window.setTimeout(() => {
+      if (dot.parentNode) dot.parentNode.removeChild(dot);
+      finish();
+    }, 2560);
+  }
+
+  function gradeQuiz(art, pickedIndex) {
+    const tt = t();
+    const quiz = art.episode.quiz;
+    const isCorrect = pickedIndex === quiz.answer_index;
+    state.quizPicked[art.id] = pickedIndex;
+
+    const buttons = Array.from(document.querySelectorAll("#ep-quiz [data-option-index]"));
+    buttons.forEach((b) => b.classList.remove("is-picked", "is-right", "is-wrong"));
+
+    const feedback = document.getElementById("ep-quiz-feedback");
+    if (!feedback) return;
+
+    if (isCorrect) {
+      const picked = buttons[pickedIndex];
+      if (picked) picked.classList.add("is-right");
+      buttons.forEach((b) => (b.disabled = true));
+
+      collectStamp(art.id);
+
+      /* Con tem "đóng cộp" ngay tại chỗ
+         [REDESIGN] Không thêm dấu ✓ ở đây vì chuỗi stamp_collected_badge
+         trong data.js đã có sẵn dấu ✓ (tránh hiện "✓ ✓"). */
+      const slot = document.getElementById("ep-stamp-slot");
+      if (slot) {
+        slot.innerHTML = `<span class="postmark-stamp is-collected">${tt.stamp_collected_badge}</span>`;
+      }
+
+      const next = DATA.artifacts.find((a) => !state.collectedStamps[a.id]);
+      const allDone = collectedCount() === DATA.artifacts.length;
+
+      feedback.classList.remove("hidden");
+      feedback.className = "ep-quiz-feedback";
+      feedback.innerHTML = `
+        <div class="font-bold text-[#10b981]">${tt.quiz_correct}</div>
+        <p class="mt-1.5 text-slate-300">${tt.quiz_explain} ${f(quiz, "explain")}</p>
+        ${
+          allDone
+            ? `<div class="mt-3 flex flex-wrap items-center gap-3">
+                 <span class="text-sm text-[#e7f434] font-semibold">${tt.all_done}</span>
+                 <button type="button" id="ep-goto-cert" class="btn-primary !py-2 !px-4 !text-sm">🛡️ ${tt.cert_section_title}</button>
+                 <button type="button" id="ep-goto-mailbox" class="btn-ghost !py-2 !px-4 !text-sm">${tt.episode_back}</button>
+               </div>`
+            : `<button type="button" id="ep-goto-next" class="btn-primary mt-3 !py-2 !px-4 !text-sm">${tt.next_envelope}</button>`
+        }
+      `;
+
+      const gotoNext = document.getElementById("ep-goto-next");
+      if (gotoNext && next) gotoNext.addEventListener("click", () => openEpisode(next.id));
+
+      const gotoCert = document.getElementById("ep-goto-cert");
+      if (gotoCert) {
+        gotoCert.addEventListener("click", () => {
+          closeEpisode();
+          const cert = document.getElementById("guardian-certificate-section");
+          if (cert) cert.scrollIntoView({ behavior: prefersReducedMotion() ? "auto" : "smooth", block: "start" });
+        });
+      }
+
+      const gotoMailbox = document.getElementById("ep-goto-mailbox");
+      if (gotoMailbox) gotoMailbox.addEventListener("click", closeEpisode);
+    } else {
+      const picked = buttons[pickedIndex];
+      if (picked) picked.classList.add("is-wrong");
+
+      feedback.classList.remove("hidden");
+      feedback.className = "ep-quiz-feedback";
+      feedback.style.borderLeftColor = "var(--bad)";
+      feedback.innerHTML = `<div class="text-[#ef4444] font-semibold">${tt.quiz_wrong}</div>`;
+
+      /* Cho phép thử lại sau 0,8 giây (không khoá cứng học sinh) */
+      window.setTimeout(() => {
+        if (picked) picked.classList.remove("is-wrong");
+      }, 800);
+    }
+  }
+
+  /* ------------------------------------------------------------------------
+     [REDESIGN] CẬP NHẬT HÌNH SVG + 3 Ô SỐ LIỆU
+     Vẫn gọi đúng engine cũ: RelicSVGEngine.evaluateArtifact(id, value, lang)
+     ------------------------------------------------------------------------ */
+  function applyTelemetry(artifactId) {
+    const art = DATA.artifacts.find((a) => a.id === artifactId);
+    if (!art) return;
+
+    const value = state.sliderValues[artifactId];
+    const res = window.RelicSVGEngine.evaluateArtifact(artifactId, value, state.lang);
+
+    const svgBox = document.getElementById("ep-svg");
+    if (svgBox) svgBox.innerHTML = res.svg;
+
+    const metricsBox = document.getElementById("ep-metrics");
+    if (metricsBox) {
+      metricsBox.innerHTML = res.metrics
         .map(
           (m) => `
-          <div class="surface-subcard rounded-xl p-3 border border-white/10">
-            <div class="text-[11px] font-mono-tech text-slate-400 uppercase tracking-wider">${m.label}</div>
-            <div class="text-lg md:text-xl font-mono-tech font-bold text-[#E7F434] mt-0.5">${m.value}</div>
-            <div class="text-[11px] font-mono-tech text-slate-400 mt-0.5">${m.sub}</div>
+          <div class="ep-metric">
+            <div class="ep-metric-label">${m.label}</div>
+            <div class="ep-metric-value">${m.value}</div>
+            <div class="ep-metric-sub">${m.sub}</div>
+            ${m.tip ? `<div class="ep-metric-tip">💡 ${m.tip}</div>` : ""}
           </div>
         `
         )
         .join("");
     }
 
-    // 3. Update Status Text & Matching Preset Stop Description
-    const statusBox = document.getElementById(`telemetry-status-${artifactId}`);
-    const stops = art.slider_config.stops;
-    // Find closest stop for contextual description
-    let closestStop = stops[0];
-    let minDiff = Infinity;
-    stops.forEach((st) => {
-      const diff = Math.abs(Number(st.value) - Number(currentVal));
-      if (diff < minDiff) {
-        minDiff = diff;
-        closestStop = st;
-      }
-    });
-
+    const statusBox = document.getElementById("ep-status");
     if (statusBox) {
-      const stopDesc = state.lang === "vi" ? closestStop.desc_vi : closestStop.desc_en;
+      const stop = closestStop(art, value);
       statusBox.innerHTML = `
-        <div class="flex flex-wrap items-center justify-between gap-2 mb-1">
-          <span class="text-xs font-mono-tech font-bold uppercase tracking-wider text-[#38BDF8]">
-            ${evalResult.statusText}
-          </span>
-          <span class="text-xs font-mono-tech px-2 py-0.5 rounded bg-white/10 text-[#E7F434]">
-            ${art.slider_config.unit}: ${currentVal}
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <span class="font-mono-tech font-bold" style="color: var(--moonbeam)">${res.statusText}</span>
+          <span class="font-mono-tech px-2 py-0.5 rounded bg-white/10" style="color: var(--beacon)">
+            ${art.slider_config.unit}: ${value}
           </span>
         </div>
-        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">${stopDesc}</p>
+        <p class="mt-1.5 text-sm text-slate-300">${f(stop, "desc")}</p>
       `;
     }
 
-    // 4. Highlight active preset button if slider matches a stop value
-    const presetContainer = document.getElementById(`preset-btns-${artifactId}`);
-    if (presetContainer) {
-      presetContainer.querySelectorAll("[data-preset-val]").forEach((btn) => {
-        const bVal = Number(btn.getAttribute("data-preset-val"));
-        const isMatch = Math.abs(bVal - Number(currentVal)) < 0.05;
-        btn.className = `px-3 py-2 rounded-lg text-xs font-mono-tech font-semibold transition-all border text-left ${isMatch
-            ? "bg-[#E7F434] text-[#151622] border-[#E7F434] font-bold shadow-md"
-            : "bg-[#151622]/90 text-slate-200 border-white/15 hover:border-[#E7F434]/60 hover:text-[#E7F434]"
-          }`;
-      });
+    /* Đồng bộ con trượt + tô sáng nút preset (nếu sổ tay kỹ sư đang mở) */
+    const slider = document.getElementById("ep-slider");
+    if (slider && Number(slider.value) !== Number(value)) slider.value = value;
+
+    document.querySelectorAll("#ep-preset-btns [data-preset-val]").forEach((btn) => {
+      const bVal = Number(btn.getAttribute("data-preset-val"));
+      const isMatch = Math.abs(bVal - Number(value)) < 0.05;
+      btn.className = `px-3 py-2 rounded-lg text-xs font-mono-tech font-semibold transition-all border text-left ${
+        isMatch
+          ? "bg-[#e7f434] text-[#0e1120] border-[#e7f434] font-bold shadow-md"
+          : "bg-[#0e1120]/90 text-slate-200 border-white/15 hover:border-[#e7f434]/60 hover:text-[#e7f434]"
+      }`;
+    });
+
+    /* [KIDS 2026-11-13] Hotspot bám theo vật thể dịch chuyển trong cảnh SVG */
+    positionHotspot(art);
+  }
+
+  /* ------------------------------------------------------------------------
+     [REDESIGN] SCROLLYTELLING: IntersectionObserver
+     Cuộn tới nhịp nào → nhịp đó sáng lên + SVG đổi sang giá trị của nhịp đó.
+     (Trang cũ hoàn toàn không có cơ chế này.)
+     ------------------------------------------------------------------------ */
+  function setupObservers(art) {
+    teardownObservers();
+
+    const steps = Array.from(document.querySelectorAll(".ep-step"));
+    if (steps.length) {
+      stepObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            steps.forEach((s) => s.classList.remove("is-active"));
+            entry.target.classList.add("is-active");
+
+            const v = Number(entry.target.getAttribute("data-svg-value"));
+            if (!Number.isNaN(v)) {
+              state.sliderValues[art.id] = v;
+              applyTelemetry(art.id);
+            }
+          });
+        },
+        { rootMargin: "-45% 0px -45% 0px", threshold: 0 }
+      );
+      steps.forEach((s) => stepObserver.observe(s));
+    }
+
+    /* Lá thư: khi lọt vào màn hình thì "mực chạy" ra */
+    const letter = document.getElementById("ep-letter");
+    if (letter) {
+      letterObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              letter.classList.add("is-open");
+              if (letterObserver) letterObserver.unobserve(letter);
+            }
+          });
+        },
+        { threshold: 0.2 }
+      );
+      letterObserver.observe(letter);
+    }
+
+    /* [REDESIGN] Nếu học sinh bật "giảm chuyển động": hiện rõ mọi nhịp luôn,
+       nội dung không bị mờ và không phụ thuộc vào cuộn. */
+    if (prefersReducedMotion()) {
+      steps.forEach((s) => s.classList.add("is-active"));
+      if (letter) letter.classList.add("is-open");
     }
   }
 
-  /**
-   * Renders all 4 Scrollytelling Relic Chapters
-   */
-  function renderChaptersList() {
-    const t = I18N[state.lang];
-    const container = document.getElementById("relic-chapters-container");
-    if (!container) return;
-
-    const visibleArtifacts = DATA.artifacts.filter(
-      (art) => state.filter === "All" || art.celestial_body === state.filter
-    );
-
-    container.innerHTML = visibleArtifacts
-      .map((art) => {
-        const isMoon = art.celestial_body === "Moon";
-        const bodyBadgeClass = isMoon
-          ? "bg-[#38BDF8]/15 text-[#38BDF8] border-[#38BDF8]/40"
-          : "bg-[#F97316]/15 text-[#F97316] border-[#F97316]/40";
-        const bodyBadgeLabel = isMoon ? t.moon_badge : t.mars_badge;
-
-        const name = state.lang === "vi" ? art.name_vi : art.name_en;
-        const funcStatus = state.lang === "vi" ? art.functionality_status_vi : art.functionality_status_en;
-        const paramName =
-          state.lang === "vi" ? art.slider_config.parameter_name_vi : art.slider_config.parameter_name_en;
-        const currentVal = state.sliderValues[art.id];
-        const isCollected = state.collectedStamps[art.id];
-        const activeTab = state.activeTabs[art.id] || "machine";
-        const isAccordionOpen = !!state.openAccordions[art.id];
-
-        const epNarrative =
-          state.lang === "vi"
-            ? `${art.narrative_voice.epistemic_label_en} • ${art.narrative_voice.epistemic_label_vi}`
-            : art.narrative_voice.epistemic_label_en;
-        const epDossier =
-          state.lang === "vi"
-            ? `${art.archaeologist_dossier.epistemic_label_en} • ${art.archaeologist_dossier.epistemic_label_vi}`
-            : art.archaeologist_dossier.epistemic_label_en;
-
-        const letterText = state.lang === "vi" ? art.narrative_voice.letter_vi : art.narrative_voice.letter_en;
-        const howOperated =
-          state.lang === "vi"
-            ? art.archaeologist_dossier.how_it_operated_vi
-            : art.archaeologist_dossier.how_it_operated_en;
-        const conservationLaw =
-          state.lang === "vi"
-            ? art.archaeologist_dossier.conservation_law_vi
-            : art.archaeologist_dossier.conservation_law_en;
-        const discrepancyNote =
-          state.lang === "vi"
-            ? art.archaeologist_dossier.discrepancy_note_vi
-            : art.archaeologist_dossier.discrepancy_note_en;
-
-        return `
-          <article
-            id="chapter-${art.id}"
-            class="surface-card max-w-6xl mx-auto my-12 p-5 sm:p-8 rounded-2xl transition-all"
-          >
-            <!-- Chapter Top Metadata Header -->
-            <div class="flex flex-wrap items-center justify-between gap-3 pb-5 mb-6 border-b border-white/10">
-              <div class="flex flex-wrap items-center gap-2.5">
-                <span class="px-3 py-1 rounded-md bg-[#1B2B85] text-[#E7F434] font-mono-tech text-xs font-bold tracking-wider border border-[#E7F434]/30">
-                  ${t.chapter_prefix} ${art.chapter_num}
-                </span>
-                <span class="px-3 py-1 rounded-md text-xs font-mono-tech font-bold border ${bodyBadgeClass}">
-                  ${bodyBadgeLabel}
-                </span>
-                <span class="text-xs font-mono-tech text-slate-400">
-                  <strong class="text-slate-200">${t.cospar_label}</strong> ${art.cospar_id}
-                </span>
-              </div>
-
-              <div id="stamp-status-${art.id}">
-                ${isCollected
-            ? `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono-tech font-bold bg-[#E7F434]/20 text-[#E7F434] border border-[#E7F434]/50">${t.stamp_collected_badge}</span>`
-            : `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono-tech text-slate-400 bg-slate-900/80 border border-white/10">○ ${t.unlock_stamp_hint}</span>`
-          }
-              </div>
-            </div>
-
-            <!-- Chapter Title & Coordinates Bar -->
-            <div class="mb-6">
-              <h2 class="font-heading text-2xl sm:text-3xl font-black text-white tracking-tight">
-                ${name}
-              </h2>
-              <div class="mt-2 flex flex-wrap items-center gap-x-6 gap-y-1.5 text-xs font-mono-tech">
-                <div class="text-slate-300">
-                  <span class="text-slate-400">${t.location_label}</span> ${art.location_name}
-                </div>
-                <div class="text-[#10B981] font-semibold">
-                  <span class="text-slate-400">${t.status_label}</span> ${funcStatus}
-                </div>
-              </div>
-            </div>
-
-            <!-- 2-Column Desktop / Stacked Mobile Core Layout -->
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-              <!-- LEFT COLUMN (6 cols): Interactive Telemetry Station -->
-              <div class="lg:col-span-6 space-y-4">
-                <div class="flex items-center justify-between">
-                  <h3 class="text-xs font-mono-tech font-bold uppercase tracking-wider text-[#38BDF8] flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-[#E7F434]"></span>
-                    ${t.telemetry_station_title}
-                  </h3>
-                </div>
-
-                <!-- Visual Viewport: Public Domain NASA Photo Layer + Dynamic SVG Overlay -->
-                <div class="relative rounded-xl overflow-hidden border border-white/15 bg-[#0D101B] aspect-[16/9]">
-                  <!-- Underlying Public Domain NASA Archival Image with graceful offline fallback -->
-                  <img
-                    src="${art.media.primary_image_url}"
-                    alt="${name}"
-                    loading="lazy"
-                    onerror="this.style.display='none'"
-                    class="absolute inset-0 w-full h-full object-cover opacity-25 mix-blend-luminosity pointer-events-none"
-                  />
-                  <!-- Real-Time Interactive SVG Overlay -->
-                  <div id="svg-viewport-${art.id}" class="relative z-10 w-full h-full"></div>
-
-                  <!-- Photo Credit Footer inside Viewport -->
-                  <div class="absolute bottom-0 inset-x-0 z-20 bg-slate-950/85 backdrop-blur-xs px-3 py-1 border-t border-white/10 flex items-center justify-between">
-                    <span class="text-[10px] font-mono-tech text-slate-300 truncate">
-                      📷 Photo Credit: ${art.media.image_credit}
-                    </span>
-                  </div>
-                </div>
-
-                <!-- Live Telemetry Readout (3 Mathematical Counters) -->
-                <div id="telemetry-metrics-${art.id}" class="grid grid-cols-3 gap-2.5"></div>
-
-                <!-- Range Slider & Preset Fallback Controls Box -->
-                <div class="surface-subcard rounded-xl p-4 space-y-3 border border-white/10">
-                  <div class="flex items-center justify-between">
-                    <label for="slider-${art.id}" class="text-xs sm:text-sm font-mono-tech font-bold text-white">
-                      🎚️ ${paramName}
-                    </label>
-                  </div>
-
-                  <input
-                    id="slider-${art.id}"
-                    type="range"
-                    min="${art.slider_config.min_val}"
-                    max="${art.slider_config.max_val}"
-                    step="${art.slider_config.step}"
-                    value="${currentVal}"
-                    data-artifact-slider="${art.id}"
-                    class="telemetry-slider ${isMoon ? "" : "mars-slider"}"
-                  />
-
-                  <!-- Preset State Fallback Buttons -->
-                  <div class="pt-1">
-                    <div class="text-[11px] font-mono-tech text-slate-400 mb-2">
-                      ${t.preset_label}
-                    </div>
-                    <div id="preset-btns-${art.id}" class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      ${art.slider_config.stops
-            .map(
-              (st) => `
-                          <button
-                            type="button"
-                            data-artifact-preset="${art.id}"
-                            data-preset-val="${st.value}"
-                            class="px-3 py-2 rounded-lg text-xs font-mono-tech font-semibold transition-all border text-left"
-                          >
-                            ⚡ ${state.lang === "vi" ? st.label_vi : st.label_en}
-                          </button>
-                        `
-            )
-            .join("")}
-                    </div>
-                  </div>
-
-                  <!-- Dynamic Milestone Explanation Box -->
-                  <div id="telemetry-status-${art.id}" class="p-3 rounded-lg bg-slate-950/75 border border-white/10"></div>
-
-                  <!-- "Where does this number come from?" Accordion -->
-                  <div class="pt-1">
-                    <button
-                      type="button"
-                      data-accordion-toggle="${art.id}"
-                      class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg bg-[#1B2B85]/40 hover:bg-[#1B2B85]/65 border border-[#38BDF8]/35 text-xs font-mono-tech font-bold text-[#38BDF8] transition"
-                    >
-                      <span>${t.where_number_btn}</span>
-                      <span id="accordion-icon-${art.id}">${isAccordionOpen ? "▲" : "▼"}</span>
-                    </button>
-                    <div
-                      id="accordion-body-${art.id}"
-                      class="${isAccordionOpen ? "block" : "hidden"} mt-2 p-3.5 rounded-lg bg-slate-950/90 border border-[#38BDF8]/30 space-y-2.5 text-xs"
-                    >
-                      <div class="font-mono-tech font-bold text-[#E7F434]">
-                        📐 ${t.where_number_formula_title}
-                      </div>
-                      <p class="text-slate-300 leading-relaxed">
-                        ${discrepancyNote}
-                      </p>
-                      <div class="pt-1 border-t border-white/10">
-                        <div class="font-mono-tech text-[11px] text-slate-400 mb-1.5">
-                          ${t.where_number_sources_title}
-                        </div>
-                        <div class="flex flex-col gap-1.5">
-                          ${art.archaeologist_dossier.source_links
-            .map(
-              (lnk) => `
-                              <a
-                                href="${lnk.url}"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                class="inline-flex items-center gap-1.5 text-[#38BDF8] hover:text-[#E7F434] font-mono-tech underline break-all"
-                              >
-                                <span>🔗 ${lnk.label}</span>
-                                <span>↗</span>
-                              </a>
-                            `
-            )
-            .join("")}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- RIGHT COLUMN (6 cols): Dual-Voice Narrative Panel -->
-              <div class="lg:col-span-6 space-y-4">
-                <!-- Tab Switcher Bar -->
-                <div class="flex flex-wrap items-center gap-2 bg-[#151622] p-1.5 rounded-xl border border-white/10">
-                  <button
-                    type="button"
-                    data-tab-btn="${art.id}"
-                    data-tab-target="machine"
-                    class="flex-1 py-2 px-3 rounded-lg text-xs font-mono-tech font-bold transition ${activeTab === "machine"
-            ? "bg-[#38BDF8] text-[#151622] shadow-sm"
-            : "text-slate-300 hover:text-white hover:bg-white/5"
-          }"
-                  >
-                    ${t.tab_machine}
-                  </button>
-                  <button
-                    type="button"
-                    data-tab-btn="${art.id}"
-                    data-tab-target="dossier"
-                    class="flex-1 py-2 px-3 rounded-lg text-xs font-mono-tech font-bold transition ${activeTab === "dossier"
-            ? "bg-[#10B981] text-[#151622] shadow-sm"
-            : "text-slate-300 hover:text-white hover:bg-white/5"
-          }"
-                  >
-                    ${t.tab_dossier}
-                  </button>
-                  <button
-                    type="button"
-                    data-tab-btn="${art.id}"
-                    data-tab-target="both"
-                    class="py-2 px-2.5 rounded-lg text-xs font-mono-tech font-semibold transition ${activeTab === "both"
-            ? "bg-[#E7F434] text-[#151622] font-bold"
-            : "text-slate-400 hover:text-white hover:bg-white/5"
-          }"
-                  >
-                    ${t.view_both_btn}
-                  </button>
-                </div>
-
-                <!-- TAB 1: [📡 The Machine's Pulse] -->
-                <div
-                  id="panel-machine-${art.id}"
-                  class="${activeTab === "machine" || activeTab === "both" ? "block" : "hidden"} cosmic-postcard rounded-xl p-5 sm:p-6 space-y-4"
-                >
-                  <!-- Mandatory Epistemic Badge (Blue) -->
-                  <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-[11px] font-mono-tech font-bold bg-[#38BDF8]/15 text-[#38BDF8] border border-[#38BDF8]/40">
-                      <span>📡</span>
-                      <span>[${epNarrative}]</span>
-                    </span>
-                    <span class="text-[11px] font-mono-tech text-slate-400">
-                      COSPAR ${art.cospar_id.split(" ")[0]}
-                    </span>
-                  </div>
-
-                  <!-- Postcard Header Metadata -->
-                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 p-3 rounded-lg bg-slate-950/60 border border-white/10 text-[11px] font-mono-tech">
-                    <div>
-                      <span class="text-slate-400">${t.postmark_from}</span>
-                      <div class="text-slate-200 font-semibold truncate">${art.location_name}</div>
-                    </div>
-                    <div>
-                      <span class="text-slate-400">${t.postmark_to}</span>
-                      <div class="text-[#E7F434] font-semibold">21.0285° N, 105.8542° E</div>
-                    </div>
-                  </div>
-
-                  <!-- First-Person Telemetry Letter -->
-                  <blockquote class="text-base sm:text-[17px] text-slate-100 leading-relaxed font-body italic border-l-3 border-[#38BDF8] pl-4 py-1">
-                    “${letterText}”
-                  </blockquote>
-                </div>
-
-                <!-- TAB 2: [🏛️ Archaeologist & Science Dossier] -->
-                <div
-                  id="panel-dossier-${art.id}"
-                  class="${activeTab === "dossier" || activeTab === "both" ? "block" : "hidden"} surface-subcard rounded-xl p-5 sm:p-6 space-y-5 border border-[#10B981]/30"
-                >
-                  <!-- Mandatory Epistemic Badge (Green) -->
-                  <div class="flex flex-wrap items-center justify-between gap-2">
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-[11px] font-mono-tech font-bold bg-[#10B981]/15 text-[#10B981] border border-[#10B981]/40">
-                      <span>🏛️</span>
-                      <span>[${epDossier}]</span>
-                    </span>
-                  </div>
-
-                  <!-- 1. How the Mission Operated & Science -->
-                  <div class="space-y-1.5">
-                    <h4 class="text-xs sm:text-sm font-mono-tech font-bold text-[#38BDF8] flex items-center gap-2">
-                      <span>🔬</span>
-                      <span>${t.dossier_sec1_title}</span>
-                    </h4>
-                    <p class="text-sm text-slate-200 leading-relaxed">
-                      ${howOperated}
-                    </p>
-                  </div>
-
-                  <!-- 2. Current Functionality & Material State -->
-                  <div class="space-y-1.5 pt-3 border-t border-white/10">
-                    <h4 class="text-xs sm:text-sm font-mono-tech font-bold text-[#E7F434] flex items-center gap-2">
-                      <span>⚙️</span>
-                      <span>${t.dossier_sec2_title}</span>
-                    </h4>
-                    <div class="inline-block px-2.5 py-0.5 rounded bg-white/10 text-xs font-mono-tech text-[#E7F434] font-semibold mb-1">
-                      ${funcStatus}
-                    </div>
-                    <p class="text-sm text-slate-300 leading-relaxed">
-                      ${discrepancyNote}
-                    </p>
-                  </div>
-
-                  <!-- 3. Space Heritage & Conservation Law -->
-                  <div class="space-y-1.5 pt-3 border-t border-white/10">
-                    <h4 class="text-xs sm:text-sm font-mono-tech font-bold text-[#10B981] flex items-center gap-2">
-                      <span>⚖️</span>
-                      <span>${t.dossier_sec3_title}</span>
-                    </h4>
-                    <p class="text-sm text-slate-200 leading-relaxed">
-                      ${conservationLaw}
-                    </p>
-                    <div class="pt-2 flex flex-wrap gap-2">
-                      ${art.archaeologist_dossier.source_links
-            .map(
-              (lnk) => `
-                          <a
-                            href="${lnk.url}"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-xs font-mono-tech text-[#38BDF8] border border-[#38BDF8]/30 transition"
-                          >
-                            <span>📄 ${lnk.label}</span>
-                            <span>↗</span>
-                          </a>
-                        `
-            )
-            .join("")}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </article>
-        `;
-      })
-      .join("");
-
-    // Populate initial SVG & telemetry metrics for each visible artifact
-    visibleArtifacts.forEach((art) => {
-      updateChapterTelemetryDOM(art.id);
-    });
-
-    // Attach Range Slider Listeners
-    container.querySelectorAll("[data-artifact-slider]").forEach((slider) => {
-      slider.addEventListener("input", (e) => {
-        const id = slider.getAttribute("data-artifact-slider");
-        state.sliderValues[id] = Number(e.target.value);
-        collectStamp(id);
-        updateChapterTelemetryDOM(id);
-      });
-    });
-
-    // Attach Preset Fallback Button Listeners
-    container.querySelectorAll("[data-artifact-preset]").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const id = btn.getAttribute("data-artifact-preset");
-        const val = Number(btn.getAttribute("data-preset-val"));
-        state.sliderValues[id] = val;
-        const slider = document.getElementById(`slider-${id}`);
-        if (slider) slider.value = val;
-        collectStamp(id);
-        updateChapterTelemetryDOM(id);
-      });
-    });
-
-    // Attach Accordion Toggle Listeners
-    container.querySelectorAll("[data-accordion-toggle]").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const id = btn.getAttribute("data-accordion-toggle");
-        state.openAccordions[id] = !state.openAccordions[id];
-        const body = document.getElementById(`accordion-body-${id}`);
-        const icon = document.getElementById(`accordion-icon-${id}`);
-        if (body) body.classList.toggle("hidden", !state.openAccordions[id]);
-        if (icon) icon.textContent = state.openAccordions[id] ? "▲" : "▼";
-      });
-    });
-
-    // Attach Dual-Voice Tab Switcher Listeners
-    container.querySelectorAll("[data-tab-btn]").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const id = btn.getAttribute("data-tab-btn");
-        const target = btn.getAttribute("data-tab-target");
-        state.activeTabs[id] = target;
-        renderChaptersList();
-      });
-    });
-  }
 
   /**
    * Renders Module 1: The Artemis Landing Site Decision Station
+   * [REDESIGN • GIỮ NGUYÊN] Chỉ đổi mã màu sang bảng màu mới (6 màu có tên).
    */
   function renderDecisionStation() {
     const t = I18N[state.lang];
@@ -712,9 +1083,10 @@
             <button
               type="button"
               data-zone-id="${z.id}"
-              style="border-color: ${isSelected ? z.color_hex : "rgba(255,255,255,0.15)"};"
-              class="p-3.5 rounded-xl border-2 text-left transition-all flex flex-col justify-between ${isSelected ? "bg-slate-900 shadow-lg scale-[1.01]" : "bg-[#151622]/80 hover:bg-slate-900/60 opacity-85"
-            }"
+              style="border-color: ${ isSelected ? z.color_hex : "rgba(255,255,255,0.15)" };"
+              class="p-3.5 rounded-xl border-2 text-left transition-all flex flex-col justify-between ${
+                isSelected ? "bg-slate-900 shadow-lg scale-[1.01]" : "bg-[#0e1120]/80 hover:bg-slate-900/60 opacity-85"
+              }"
             >
               <div class="flex items-center justify-between gap-2 w-full">
                 <span class="font-mono-tech text-xs sm:text-sm font-bold" style="color: ${z.color_hex};">
@@ -773,7 +1145,7 @@
               <p class="text-sm text-slate-200 leading-relaxed">${impactTxt}</p>
             </div>
             <div class="p-3.5 rounded-lg bg-slate-900/90 border border-white/10">
-              <div class="text-xs font-mono-tech font-bold uppercase text-[#38BDF8] mb-1">
+              <div class="text-xs font-mono-tech font-bold uppercase text-[#7fd4ff] mb-1">
                 ⚖️ ${t.artemis_law_label}
               </div>
               <p class="text-sm text-slate-200 leading-relaxed">${lawTxt}</p>
@@ -781,8 +1153,9 @@
           </div>
 
           <div class="pt-2 border-t border-white/10 flex flex-wrap items-center justify-between gap-3">
-            <div class="text-xs sm:text-sm font-mono-tech ${state.badgeUnlocked ? "text-[#10B981] font-bold" : "text-amber-300"
-        }">
+            <div class="text-xs sm:text-sm font-mono-tech ${
+              state.badgeUnlocked ? "text-[#10B981] font-bold" : "text-amber-300"
+            }">
               ${state.badgeUnlocked ? t.artemis_unlocked_msg : t.artemis_locked_msg}
             </div>
           </div>
@@ -793,6 +1166,8 @@
 
   /**
    * Renders Module 2: Zero-PII "Space Heritage Guardian" Certificate & 15-Minute Teacher Guide
+   * [REDESIGN • GIỮ NGUYÊN] Tem giờ được thu qua câu hỏi (hàm collectStamp
+   * ở đầu file) thay vì kéo con trượt; phần còn lại không đổi.
    */
   function renderCertificateSection() {
     const t = I18N[state.lang];
@@ -868,13 +1243,15 @@
             <button
               type="button"
               data-pledge-idx="${idx}"
-              class="w-full p-3.5 rounded-xl border text-left transition flex items-start gap-3 ${active
-              ? "bg-[#1B2B85]/45 border-[#E7F434] text-white shadow-md"
-              : "bg-[#151622]/70 border-white/10 text-slate-300 hover:border-white/30"
-            }"
+              class="w-full p-3.5 rounded-xl border text-left transition flex items-start gap-3 ${
+                active
+                  ? "bg-[#24306b]/45 border-[#E7F434] text-white shadow-md"
+                  : "bg-[#0e1120]/70 border-white/10 text-slate-300 hover:border-white/30"
+              }"
             >
-              <span class="px-2 py-0.5 rounded font-mono-tech text-xs font-bold ${active ? "bg-[#E7F434] text-[#151622]" : "bg-slate-800 text-slate-400"
-            }">
+              <span class="px-2 py-0.5 rounded font-mono-tech text-xs font-bold ${
+                active ? "bg-[#E7F434] text-[#0e1120]" : "bg-slate-800 text-slate-400"
+              }">
                 Pledge ${letterCode}
               </span>
               <span class="text-sm leading-relaxed">${pText}</span>
@@ -914,9 +1291,10 @@
         .map((st) => {
           const has = state.collectedStamps[st.id];
           return `
-            <div class="px-3 py-2 rounded-lg border font-mono-tech text-xs font-bold flex items-center justify-between ${has
-              ? "bg-[#E7F434]/15 border-[#E7F434] text-[#E7F434]"
-              : "bg-slate-900/80 border-white/10 text-slate-400"
+            <div class="px-3 py-2 rounded-lg border font-mono-tech text-xs font-bold flex items-center justify-between ${
+              has
+                ? "bg-[#E7F434]/15 border-[#E7F434] text-[#E7F434]"
+                : "bg-slate-900/80 border-white/10 text-slate-400"
             }">
               <span>${st.label}</span>
               <span>${has ? "✓ VERIFIED" : "○ PENDING"}</span>
@@ -924,6 +1302,37 @@
           `;
         })
         .join("");
+    }
+
+    /* [KIDS 2026-11-13] Hàng sticker khám phá (thu từ hotspot trên cảnh SVG) */
+    setTxt("cert-stickers-title", t.cert_stickers_title);
+    const stickersEl = document.getElementById("cert-preview-stickers");
+    if (stickersEl) {
+      const stickerItems = [
+        { id: "apollo11-lrrr", icon: "🔦", label: "01: LRRR" },
+        { id: "surveyor-3", icon: "📷", label: "02: SURVEYOR 3" },
+        { id: "opportunity-rover", icon: "🌪️", label: "03: OPPORTUNITY" },
+        { id: "ingenuity-helicopter", icon: "🚁", label: "04: INGENUITY" }
+      ];
+      stickersEl.innerHTML =
+        stickerItems
+          .map((stItem) => {
+            const has = state.stickers[stItem.id];
+            return `
+            <div class="px-3 py-2 rounded-lg border font-mono-tech text-xs font-bold flex items-center justify-between ${
+              has
+                ? "bg-[#7fd4ff]/15 border-[#7fd4ff] text-[#7fd4ff]"
+                : "bg-slate-900/80 border-white/10 text-slate-400"
+            }">
+              <span>${stItem.icon} ${stItem.label}</span>
+              <span>${has ? "★" : "○"}</span>
+            </div>
+          `;
+          })
+          .join("") +
+        (stickerCount() === stickerItems.length
+          ? `<div class="col-span-full px-3 py-2 rounded-lg bg-[#E7F434]/15 border border-[#E7F434] text-[#E7F434] font-mono-tech text-xs font-bold">🎉 ${t.sticker_all}</div>`
+          : "");
     }
   }
 
@@ -941,6 +1350,19 @@
     setTxt("teacher-title", t.teacher_title);
     setTxt("teacher-desc", t.teacher_desc);
 
+    /* [REDESIGN 2026-11-13 • A+B HYBRID] THẺ GIÁO VIÊN
+       Link cũ trỏ tới "#chapter-<id>" (4 chương xếp dọc) — các anchor đó
+       KHÔNG CÒN TỒN TẠI vì trang đã chuyển sang mô hình hộp thư + tập phim.
+       Nay: nếu target có dạng #chapter-xxx thì render thành NÚT mở tập phim
+       (openEpisode), còn lại (#artemis-station) vẫn là anchor cuộn bình thường.
+       Muốn đổi nội dung bài học thì sửa `teacher_cards` trong js/data.js. */
+    const chapterTargetToArtifact = (target) => {
+      const m = /^#chapter-(.+)$/.exec(target || "");
+      return m ? m[1] : null;
+    };
+    const teacherBtnClass =
+      "inline-flex items-center justify-center px-3.5 py-2 rounded-lg bg-white/10 hover:bg-[#E7F434] hover:text-[#0e1120] text-xs font-mono-tech font-bold text-[#E7F434] transition cursor-pointer";
+
     const teacherGrid = document.getElementById("teacher-cards-grid");
     if (teacherGrid) {
       teacherGrid.innerHTML = t.teacher_cards
@@ -949,7 +1371,7 @@
           <div class="surface-subcard rounded-xl p-5 border border-white/10 flex flex-col justify-between space-y-4">
             <div class="space-y-2">
               <div class="flex items-center justify-between">
-                <span class="px-2.5 py-1 rounded bg-[#1B2B85] text-[#E7F434] font-mono-tech text-xs font-bold">
+                <span class="px-2.5 py-1 rounded bg-[#24306b] text-[#E7F434] font-mono-tech text-xs font-bold">
                   ⏱️ ${c.time}
                 </span>
                 <span class="font-mono-tech text-xs text-slate-400">STEP 0${i + 1}</span>
@@ -957,16 +1379,20 @@
               <h4 class="font-heading text-lg font-bold text-white pt-1">${c.topic}</h4>
               <p class="text-sm text-slate-300 leading-relaxed">${c.body}</p>
             </div>
-            <a
-              href="${c.target}"
-              class="inline-flex items-center justify-center px-3.5 py-2 rounded-lg bg-white/10 hover:bg-[#E7F434] hover:text-[#151622] text-xs font-mono-tech font-bold text-[#E7F434] transition"
-            >
-              ${c.btn}
-            </a>
+            ${
+              chapterTargetToArtifact(c.target)
+                ? `<button type="button" data-teacher-episode="${chapterTargetToArtifact(c.target)}" class="${teacherBtnClass}">${c.btn}</button>`
+                : `<a href="${c.target}" class="${teacherBtnClass}">${c.btn}</a>`
+            }
           </div>
         `
         )
         .join("");
+
+      /* [REDESIGN] Nút "Tới Chương 0X" giờ mở tập phim tương ứng */
+      teacherGrid.querySelectorAll("[data-teacher-episode]").forEach((btn) => {
+        btn.addEventListener("click", () => openEpisode(btn.getAttribute("data-teacher-episode")));
+      });
     }
 
     // Footer & SI Disclosure Table
@@ -988,17 +1414,18 @@
           </thead>
           <tbody class="divide-y divide-white/10 text-slate-200">
             ${DATA.meta.si_disclosure
-        .map(
-          (row) => `
+              .map(
+                (row) => `
                 <tr>
-                  <td class="py-3 px-3 font-mono-tech font-bold text-[#38BDF8]">${row.tool}</td>
+                  <td class="py-3 px-3 font-mono-tech font-bold text-[#7fd4ff]">${row.tool}</td>
                   <td class="py-3 px-3">${state.lang === "vi" ? row.role_vi : row.role_en}</td>
-                  <td class="py-3 px-3 text-[#10B981]">${state.lang === "vi" ? row.human_check_vi : row.human_check_en
-            }</td>
+                  <td class="py-3 px-3 text-[#10B981]">${
+                    state.lang === "vi" ? row.human_check_vi : row.human_check_en
+                  }</td>
                 </tr>
               `
-        )
-        .join("")}
+              )
+              .join("")}
           </tbody>
         </table>
       </div>
@@ -1011,11 +1438,19 @@
     if (modalSiBox) modalSiBox.innerHTML = siTableHtml;
   }
 
+  /* ------------------------------------------------------------------------
+     [REDESIGN] renderAll
+     Bỏ: renderHeaderStamps / renderFilterButtons / renderHeroSection /
+         renderChaptersList (các hàm của layout cũ đã bị xoá).
+     Thêm: renderMailbox; tập phim chỉ được vẽ lại nếu đang mở
+         (để đổi ngôn ngữ không làm mất vị trí cuộn của học sinh).
+     ------------------------------------------------------------------------ */
   function renderAll() {
-    renderHeaderStamps();
-    renderFilterButtons();
-    renderHeroSection();
-    renderChaptersList();
+    renderHeaderProgress();
+    renderMailbox();
+    if (state.openArtifactId) {
+      renderEpisode();
+    }
     renderDecisionStation();
     renderCertificateSection();
     renderClassroomAndFooter();
@@ -1023,6 +1458,8 @@
 
   /**
    * Initialize Static DOM Event Listeners on Startup
+   * [REDESIGN] Bỏ công tắc thu sóng ở hero (không còn trong layout mới);
+   *            thêm phím ESC để đóng modal (accessibility).
    */
   function initApp() {
     renderAll();
@@ -1043,16 +1480,7 @@
       });
     }
 
-    // Hero Receiver Switch
-    const receiverBtn = document.getElementById("receiver-toggle-btn");
-    if (receiverBtn) {
-      receiverBtn.addEventListener("click", () => {
-        state.receiverActive = !state.receiverActive;
-        renderHeroSection();
-      });
-    }
-
-    // Guardian Callsign / Nickname Live Input
+    // Guardian Callsign / Nickname Live Input (Zero PII)
     const nameInput = document.getElementById("guardian-name-input");
     if (nameInput) {
       nameInput.addEventListener("input", (e) => {
@@ -1085,26 +1513,28 @@
     const closeSiModalBtn = document.getElementById("close-si-modal-btn");
     const siModal = document.getElementById("si-disclosure-modal");
 
+    const closeSiModal = () => {
+      if (!siModal) return;
+      siModal.classList.add("hidden");
+      siModal.classList.remove("flex");
+    };
+
     if (openSiModalBtn && siModal) {
       openSiModalBtn.addEventListener("click", () => {
         siModal.classList.remove("hidden");
         siModal.classList.add("flex");
       });
     }
-    if (closeSiModalBtn && siModal) {
-      closeSiModalBtn.addEventListener("click", () => {
-        siModal.classList.add("hidden");
-        siModal.classList.remove("flex");
-      });
-    }
+    if (closeSiModalBtn) closeSiModalBtn.addEventListener("click", closeSiModal);
     if (siModal) {
       siModal.addEventListener("click", (e) => {
-        if (e.target === siModal) {
-          siModal.classList.add("hidden");
-          siModal.classList.remove("flex");
-        }
+        if (e.target === siModal) closeSiModal();
       });
     }
+    /* [REDESIGN] Phím ESC đóng modal — học sinh dùng bàn phím không bị kẹt */
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeSiModal();
+    });
   }
 
   if (document.readyState === "loading") {
@@ -1113,4 +1543,3 @@
     initApp();
   }
 })();
-

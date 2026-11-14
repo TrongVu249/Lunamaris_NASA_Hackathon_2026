@@ -2,110 +2,1064 @@
  * LUNAMARIS: Letters Across the Silent Seas
  * Design System & Dynamic SVG / Range Slider Stylesheet
  * NASA International Space Apps Challenge 2026
+ *
+ * ============================================================================
+ * [REDESIGN 2026-11-13 • A+B HYBRID: "COSMIC MAILBOX + EPISODES"]
+ * Toàn bộ file được viết lại để phục vụ hướng thiết kế mới:
+ *   - Bảng màu giảm từ ~49 mã xuống 6 màu CÓ TÊN (dễ sửa về sau).
+ *   - Hệ chữ cho học sinh: nội dung 17px+, nhãn mono tối thiểu ~12.5px.
+ *   - Thêm component mới: Hộp thư (phong bì) + Tập phim scrollytelling dính.
+ *   - Thêm prefers-reduced-motion và focus-visible (accessibility).
+ * Các keyframes cũ mà js/svg-engine.js phụ thuộc VẪN ĐƯỢC GIỮ NGUYÊN:
+ *   laser-dash, sandblast-dash, rotor-spin-*, pulse-beacon.
+ * ============================================================================
  */
 
 :root {
-  --bg-cinder: #151622;
-  --bg-surface: #1E2030;
-  --bg-surface-elevated: #25283D;
-  --brand-deep-blue: #1B2B85;
-  --accent-neon-yellow: #E7F434;
-  --signal-lunar-cyan: #38BDF8;
-  --signal-martian-amber: #F97316;
-  --status-alert-red: #EF4444;
-  --status-caution-yellow: #EAB308;
-  --status-safe-green: #10B981;
-  --text-primary: #F8FAFC;
-  --text-secondary: #94A3B8;
-  --border-subtle: rgba(255, 255, 255, 0.12);
+  /* [REDESIGN] 6 màu chủ đạo có tên — muốn đổi giao diện thì đổi ở đây. */
+  --space: #0e1120;        /* nền không gian sâu */
+  --hull: #1b2136;         /* mặt thẻ / vỏ tàu */
+  --star: #f5f7ff;         /* chữ chính */
+  --moonbeam: #7fd4ff;     /* nhấn cho Mặt Trăng */
+  --rust: #ff8a4c;         /* nhấn cho Sao Hỏa */
+  --beacon: #e7f434;       /* màu hành động chính DUY NHẤT (tem, nút chính) */
+  /* [REDESIGN] Giấy thư cho khái niệm "lá thư" (phương án B) */
+  --paper: #f3ecdc;
+  --paper-ink: #23262e;
+  /* Màu trạng thái giữ lại cho mô phỏng vật lý (không dùng trang trí) */
+  --ok: #10b981;
+  --warn: #eab308;
+  --bad: #ef4444;
+
+  /* [REDESIGN] Hệ chữ: Baloo 2 (tiêu đề), Nunito (nội dung),
+     JetBrains Mono (khoảnh khắc telemetry), Dancing Script (chữ thư). */
+  --font-display: "Baloo 2", "Fira Sans", sans-serif;
+  --font-body: "Nunito", "Overpass", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  --font-hand: "Dancing Script", cursive;
+
+  --border-subtle: rgba(245, 247, 255, 0.14);
+  --radius: 18px;
 }
 
 * {
   box-sizing: border-box;
 }
 
+/* ==========================================================================
+   [REDESIGN] 1. NỀN TẢNG (BASE)
+   - Chữ nội dung 17px để học sinh đọc dễ (trước đây nhiều chỗ chỉ 10-11px).
+   - :focus-visible để học sinh dùng bàn phím thấy rõ vị trí đang chọn.
+   ========================================================================== */
 html {
   scroll-behavior: smooth;
-  background-color: var(--bg-cinder);
-  color: var(--text-primary);
-  font-family: 'Overpass', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: var(--space);
+  color: var(--star);
+  font-family: var(--font-body);
+  font-size: 17px;
 }
 
 body {
-  background-color: var(--bg-cinder);
-  color: var(--text-primary);
+  background-color: var(--space);
+  color: var(--star);
+  /* [REDESIGN] Khai báo font + cỡ chữ ngay trên <body>: Tailwind CDN chèn
+     <style> SAU file này và ghi đè rule `html` của ta, nên nếu chỉ đặt ở
+     `html` thì chữ sẽ bị rơi về font hệ thống 16px. */
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.65;
   overflow-x: hidden;
   margin: 0;
   padding: 0;
 }
 
-/* Typography Hierarchy */
-.font-heading {
-  font-family: 'Fira Sans', sans-serif;
+/* [REDESIGN] Tiêu đề luôn dùng font display, bất kể Tailwind preflight */
+h1, h2, h3, h4, .font-heading {
+  font-family: var(--font-display);
 }
 
+:focus-visible {
+  outline: 3px solid var(--beacon);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* [REDESIGN] Giữ lại class cũ trong index.html/app.js để không vỡ layout,
+   nhưng trỏ sang token mới. */
 .font-body {
-  font-family: 'Overpass', sans-serif;
+  font-family: var(--font-body);
 }
 
 .font-mono-tech {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
+  font-size: 0.78em; /* [REDESIGN] nhãn mono không còn bé hơn ~12.5px */
+  letter-spacing: 0.02em;
 }
 
-/* Surface Cards */
+/* [REDESIGN] Thẻ bề mặt: ít bóng hơn, bo tròn mềm, viền mảnh. */
 .surface-card {
-  background-color: var(--bg-surface);
+  background-color: var(--hull);
   border: 1px solid var(--border-subtle);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+  border-radius: var(--radius);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.35);
 }
 
 .surface-subcard {
-  background-color: rgba(15, 17, 28, 0.72);
-  border: 1px solid rgba(255, 255, 255, 0.09);
+  background-color: rgba(14, 17, 32, 0.72);
+  border: 1px solid rgba(245, 247, 255, 0.1);
+  border-radius: calc(var(--radius) - 6px);
 }
 
-/* Starfield & Hero Radar Background */
-.hero-starfield {
-  background-color: var(--bg-cinder);
+/* ==========================================================================
+   [REDESIGN] 2. THANH TIẾN ĐỘ TRÊN HEADER (thay cho hàng tem cũ)
+   Mỗi chấm = một hiện vật. Học sinh nhìn là biết đang ở tập phim nào.
+   ========================================================================== */
+.progress-dots {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.progress-dot {
+  width: 34px;
+  height: 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(245, 247, 255, 0.28);
+  background: rgba(245, 247, 255, 0.12);
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
+}
+
+.progress-dot:hover {
+  transform: scaleY(1.35);
+  border-color: var(--beacon);
+}
+
+.progress-dot.is-done {
+  background: var(--beacon);
+  border-color: var(--beacon);
+}
+
+.progress-dot.is-current {
+  background: var(--moonbeam);
+  border-color: var(--moonbeam);
+}
+
+/* ==========================================================================
+   [REDESIGN] 3. HỘP THƯ VŨ TRỤ (COSMIC MAILBOX) — Màn hình mở đầu
+   4 phong bì = 4 hiện vật. Mỗi phong bì là "một lá thư chưa mở".
+   Chỉ MỘT tập phim được mở tại một thời điểm → giảm quá tải thông tin.
+   ========================================================================== */
+.mailbox-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(258px, 1fr));
+  gap: 20px;
+}
+
+.envelope-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 30px 20px 20px;
+  background: linear-gradient(160deg, #f6efdd 0%, #e6dbc2 100%);
+  color: var(--paper-ink);
+  border: 1px solid rgba(35, 38, 46, 0.22);
+  border-radius: 10px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--font-body);
+  overflow: hidden;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.envelope-card:hover,
+.envelope-card:focus-visible {
+  transform: translateY(-6px) rotate(-0.6deg);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* Nắp phong bì (tam giác) */
+.envelope-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 26px;
+  background:
+    linear-gradient(to bottom right, transparent 49.4%, rgba(35, 38, 46, 0.16) 50%) left / 50% 100% no-repeat,
+    linear-gradient(to bottom left, transparent 49.4%, rgba(35, 38, 46, 0.16) 50%) right / 50% 100% no-repeat,
+    rgba(35, 38, 46, 0.06);
+}
+
+/* Dải viền hàng không (airmail) ở đáy phong bì */
+.envelope-card::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 7px;
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--moonbeam),
+    var(--moonbeam) 11px,
+    #f6efdd 11px,
+    #f6efdd 22px,
+    var(--rust) 22px,
+    var(--rust) 33px,
+    #f6efdd 33px,
+    #f6efdd 44px
+  );
+}
+
+.envelope-card.is-done {
+  background: linear-gradient(160deg, #fdf8ea 0%, #efe6cf 100%);
+}
+
+.envelope-postmark {
+  position: absolute;
+  top: 34px;
+  right: 14px;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  border: 2px dashed rgba(35, 38, 46, 0.45);
+  display: grid;
+  place-items: center;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: rgba(35, 38, 46, 0.6);
+  transform: rotate(-9deg);
+  opacity: 0.55;
+}
+
+.envelope-card.is-done .envelope-postmark {
+  border-style: solid;
+  border-color: var(--ok);
+  color: var(--ok);
+  opacity: 1;
+}
+
+.envelope-name {
+  font-family: var(--font-display);
+  font-size: 1.22rem;
+  font-weight: 800;
+  line-height: 1.25;
+  margin: 0;
+  padding-right: 60px;
+}
+
+.envelope-teaser {
+  font-size: 0.94rem;
+  line-height: 1.5;
+  color: rgba(35, 38, 46, 0.82);
+  margin: 0;
+}
+
+.envelope-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  margin-top: auto;
+  padding-bottom: 10px;
+}
+
+.body-chip {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+}
+
+.body-chip.moon { color: #1d6fa5; }
+.body-chip.mars { color: #b4531a; }
+
+.envelope-cta {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--paper-ink);
+  background: var(--beacon);
+  border-radius: 999px;
+  padding: 6px 14px;
+  align-self: flex-start;
+}
+
+/* [REDESIGN] Nền sao: giữ lại ít sao tĩnh (bỏ 3 vòng radar động cũ vì
+   gây rối mắt và không mang thông tin). */
+.hero-starfield,
+.mailbox-starfield {
+  background-color: var(--space);
   background-image:
-    radial-gradient(1.5px 1.5px at 12% 18%, rgba(248, 250, 252, 0.75) 50%, transparent 100%),
-    radial-gradient(1px 1px at 28% 62%, rgba(56, 189, 248, 0.65) 50%, transparent 100%),
-    radial-gradient(2px 2px at 46% 24%, rgba(231, 244, 52, 0.6) 50%, transparent 100%),
-    radial-gradient(1.5px 1.5px at 68% 42%, rgba(248, 250, 252, 0.7) 50%, transparent 100%),
-    radial-gradient(1px 1px at 84% 16%, rgba(249, 115, 22, 0.7) 50%, transparent 100%),
-    radial-gradient(1.5px 1.5px at 91% 74%, rgba(248, 250, 252, 0.55) 50%, transparent 100%),
-    radial-gradient(1px 1px at 19% 85%, rgba(248, 250, 252, 0.5) 50%, transparent 100%),
-    radial-gradient(circle at 50% 42%, rgba(27, 43, 133, 0.36) 0%, rgba(21, 22, 34, 0.96) 72%);
+    radial-gradient(1.5px 1.5px at 12% 18%, rgba(245, 247, 255, 0.7) 50%, transparent 100%),
+    radial-gradient(1px 1px at 28% 62%, rgba(127, 212, 255, 0.6) 50%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 68% 42%, rgba(245, 247, 255, 0.6) 50%, transparent 100%),
+    radial-gradient(1px 1px at 84% 16%, rgba(255, 138, 76, 0.6) 50%, transparent 100%),
+    radial-gradient(1px 1px at 19% 85%, rgba(245, 247, 255, 0.45) 50%, transparent 100%);
 }
 
-@keyframes radar-expand {
-  0% {
-    transform: scale(0.45);
-    opacity: 0.65;
-  }
+/* ==========================================================================
+   [REDESIGN] 4. TẬP PHIM (EPISODE) — Scrollytelling dính
+   Cột trái: hình SVG + telemetry DÍNH (sticky) khi cuộn.
+   Cột phải: 4 "nhịp truyện" — mỗi nhịp đổi giá trị con trượt → SVG đổi theo.
+   Đây là phần tạo cảm giác "cuộn tới đâu, máy móc chạy tới đó".
+   ========================================================================== */
+.episode-shell {
+  display: grid;
+  grid-template-columns: 5fr 6fr;
+  gap: 34px;
+  align-items: start;
+}
 
+.ep-visual {
+  position: sticky;
+  top: 84px;
+}
+
+.ep-visual-frame {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+  background: #0a0d18;
+}
+
+.ep-visual-frame img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.22;
+  mix-blend-mode: luminosity;
+  pointer-events: none;
+}
+
+.ep-svg-layer {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+}
+
+.ep-photo-credit {
+  position: absolute;
+  inset: auto 0 0 0;
+  z-index: 2;
+  background: rgba(10, 13, 24, 0.85);
+  border-top: 1px solid var(--border-subtle);
+  padding: 4px 10px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: rgba(245, 247, 255, 0.7);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 3 ô số liệu telemetry dưới hình */
+.ep-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.ep-metric {
+  background: rgba(14, 17, 32, 0.78);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 10px;
+}
+
+.ep-metric-label {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: rgba(245, 247, 255, 0.58);
+}
+
+.ep-metric-value {
+  font-family: var(--font-mono);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--beacon);
+  margin-top: 2px;
+}
+
+.ep-metric-sub {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: rgba(245, 247, 255, 0.5);
+}
+
+.ep-status {
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(14, 17, 32, 0.78);
+  border: 1px solid var(--border-subtle);
+  font-size: 0.95rem;
+}
+
+/* ==========================================================================
+   [KIDS 2026-11-13] LỚP CHƠI TRẺ EM TRÊN CẢNH SVG + KHỐI "ĐOÁN TRƯỚC"
+   ========================================================================== */
+.ep-play-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.play-laser-btn {
+  position: absolute;
+  left: 10px;
+  bottom: 34px;
+  pointer-events: auto;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 12px;
+  color: #0e1120;
+  background: var(--beacon);
+  border: 2px solid #0e1120;
+  border-radius: 999px;
+  padding: 8px 14px;
+  box-shadow: 0 0 0 4px rgba(231, 244, 52, 0.25);
+  animation: play-pulse 1.6s ease-in-out infinite;
+}
+
+.play-laser-btn:disabled {
+  opacity: 0.55;
+  animation: none;
+  cursor: default;
+}
+
+@keyframes play-pulse {
+  0%,
   100% {
-    transform: scale(1.65);
-    opacity: 0;
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.06);
   }
 }
 
-.radar-ring-1 {
-  transform-origin: center;
-  animation: radar-expand 5.5s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+.play-status {
+  position: absolute;
+  left: 10px;
+  bottom: 76px;
+  max-width: 72%;
+  pointer-events: none;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: #d9fbe1;
+  background: rgba(10, 13, 24, 0.85);
+  border: 1px solid rgba(16, 185, 129, 0.5);
+  border-radius: 8px;
+  padding: 4px 8px;
 }
 
-.radar-ring-2 {
-  transform-origin: center;
-  animation: radar-expand 5.5s cubic-bezier(0.16, 1, 0.3, 1) 1.8s infinite;
+.photon-dot {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  margin: -5px 0 0 -5px;
+  border-radius: 50%;
+  background: #34d399;
+  box-shadow: 0 0 10px 3px rgba(52, 211, 153, 0.75);
+  pointer-events: none;
+  z-index: 4;
 }
 
-.radar-ring-3 {
-  transform-origin: center;
-  animation: radar-expand 5.5s cubic-bezier(0.16, 1, 0.3, 1) 3.6s infinite;
+.play-hotspot {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  pointer-events: auto;
+  cursor: pointer;
+  background: rgba(127, 212, 255, 0.18);
+  border: 2px solid #7fd4ff;
+  color: #7fd4ff;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: spot-ping 1.8s ease-out infinite;
 }
 
-/* Custom Mobile-First Range Slider */
+.play-hotspot.is-got {
+  border-color: var(--beacon);
+  color: var(--beacon);
+  background: rgba(231, 244, 52, 0.15);
+  animation: none;
+}
+
+@keyframes spot-ping {
+  0% {
+    box-shadow: 0 0 0 0 rgba(127, 212, 255, 0.55);
+  }
+  100% {
+    box-shadow: 0 0 0 14px rgba(127, 212, 255, 0);
+  }
+}
+
+.play-spot-pop {
+  position: absolute;
+  transform: translate(-50%, calc(-100% - 22px));
+  width: min(250px, 68%);
+  background: rgba(10, 13, 24, 0.96);
+  border: 1px solid rgba(127, 212, 255, 0.6);
+  border-radius: 12px;
+  padding: 10px 12px;
+  pointer-events: auto;
+  z-index: 6;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #e2e8f0;
+}
+
+.play-spot-pop.below {
+  transform: translate(-50%, 22px);
+}
+
+.play-spot-title {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 11px;
+  color: #7fd4ff;
+  margin-bottom: 4px;
+}
+
+.play-spot-star {
+  margin-top: 6px;
+  color: var(--beacon);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.play-spot-close {
+  position: absolute;
+  top: 2px;
+  right: 6px;
+  background: none;
+  border: none;
+  color: #94a3b8;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.play-sticker-chip {
+  position: absolute;
+  right: 10px;
+  bottom: 34px;
+  pointer-events: none;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--beacon);
+  background: rgba(10, 13, 24, 0.85);
+  border: 1px solid rgba(231, 244, 52, 0.45);
+  border-radius: 999px;
+  padding: 4px 10px;
+}
+
+.ep-guess {
+  border: 2px dashed rgba(231, 244, 52, 0.5);
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-bottom: 26px;
+  background: rgba(231, 244, 52, 0.06);
+}
+
+.ep-guess-title {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--beacon);
+}
+
+.ep-guess-q {
+  margin: 6px 0 10px;
+  font-weight: 600;
+  color: #f1f5f9;
+}
+
+.ep-guess-options {
+  display: grid;
+  gap: 8px;
+}
+
+.ep-guess-option {
+  text-align: left;
+  padding: 9px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(14, 17, 32, 0.85);
+  color: #e2e8f0;
+  font-size: 14px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.ep-guess-option:hover:not(:disabled) {
+  border-color: var(--beacon);
+  transform: translateY(-1px);
+}
+
+.ep-guess-option:disabled {
+  cursor: default;
+}
+
+.ep-guess-option.is-right {
+  border-color: #10b981;
+  background: rgba(16, 185, 129, 0.15);
+  color: #a7f3d0;
+  font-weight: 700;
+}
+
+.ep-guess-option.is-wrong {
+  border-color: #ef4444;
+  background: rgba(239, 68, 68, 0.12);
+  color: #fca5a5;
+}
+
+.ep-guess-option.is-dim {
+  opacity: 0.45;
+}
+
+.ep-guess-reveal {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(127, 212, 255, 0.1);
+  border-left: 3px solid #7fd4ff;
+  font-size: 13px;
+  color: #dbeafe;
+}
+
+.ep-guess-reveal.is-right {
+  background: rgba(16, 185, 129, 0.12);
+  border-left-color: #10b981;
+}
+
+.ep-guess-reveal p {
+  margin-top: 4px;
+  color: #e2e8f0;
+}
+
+/* [KIDS 2026-11-13 • v2] Dải dẫn đường + con trượt lộ thiên + giải thích nhỏ */
+.ep-help {
+  border: 1px solid rgba(127, 212, 255, 0.45);
+  background: rgba(127, 212, 255, 0.08);
+  border-radius: 14px;
+  padding: 12px 14px;
+  margin-bottom: 22px;
+}
+
+.ep-help-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.ep-help-title {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: #7fd4ff;
+}
+
+.ep-help-close {
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: #0e1120;
+  background: #7fd4ff;
+  border: none;
+  border-radius: 999px;
+  padding: 5px 12px;
+}
+
+.ep-help-steps {
+  margin: 8px 0 0 18px;
+  display: grid;
+  gap: 4px;
+  font-size: 13px;
+  color: #e2e8f0;
+}
+
+.ep-slider-box {
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(14, 17, 32, 0.78);
+  border: 1px solid var(--border-subtle);
+  display: grid;
+  gap: 6px;
+}
+
+.ep-slider-title {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 12px;
+  color: #7fd4ff;
+}
+
+.ep-slider-hint {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: rgba(245, 247, 255, 0.55);
+}
+
+.ep-metric-tip {
+  margin-top: 4px;
+  font-size: 10px;
+  line-height: 1.45;
+  color: rgba(245, 247, 255, 0.5);
+}
+
+.play-hotspot-tag {
+  position: absolute;
+  left: 34px;
+  top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  color: #7fd4ff;
+  background: rgba(10, 13, 24, 0.85);
+  border: 1px solid rgba(127, 212, 255, 0.4);
+  border-radius: 6px;
+  padding: 2px 6px;
+  pointer-events: none;
+}
+
+/* Cột bước truyện: mỗi nhịp cách nhau ~42vh để có "đất" cuộn */
+.ep-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 42vh;
+  padding-bottom: 20vh;
+}
+
+.ep-step {
+  opacity: 0.34;
+  transform: translateY(10px);
+  transition: opacity 0.45s ease, transform 0.45s ease;
+}
+
+.ep-step.is-active {
+  opacity: 1;
+  transform: none;
+}
+
+.ep-step-index {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--moonbeam);
+}
+
+.ep-step-text {
+  font-size: 1.3rem;
+  line-height: 1.55;
+  margin: 6px 0 0;
+  max-width: 46ch;
+}
+
+.ep-step-fact {
+  margin-top: 10px;
+  font-size: 0.92rem;
+  color: rgba(245, 247, 255, 0.72);
+  max-width: 52ch;
+}
+
+/* ==========================================================================
+   [REDESIGN] 5. LÁ THƯ TRÊN GIẤY (phương án B) — mực "chạy" ra khi mở
+   ========================================================================== */
+.ep-letter {
+  position: relative;
+  margin-top: 22px;
+  padding: 26px 24px 24px;
+  border-radius: 8px;
+  background:
+    repeating-linear-gradient(transparent 0 31px, rgba(35, 38, 46, 0.09) 31px 32px),
+    var(--paper);
+  color: var(--paper-ink);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.35);
+}
+
+/* Lề đỏ của vở học sinh */
+.ep-letter::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 44px;
+  width: 1px;
+  background: rgba(255, 138, 76, 0.55);
+}
+
+.ep-letter-title {
+  font-family: var(--font-hand);
+  font-size: 1.7rem;
+  line-height: 1.2;
+  margin: 0 0 10px;
+  color: #2b3a55;
+}
+
+.ep-letter-body {
+  font-size: 1rem;
+  line-height: 32px; /* khớp với đường kẻ giấy ở trên */
+  margin: 0;
+  white-space: pre-line;
+}
+
+/* Hiệu ứng mực: chữ mờ → đậm dần khi lá thư xuất hiện */
+.ep-letter-body .ink {
+  color: rgba(35, 38, 46, 0.16);
+  transition: color 0.9s ease;
+}
+
+.ep-letter.is-open .ep-letter-body .ink {
+  color: var(--paper-ink);
+}
+
+/* ==========================================================================
+   [REDESIGN] 6. "SỔ TAY KỸ SƯ" — nắp gập <details>, mặc định đóng
+   Để học sinh không bị ngập số liệu; ai tò mò mới mở.
+   ========================================================================== */
+.ep-dossier {
+  margin-top: 18px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  background: rgba(14, 17, 32, 0.6);
+  overflow: hidden;
+}
+
+.ep-dossier > summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 12px 16px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.98rem;
+  color: var(--moonbeam);
+}
+
+.ep-dossier > summary::-webkit-details-marker { display: none; }
+.ep-dossier > summary::before { content: "▸ "; }
+.ep-dossier[open] > summary::before { content: "▾ "; }
+
+.ep-dossier-body {
+  padding: 0 16px 16px;
+  font-size: 0.92rem;
+  color: rgba(245, 247, 255, 0.8);
+  display: grid;
+  gap: 12px;
+}
+
+/* ==========================================================================
+   [REDESIGN] 7. CÂU HỎI MỞ TEM (quiz gate)
+   Tem chỉ được "đóng" khi trả lời đúng → học sinh phải đọc, không lướt.
+   ========================================================================== */
+.ep-quiz {
+  margin-top: 22px;
+  padding: 20px;
+  border-radius: var(--radius);
+  background: var(--hull);
+  border: 1px solid rgba(231, 244, 52, 0.35);
+}
+
+.ep-quiz-question {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 0 0 14px;
+}
+
+.ep-quiz-options {
+  display: grid;
+  gap: 10px;
+}
+
+.ep-quiz-option {
+  text-align: left;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border-subtle);
+  background: rgba(14, 17, 32, 0.7);
+  color: var(--star);
+  font-family: var(--font-body);
+  font-size: 0.98rem;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+}
+
+.ep-quiz-option:hover { border-color: var(--beacon); transform: translateX(3px); }
+.ep-quiz-option.is-picked { border-color: var(--beacon); background: rgba(231, 244, 52, 0.12); }
+.ep-quiz-option.is-right { border-color: var(--ok); background: rgba(16, 185, 129, 0.18); }
+.ep-quiz-option.is-wrong { border-color: var(--bad); background: rgba(239, 68, 68, 0.16); }
+
+.ep-quiz-feedback {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(14, 17, 32, 0.8);
+  border-left: 4px solid var(--beacon);
+  font-size: 0.95rem;
+}
+
+/* ==========================================================================
+   [REDESIGN] 8. TEM SỨ MỆNH + HIỆU ỨNG "ĐÓNG CỘP"
+   ========================================================================== */
+.postmark-stamp {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 2px solid rgba(245, 247, 255, 0.25);
+  color: rgba(245, 247, 255, 0.5);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.postmark-stamp.is-collected {
+  border-color: var(--beacon);
+  color: var(--beacon);
+  background: rgba(231, 244, 52, 0.12);
+  animation: stamp-thunk 0.5s cubic-bezier(0.2, 1.6, 0.4, 1);
+}
+
+@keyframes stamp-thunk {
+  0%   { transform: scale(2.1) rotate(-14deg); opacity: 0; }
+  60%  { transform: scale(0.92) rotate(3deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+/* [REDESIGN] Thanh điều hướng trong tập phim: quay lại hộp thư / đổi hiện vật */
+.ep-topbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.ep-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--border-subtle);
+  background: rgba(14, 17, 32, 0.7);
+  color: var(--star);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.ep-back-btn:hover { border-color: var(--beacon); color: var(--beacon); }
+
+.ep-switch-chip {
+  padding: 7px 13px;
+  border-radius: 999px;
+  border: 1px solid var(--border-subtle);
+  background: rgba(14, 17, 32, 0.7);
+  color: rgba(245, 247, 255, 0.75);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ep-switch-chip:hover { border-color: var(--moonbeam); color: var(--moonbeam); }
+.ep-switch-chip.is-current { border-color: var(--beacon); color: var(--beacon); }
+
+/* Nút chính duy nhất của trang: màu beacon */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 22px;
+  border-radius: 999px;
+  border: none;
+  background: var(--beacon);
+  color: #14182a;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 22px rgba(231, 244, 52, 0.28); }
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 999px;
+  border: 1px solid var(--border-subtle);
+  background: transparent;
+  color: var(--star);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.98rem;
+  cursor: pointer;
+}
+
+.btn-ghost:hover { border-color: var(--moonbeam); color: var(--moonbeam); }
+
+/* Gợi ý cuộn xuống (mũi tên nảy nhẹ) */
+.scroll-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: rgba(245, 247, 255, 0.6);
+}
+
+.scroll-hint span:last-child { animation: hint-bob 1.8s ease-in-out infinite; }
+
+@keyframes hint-bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(5px); }
+}
+
+/* [REDESIGN • GIỮ NGUYÊN] Con trượt telemetry: js/app.js + js/svg-engine.js
+   vẫn dùng class .telemetry-slider. Chỉ đổi sang token màu mới. */
 input[type="range"].telemetry-slider {
   -webkit-appearance: none;
   appearance: none;
@@ -129,7 +1083,7 @@ input[type="range"].telemetry-slider::-webkit-slider-thumb {
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: var(--accent-neon-yellow);
+  background: var(--beacon);
   border: 3px solid #151622;
   box-shadow: 0 0 16px rgba(231, 244, 52, 0.9);
   cursor: grab;
@@ -147,14 +1101,15 @@ input[type="range"].telemetry-slider::-moz-range-thumb {
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: var(--accent-neon-yellow);
+  background: var(--beacon);
   border: 3px solid #151622;
   box-shadow: 0 0 16px rgba(231, 244, 52, 0.9);
   cursor: grab;
   transition: transform 0.15s ease;
 }
 
-/* Dynamic SVG Animations for the 4 Chapters */
+/* [REDESIGN • GIỮ NGUYÊN] Animation SVG cho 4 chương — js/svg-engine.js
+   phụ thuộc trực tiếp các class/keyframes bên dưới, KHÔNG ĐƯỢC XOÁ. */
 @keyframes laser-dash {
   to {
     stroke-dashoffset: -48;
@@ -181,11 +1136,9 @@ input[type="range"].telemetry-slider::-moz-range-thumb {
   0% {
     transform: rotateY(0deg) scaleX(1);
   }
-
   50% {
     transform: rotateY(180deg) scaleX(0.18);
   }
-
   100% {
     transform: rotateY(360deg) scaleX(1);
   }
@@ -195,11 +1148,9 @@ input[type="range"].telemetry-slider::-moz-range-thumb {
   0% {
     transform: rotateY(360deg) scaleX(0.2);
   }
-
   50% {
     transform: rotateY(180deg) scaleX(1);
   }
-
   100% {
     transform: rotateY(0deg) scaleX(0.2);
   }
@@ -220,7 +1171,6 @@ input[type="range"].telemetry-slider::-moz-range-thumb {
     r: 8px;
     opacity: 0.95;
   }
-
   100% {
     r: 58px;
     opacity: 0;
@@ -235,10 +1185,13 @@ input[type="range"].telemetry-slider::-moz-range-thumb {
   animation: pulse-beacon 2.2s ease-out 1.1s infinite;
 }
 
-/* Cosmic Postcard Styling for Voice 1 */
+/* ==========================================================================
+   [REDESIGN] 9. TƯƠNG THÍCH NGƯỢC (class cũ vẫn còn trong code khác)
+   ========================================================================== */
 .cosmic-postcard {
-  background: linear-gradient(145deg, rgba(24, 28, 48, 0.95) 0%, rgba(17, 20, 34, 0.98) 100%);
-  border: 1px solid rgba(56, 189, 248, 0.28);
+  background: linear-gradient(145deg, rgba(27, 33, 54, 0.95) 0%, rgba(14, 17, 32, 0.98) 100%);
+  border: 1px solid rgba(127, 212, 255, 0.28);
+  border-radius: var(--radius);
   position: relative;
 }
 
@@ -249,39 +1202,95 @@ input[type="range"].telemetry-slider::-moz-range-thumb {
   left: 0;
   right: 0;
   height: 4px;
-  background: repeating-linear-gradient(-45deg,
-      #38BDF8,
-      #38BDF8 12px,
-      transparent 12px,
-      transparent 24px,
-      #F97316 24px,
-      #F97316 36px,
-      transparent 36px,
-      transparent 48px);
-  border-top-left-radius: 12px;
-  border-top-right-radius: 12px;
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--moonbeam),
+    var(--moonbeam) 12px,
+    transparent 12px,
+    transparent 24px,
+    var(--rust) 24px,
+    var(--rust) 36px,
+    transparent 36px,
+    transparent 48px
+  );
+  border-top-left-radius: var(--radius);
+  border-top-right-radius: var(--radius);
 }
 
-/* Mission Stamp Collected Glow */
 .mission-stamp-collected {
   opacity: 1 !important;
-  border-color: var(--accent-neon-yellow) !important;
-  color: var(--accent-neon-yellow) !important;
+  border-color: var(--beacon) !important;
+  color: var(--beacon) !important;
   background-color: rgba(231, 244, 52, 0.12) !important;
   box-shadow: 0 0 14px rgba(231, 244, 52, 0.35);
 }
 
-/* Print Rules for Space Heritage Guardian Certificate */
+/* ==========================================================================
+   [REDESIGN] 10. RESPONSIVE — dưới 900px tập phim còn 1 cột,
+   hình vẫn dính ở trên để học sinh vừa cuộn vừa xem máy chạy.
+   ========================================================================== */
+@media (max-width: 900px) {
+  html { font-size: 16px; }
+
+  .episode-shell {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  /* [KIDS 2026-11-13] Bỏ sticky ở màn hình hẹp: cột hình cao ~570px từng đè
+     lên toàn bộ cột truyện (nút đoán, hotspot, câu hỏi đều không bấm được).
+     SVG vẫn đổi theo nhịp cuộn nhờ IntersectionObserver. */
+  .ep-visual {
+    position: static;
+    top: auto;
+  }
+
+  .ep-steps { gap: 30vh; }
+
+  .ep-step-text { font-size: 1.18rem; }
+
+  .mailbox-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 620px) {
+  .mailbox-grid { grid-template-columns: 1fr; }
+
+  .ep-metrics { grid-template-columns: 1fr; }
+
+  .ep-letter { padding: 22px 18px; }
+
+  .ep-letter::before { left: 30px; }
+}
+
+/* ==========================================================================
+   [REDESIGN] 11. TÔN TRỌNG prefers-reduced-motion (accessibility)
+   Học sinh bị chóng mặt vẫn đọc được toàn bộ nội dung.
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  /* Bỏ hiệu ứng mờ theo cuộn: mọi nhịp truyện hiển thị rõ luôn */
+  .ep-step { opacity: 1; transform: none; }
+}
+
+/* [REDESIGN • GIỮ NGUYÊN] Quy tắc in cho Chứng nhận "Người bảo vệ di sản"
+   — chỉ đổi mã màu sang token mới. */
 @media print {
   body * {
     visibility: hidden;
   }
-
   #guardian-certificate-card,
   #guardian-certificate-card * {
     visibility: visible;
   }
-
   #guardian-certificate-card {
     position: fixed;
     left: 0;
@@ -297,3 +1306,4 @@ input[type="range"].telemetry-slider::-moz-range-thumb {
     border: 2px solid #E7F434 !important;
   }
 }
+

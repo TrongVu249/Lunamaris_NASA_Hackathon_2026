@@ -4,34 +4,34 @@
  * NASA 2011 Recommendations, NASA SP-284, Public Law 116-275 & NASA GIC 21-07
  */
 
-  window.LunamarisDecisionStation = window.RelicDecisionStation = (function () {
-    // Stepped X coordinates on the 760x270 cross-section SVG for each boundary marker
-    const MARKER_POSITIONS = {
-      0: 76,      // Heritage Artifact (0 m)
-      50: 158,    // < 75 m / 225 m Red Zone
-      75: 190,    // 75 m Apollo 11 Artifact Boundary
-      155: 295,   // 155 m Apollo 12 Historical Touchdown
-      225: 365,   // 225 m Apollo 17 Artifact Boundary
-      500: 475,   // 500 m (0.5 km) Impact Site Rule
-      2000: 648   // >= 2,000 m (2.0 km) Artemis Heritage Safe Buffer
-    };
+window.RelicDecisionStation = (function () {
+  // Stepped X coordinates on the 760x270 cross-section SVG for each boundary marker
+  const MARKER_POSITIONS = {
+    0: 76,      // Heritage Artifact (0 m)
+    50: 158,    // < 75 m / 225 m Red Zone
+    75: 190,    // 75 m Apollo 11 Artifact Boundary
+    155: 295,   // 155 m Apollo 12 Historical Touchdown
+    225: 365,   // 225 m Apollo 17 Artifact Boundary
+    500: 475,   // 500 m (0.5 km) Impact Site Rule
+    2000: 648   // >= 2,000 m (2.0 km) Artemis Heritage Safe Buffer
+  };
 
-    function renderCrossSectionSVG(selectedZone, lang) {
-      const dist = selectedZone.distance_num;
-      const landerX = MARKER_POSITIONS[dist] || 295;
-      const color = selectedZone.color_hex;
+  function renderCrossSectionSVG(selectedZone, lang) {
+    const dist = selectedZone.distance_num;
+    const landerX = MARKER_POSITIONS[dist] || 295;
+    const color = selectedZone.color_hex;
 
-      // Ballistic ejecta reach from lander toward the artifact at x=76
-      // In 1/6g vacuum, plume ejecta travels ~1.8 km horizontally before hitting the ground
-      let plumeEndX = 76;
-      if (dist === 50) plumeEndX = 48; // Direct blast sweeps past artifact
-      else if (dist === 155) plumeEndX = 68; // Sandblasts artifact directly
-      else if (dist === 500) plumeEndX = 74; // Fine dust settles on LRRR
-      else if (dist >= 2000) plumeEndX = 240; // Falls harmlessly to ground before 225m/75m boundary!
+    // Ballistic ejecta reach from lander toward the artifact at x=76
+    // In 1/6g vacuum, plume ejecta travels ~1.8 km horizontally before hitting the ground
+    let plumeEndX = 76;
+    if (dist === 50) plumeEndX = 48; // Direct blast sweeps past artifact
+    else if (dist === 155) plumeEndX = 68; // Sandblasts artifact directly
+    else if (dist === 500) plumeEndX = 74; // Fine dust settles on LRRR
+    else if (dist >= 2000) plumeEndX = 240; // Falls harmlessly to ground before 225m/75m boundary!
 
-      const isSafe = selectedZone.unlocks_badge;
+    const isSafe = selectedZone.unlocks_badge;
 
-      return `
+    return `
       <svg viewBox="0 0 760 270" class="w-full h-auto select-none" aria-label="Artemis Lunar Landing Vacuum Ballistics Cross-Section">
         <defs>
           <linearGradient id="lunarRegolithGrad" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -57,10 +57,11 @@
 
         <!-- Stepped Scale Top Banner -->
         <text x="380" y="22" text-anchor="middle" fill="#94A3B8" font-family="JetBrains Mono, monospace" font-size="10" font-weight="700">
-          ${lang === "vi"
-          ? "SƠ ĐỒ MẶT CẮT ĐẠN ĐẠO CHÂN KHÔNG (THANG ĐO BẬC THANG: 0 m → 75 m → 155 m → 225 m → 500 m → 2.000 m)"
-          : "VACUUM BALLISTICS CROSS-SECTION (STEPPED SCALE: 0 m → 75 m → 155 m → 225 m → 500 m → 2,000 m)"
-        }
+          ${
+            lang === "vi"
+              ? "SƠ ĐỒ MẶT CẮT ĐẠN ĐẠO CHÂN KHÔNG (THANG ĐO BẬC THANG: 0 m → 75 m → 155 m → 225 m → 500 m → 2.000 m)"
+              : "VACUUM BALLISTICS CROSS-SECTION (STEPPED SCALE: 0 m → 75 m → 155 m → 225 m → 500 m → 2,000 m)"
+          }
         </text>
 
         <!-- Lunar Surface Terrain -->
@@ -154,10 +155,10 @@
         </g>
       </svg>
     `;
-    }
+  }
 
-    return {
-      renderCrossSectionSVG
-    };
-  })();
+  return {
+    renderCrossSectionSVG
+  };
+})();
 
