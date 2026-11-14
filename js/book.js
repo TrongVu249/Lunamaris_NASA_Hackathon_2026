@@ -1,0 +1,745 @@
+/**
+ * LUNAMARIS: Letters Across the Silent Seas
+ * Book engine — biến trang web thành "quyển sách": mỗi lần hiện 1 trang (cảnh),
+ * trang mới trượt vào từ bên phải; lùi thì chạy ngược chiều.
+ *
+ * - Thứ tự trang = thứ tự <section class="book-scene"> trong #book.
+ * - Trang có [data-skip] (bị bộ lọc hành tinh ẩn) hoặc [data-story] chưa có nội dung bị bỏ qua.
+ * - Điều khiển: nút ‹ ›, chấm tiến độ, mục lục, phím ←/→ (PageUp/PageDown ở mép trang),
+ *   vuốt ngang trên màn cảm ứng, nút Back của trình duyệt (hash #cover, #toc, #ch1…).
+ * - Chế độ đọc cuộn: bỏ .book-paged khỏi <body>, mọi trang xếp dọc như web cũ.
+ * - Tôn trọng prefers-reduced-motion: đổi trang tức thì, không trượt.
+ *
+ * API: window.LunamarisBook = { goTo(id), next(), prev(), refresh(), current(), isPaged() }
+ * Hợp đồng cho bộ phát truyện (chưa làm):
+ *   window.LunamarisStory = { has(seq) -> bool, mount(seq, el, { onDone }) }
+ */
+(function () {
+  "use strict";
+
+  var STORE_SCENE = "lunamaris_last_scene";
+  var STORE_MODE = "lunamaris_reading_mode";
+  var TURN_FALLBACK_MS = 900;
+  var SWIPE_MIN_PX = 60;
+
+  var reduceMotion = window.matchMedia ? window.matchMedia("(prefers-reduced-motion: reduce)") : { matches: false };
+  var coarsePointer = window.matchMedia ? window.matchMedia("(pointer: coarse)") : { matches: false };
+
+  var body = document.body;
+  var book = null;
+  var scenes = []; // mọi .book-scene trong DOM
+  var order = []; // các trang đang được lật tới (không bị bỏ qua)
+  var currentId = null;
+  var paged = true;
+  var finishTurn = null; // hàm kết thúc lượt lật đang chạy (nếu có)
+  var mountedStories = {};
+  var baseTitle = document.title;
+  var scrollObserver = null;
+
+  /* ---------------- tiện ích ---------------- */
+
+  function store(key, val) {
+    try {
+      if (val == null) window.localStorage.removeItem(key);
+      else window.localStorage.setItem(key, val);
+    } catch (e) {
+      /* chế độ riêng tư / bị chặn lưu trữ: bỏ qua */
+    }
+  }
+
+  function load(key) {
+    try {
+      return window.localStorage.getItem(key);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function dict() {
+    var all = window.UI_I18N || {};
+    var lang = document.documentElement.lang === "en" ? "en" : "vi";
+    return all[lang] || all.vi || {};
+  }
+
+  function fmt(str, map) {
+    return String(str || "").replace(/\{(\w+)\}/g, function (_, k) {
+      return map[k] != null ? map[k] : "";
+    });
+  }
+
+  function idOf(scene) {
+    return scene ? scene.getAttribute("data-scene") : null;
+  }
+
+  function sceneById(id) {
+    for (var i = 0; i < scenes.length; i++) {
+      if (idOf(scenes[i]) === id) return scenes[i];
+    }
+    return null;
+  }
+
+  function indexOf(id) {
+    for (var i = 0; i < order.length; i++) {
+      if (idOf(order[i]) === id) return i;
+    }
+    return -1;
+  }
+
+  function scrollerOf(scene) {
+    return scene ? scene.querySelector(".scene-scroll") || scene : null;
+  }
+
+  function storyReady(seq) {
+    var S = window.LunamarisStory;
+    try {
+      return !!(S && typeof S.has === "function" && S.has(seq));
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function isSkipped(scene) {
+    if (scene.hasAttribute("data-skip")) return true;
+    var seq = scene.getAttribute("data-story");
+    return seq ? !storyReady(seq) : false;
+  }
+
+  function computeOrder() {
+    scenes = Array.prototype.slice.call(book.querySelectorAll(".book-scene"));
+    order = scenes.filter(function (s) {
+      var skip = isSkipped(s);
+      s.classList.toggle("is-skipped", skip);
+      if (s.hasAttribute("data-story")) s.classList.toggle("has-story", !skip);
+      return !skip;
+    });
+  }
+
+  /** Hash → id trang. Nhận cả id trang (#ch2) lẫn id phần tử bên trong (#artemis-station, #chapter-surveyor-3). */
+  function resolve(hash) {
+    var raw = (hash || "").replace(/^#/, "");
+    if (!raw) return null;
+    var id;
+    try {
+      id = decodeURIComponent(raw);
+    } catch (e) {
+      id = raw;
+    }
+    if (sceneById(id)) return id;
+    var el = document.getElementById(id);
+    var scene = el && el.closest ? el.closest(".book-scene") : null;
+    return scene ? idOf(scene) : null;
+  }
+
+  /** Nếu trang bị bỏ qua thì lấy trang hiển thị gần nhất phía sau (hoặc phía trước). */
+  function visibleNear(id) {
+    if (!id) return null;
+    if (indexOf(id) !== -1) return id;
+    var target = sceneById(id);
+    var pos = scenes.indexOf(target);
+    if (pos === -1) return null;
+    for (var i = pos + 1; i < scenes.length; i++) if (order.indexOf(scenes[i]) !== -1) return idOf(scenes[i]);
+    for (var j = pos - 1; j >= 0; j--) if (order.indexOf(scenes[j]) !== -1) return idOf(scenes[j]);
+    return null;
+  }
+
+  function firstId() {
+    return order.length ? idOf(order[0]) : null;
+  }
+
+  function sceneTitle(scene) {
+    if (!scene) return { num: "", text: "" };
+    return {
+      num: scene.getAttribute("data-title-num") || "",
+      text: scene.getAttribute("data-title") || ""
+    };
+  }
+
+  function dialogOpen() {
+    var si = document.getElementById("si-disclosure-modal");
+    if (si && !si.classList.contains("hidden")) return true;
+    var nb = document.getElementById("notebook-qr-panel");
+    if (nb && !nb.classList.contains("invisible")) return true;
+    return false;
+  }
+
+  function isEditable(el) {
+    if (!el || el === document.body) return false;
+    if (el.isContentEditable) return true;
+    var tag = el.tagName;
+    if (tag === "TEXTAREA" || tag === "SELECT") return true;
+    if (tag === "INPUT") return true; // gồm cả input[type=range]: phím mũi tên dành cho thanh trượt
+    var role = el.getAttribute && el.getAttribute("role");
+    return role === "slider" || role === "textbox" || role === "spinbutton";
+  }
+
+  /* ---------------- hiển thị trang ---------------- */
+
+  function setHidden(scene, hidden) {
+    if (hidden) {
+      scene.setAttribute("aria-hidden", "true");
+      scene.setAttribute("inert", "");
+    } else {
+      scene.removeAttribute("aria-hidden");
+      scene.removeAttribute("inert");
+    }
+  }
+
+  function focusHeading(scene, prevScene) {
+    // Chỉ chuyển focus khi focus đang ở trang cũ (hoặc chưa ở đâu) — giữ nguyên nếu người dùng
+    // đang bấm liên tục nút "Trang sau" trên thanh lật trang.
+    var active = document.activeElement;
+    var focusWasInPrev = prevScene && active && prevScene.contains(active);
+    if (!focusWasInPrev && active && active !== document.body) return;
+    var heading = scene.querySelector("[data-scene-heading]") || scene.querySelector("h1, h2");
+    if (!heading) return;
+    if (!heading.hasAttribute("tabindex")) heading.setAttribute("tabindex", "-1");
+    try {
+      heading.focus({ preventScroll: true });
+    } catch (e) {
+      heading.focus();
+    }
+  }
+
+  function mountStory(scene) {
+    var seq = scene.getAttribute("data-story");
+    if (!seq || mountedStories[seq] || !storyReady(seq)) return;
+    var S = window.LunamarisStory;
+    if (typeof S.mount !== "function") return;
+    mountedStories[seq] = true;
+    S.mount(seq, scene.querySelector(".scene-page") || scene, { onDone: next });
+  }
+
+  function clearTurnClasses(scene) {
+    scene.classList.remove("turn-in-fwd", "turn-in-back", "turn-out-fwd", "turn-out-back", "is-leaving");
+  }
+
+  /**
+   * Hiện trang `id`. dir > 0: tiến (trang mới vào từ phải); dir < 0: lùi.
+   * opts.instant: không chạy hiệu ứng. opts.target: phần tử cần cuộn tới (chế độ cuộn).
+   */
+  function show(id, dir, opts) {
+    opts = opts || {};
+    var nextScene = sceneById(id);
+    if (!nextScene) return;
+    if (finishTurn) finishTurn();
+
+    var prevScene = currentId ? sceneById(currentId) : null;
+    currentId = id;
+    store(STORE_SCENE, id);
+
+    if (!paged) {
+      var target = opts.target || nextScene;
+      if (!opts.noScroll) {
+        target.scrollIntoView({ behavior: opts.instant || reduceMotion.matches ? "auto" : "smooth", block: "start" });
+      }
+      updateChrome();
+      return;
+    }
+
+    scenes.forEach(function (s) {
+      if (s !== nextScene && s !== prevScene) {
+        clearTurnClasses(s);
+        s.classList.remove("is-active");
+        setHidden(s, true);
+      }
+    });
+
+    setHidden(nextScene, false);
+    nextScene.classList.add("is-active");
+    var scroller = scrollerOf(nextScene);
+    if (scroller) scroller.scrollTop = 0;
+    if (opts.target && opts.target !== nextScene) {
+      opts.target.scrollIntoView({ block: "start" });
+    }
+    // Lối tắt anchor của trình duyệt có thể cuộn #book (overflow:hidden) — luôn trả về 0.
+    book.scrollTop = 0;
+    book.scrollLeft = 0;
+
+    var animate = prevScene && prevScene !== nextScene && !opts.instant && !reduceMotion.matches;
+    if (animate) {
+      var fwd = dir >= 0;
+      setHidden(prevScene, true);
+      prevScene.classList.add("is-leaving", fwd ? "turn-out-fwd" : "turn-out-back");
+      nextScene.classList.add(fwd ? "turn-in-fwd" : "turn-in-back");
+
+      var done = false;
+      var timer = null;
+      var onEnd = function (e) {
+        if (e.target !== nextScene || e.pseudoElement) return;
+        finish();
+      };
+      var finish = function () {
+        if (done) return;
+        done = true;
+        finishTurn = null;
+        clearTimeout(timer);
+        nextScene.removeEventListener("animationend", onEnd);
+        clearTurnClasses(nextScene);
+        clearTurnClasses(prevScene);
+        if (prevScene !== sceneById(currentId)) prevScene.classList.remove("is-active");
+      };
+      nextScene.addEventListener("animationend", onEnd);
+      timer = setTimeout(finish, TURN_FALLBACK_MS);
+      finishTurn = finish;
+    } else if (prevScene && prevScene !== nextScene) {
+      clearTurnClasses(prevScene);
+      prevScene.classList.remove("is-active");
+      setHidden(prevScene, true);
+    }
+
+    if (prevScene) focusHeading(nextScene, prevScene);
+    mountStory(nextScene);
+    updateChrome();
+  }
+
+  /* ---------------- điều hướng ---------------- */
+
+  function goTo(id) {
+    var resolved = resolve("#" + id) || id;
+    var target = visibleNear(resolved);
+    if (!target) return false;
+    if (target === currentId) {
+      if (!paged) show(target, 0);
+      return true;
+    }
+    if (location.hash.replace(/^#/, "") !== target) {
+      location.hash = target; // hashchange → show()
+    } else {
+      show(target, indexOf(target) - indexOf(currentId));
+    }
+    return true;
+  }
+
+  function next() {
+    if (finishTurn) return; // đang lật: bỏ qua thao tác dồn dập
+    var i = indexOf(currentId);
+    if (i !== -1 && i < order.length - 1) goTo(idOf(order[i + 1]));
+  }
+
+  function prev() {
+    if (finishTurn) return;
+    var i = indexOf(currentId);
+    if (i > 0) goTo(idOf(order[i - 1]));
+  }
+
+  function onHashChange() {
+    var raw = location.hash.replace(/^#/, "");
+    var resolved = resolve(location.hash);
+    var id = visibleNear(resolved) || firstId();
+    if (!id) return;
+    var targetEl = null;
+    if (raw && raw !== id && resolved) {
+      targetEl = document.getElementById(raw);
+      // Chuẩn hoá alias cũ (#artemis-station → #artemis) mà không thêm mục lịch sử
+      try {
+        history.replaceState(null, "", "#" + id);
+      } catch (e) { /* file:// trên vài trình duyệt */ }
+    }
+    var dir = indexOf(id) - indexOf(currentId);
+    show(id, dir, { target: targetEl && targetEl.closest(".book-scene") !== targetEl ? targetEl : null });
+  }
+
+  /* ---------------- thanh trên + thanh lật trang ---------------- */
+
+  function buildDots() {
+    var list = document.getElementById("pager-dots");
+    if (!list) return;
+    list.innerHTML = "";
+    order.forEach(function (scene, i) {
+      var li = document.createElement("li");
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "pager-dot";
+      btn.setAttribute("data-goto", idOf(scene));
+      var title = sceneTitle(scene);
+      var label = (i + 1) + ". " + (title.num ? title.num + " " : "") + title.text;
+      btn.setAttribute("aria-label", label);
+      btn.title = label;
+      li.appendChild(btn);
+      list.appendChild(li);
+    });
+  }
+
+  function updateChrome() {
+    var t = dict();
+    var idx = indexOf(currentId);
+    var total = order.length;
+    var scene = sceneById(currentId);
+    var title = sceneTitle(scene);
+
+    var rt = document.getElementById("book-running-title");
+    if (rt) {
+      rt.innerHTML = "";
+      if (title.num) {
+        var n = document.createElement("span");
+        n.className = "rt-num";
+        n.textContent = title.num;
+        rt.appendChild(n);
+      }
+      var txt = document.createElement("span");
+      txt.className = "rt-text";
+      txt.textContent = title.text;
+      rt.appendChild(txt);
+    }
+
+    document.title = title.text ? title.text + " | LUNAMARIS" : baseTitle;
+
+    var status = document.getElementById("pager-status");
+    if (status && idx !== -1) {
+      status.textContent = fmt(t.pager_page_of || "{n} / {total}", { n: idx + 1, total: total });
+    }
+
+    var prevBtn = document.getElementById("pager-prev");
+    var nextBtn = document.getElementById("pager-next");
+    if (prevBtn) {
+      prevBtn.disabled = idx <= 0;
+      prevBtn.setAttribute("aria-label", t.pager_prev || "Previous page");
+    }
+    if (nextBtn) {
+      nextBtn.disabled = idx === -1 || idx >= total - 1;
+      nextBtn.setAttribute("aria-label", t.pager_next || "Next page");
+    }
+    setText("pager-prev-label", t.pager_prev);
+    setText("pager-next-label", t.pager_next);
+
+    var mode = document.getElementById("pager-mode");
+    if (mode) {
+      var modeLabel = paged ? t.reading_mode_on : t.reading_mode_off;
+      mode.title = modeLabel || "";
+      mode.setAttribute("aria-pressed", paged ? "false" : "true");
+      setText("pager-mode-label", modeLabel);
+    }
+    var pager = document.getElementById("book-pager");
+    if (pager && t.pager_nav_label) pager.setAttribute("aria-label", t.pager_nav_label);
+
+    var dots = document.querySelectorAll("#pager-dots .pager-dot");
+    Array.prototype.forEach.call(dots, function (d) {
+      if (d.getAttribute("data-goto") === currentId) d.setAttribute("aria-current", "page");
+      else d.removeAttribute("aria-current");
+    });
+
+    // Số trang ở chân mỗi trang + số trang trong mục lục
+    scenes.forEach(function (s) {
+      var i = order.indexOf(s);
+      var f = s.querySelector("[data-folio]");
+      if (f) {
+        f.textContent = i === -1 ? "" : String(i + 1);
+        var folio = f.closest(".folio");
+        if (folio) folio.classList.toggle("is-empty", i === -1);
+      }
+    });
+    Array.prototype.forEach.call(document.querySelectorAll("[data-page-of]"), function (el) {
+      var i = indexOf(el.getAttribute("data-page-of"));
+      el.textContent = i === -1 ? "" : String(i + 1);
+    });
+
+    // Nút "Đọc tiếp trang X" ở bìa
+    var cont = document.getElementById("book-continue-btn");
+    if (cont) {
+      var last = load(STORE_SCENE);
+      var li = indexOf(last);
+      var offerContinue = !!last && li > 1 && last !== currentId;
+      cont.hidden = !offerContinue;
+      if (offerContinue) {
+        cont.href = "#" + last;
+        cont.textContent = fmt(t.book_continue || "→ {n}", { n: li + 1 });
+      }
+    }
+  }
+
+  function setText(id, val) {
+    var el = document.getElementById(id);
+    if (el && val) el.textContent = val;
+  }
+
+  /* ---------------- chế độ đọc ---------------- */
+
+  function applyMode() {
+    body.classList.toggle("book-paged", paged);
+    if (scrollObserver) {
+      scrollObserver.disconnect();
+      scrollObserver = null;
+    }
+    if (paged) {
+      var id = currentId;
+      currentId = null;
+      scenes.forEach(function (s) {
+        clearTurnClasses(s);
+        s.classList.remove("is-active");
+        setHidden(s, true);
+      });
+      if (id) show(id, 0, { instant: true });
+    } else {
+      scenes.forEach(function (s) {
+        clearTurnClasses(s);
+        s.classList.remove("is-active");
+        setHidden(s, false);
+      });
+      watchScroll();
+      if (currentId) show(currentId, 0, { instant: true });
+    }
+  }
+
+  /** Chế độ cuộn: cập nhật tiêu đề chạy theo trang đang nằm giữa màn hình. */
+  function watchScroll() {
+    if (!("IntersectionObserver" in window)) return;
+    scrollObserver = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (en) {
+          if (!en.isIntersecting) return;
+          var id = idOf(en.target);
+          if (id && id !== currentId) {
+            currentId = id;
+            store(STORE_SCENE, id);
+            updateChrome();
+          }
+        });
+      },
+      { rootMargin: "-45% 0px -50% 0px" }
+    );
+    order.forEach(function (s) {
+      scrollObserver.observe(s);
+    });
+  }
+
+  function toggleMode() {
+    if (finishTurn) finishTurn();
+    paged = !paged;
+    store(STORE_MODE, paged ? "paged" : "scroll");
+    applyMode();
+  }
+
+  /* ---------------- refresh (khi app.js render lại / đổi bộ lọc) ---------------- */
+
+  function refresh() {
+    computeOrder();
+    buildDots();
+    if (!paged) watchScroll();
+    if (currentId && indexOf(currentId) === -1) {
+      var fallback = visibleNear(currentId) || firstId();
+      if (fallback) {
+        try {
+          history.replaceState(null, "", "#" + fallback);
+        } catch (e) { /* bỏ qua */ }
+        show(fallback, 0, { instant: true, noScroll: !paged });
+        return;
+      }
+    }
+    updateChrome();
+  }
+
+  /* ---------------- cử chỉ & phím ---------------- */
+
+  function hasHorizontalScroll(el) {
+    while (el && el !== book) {
+      if (el.scrollWidth > el.clientWidth + 1) {
+        var ox = window.getComputedStyle(el).overflowX;
+        if (ox === "auto" || ox === "scroll") return true;
+      }
+      el = el.parentElement;
+    }
+    return false;
+  }
+
+  function noSwipe(target) {
+    if (!target || !target.closest) return true;
+    if (target.closest("input, textarea, select, [contenteditable='true'], [data-no-swipe]")) return true;
+    return hasHorizontalScroll(target);
+  }
+
+  function bindGestures() {
+    var sx = 0;
+    var sy = 0;
+    var st = 0;
+    var tracking = false;
+
+    book.addEventListener(
+      "pointerdown",
+      function (e) {
+        tracking = false;
+        if (!paged || e.pointerType === "mouse" || !e.isPrimary || finishTurn) return;
+        if (noSwipe(e.target)) return;
+        tracking = true;
+        sx = e.clientX;
+        sy = e.clientY;
+        st = Date.now();
+      },
+      { passive: true }
+    );
+
+    book.addEventListener(
+      "pointerup",
+      function (e) {
+        if (!tracking) return;
+        tracking = false;
+        var dx = e.clientX - sx;
+        var dy = e.clientY - sy;
+        if (Math.abs(dx) > SWIPE_MIN_PX && Math.abs(dx) > 1.5 * Math.abs(dy) && Date.now() - st < 900) {
+          if (dx < 0) next();
+          else prev();
+        }
+      },
+      { passive: true }
+    );
+
+    book.addEventListener("pointercancel", function () {
+      tracking = false;
+    });
+  }
+
+  function atEdge(scroller, bottom) {
+    if (!scroller) return true;
+    if (bottom) return scroller.scrollTop + scroller.clientHeight >= scroller.scrollHeight - 2;
+    return scroller.scrollTop <= 1;
+  }
+
+  function bindKeys() {
+    document.addEventListener("keydown", function (e) {
+      if (!paged || e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+      if (dialogOpen() || isEditable(e.target)) return;
+      var scroller = scrollerOf(sceneById(currentId));
+      switch (e.key) {
+        case "ArrowRight":
+          e.preventDefault();
+          next();
+          break;
+        case "ArrowLeft":
+          e.preventDefault();
+          prev();
+          break;
+        case "PageDown":
+          // Trang dài: PageDown cuộn trong trang trước, tới cuối trang mới lật.
+          if (atEdge(scroller, true)) {
+            e.preventDefault();
+            next();
+          }
+          break;
+        case "PageUp":
+          if (atEdge(scroller, false)) {
+            e.preventDefault();
+            prev();
+          }
+          break;
+        default:
+          break;
+      }
+    });
+  }
+
+  function bindClicks() {
+    document.addEventListener("click", function (e) {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      var dot = e.target.closest && e.target.closest("[data-goto]");
+      if (dot) {
+        e.preventDefault();
+        goTo(dot.getAttribute("data-goto"));
+        return;
+      }
+      var a = e.target.closest && e.target.closest('a[href^="#"]');
+      if (!a || a.target === "_blank") return;
+      var hash = a.getAttribute("href");
+      var id = resolve(hash);
+      if (!id) return;
+      e.preventDefault();
+      var raw = hash.replace(/^#/, "");
+      if (raw !== id && visibleNear(id) === id) {
+        // alias trỏ vào phần tử bên trong một trang (vd. #chapter-opportunity-rover):
+        // cùng trang thì chỉ cuộn tới phần tử; khác trang thì để onHashChange lật + cuộn.
+        var targetEl = document.getElementById(raw);
+        if (id === currentId) {
+          if (targetEl) targetEl.scrollIntoView({ behavior: reduceMotion.matches ? "auto" : "smooth", block: "start" });
+        } else {
+          location.hash = raw;
+        }
+        return;
+      }
+      goTo(id);
+    });
+
+    var prevBtn = document.getElementById("pager-prev");
+    var nextBtn = document.getElementById("pager-next");
+    var modeBtn = document.getElementById("pager-mode");
+    if (prevBtn) prevBtn.addEventListener("click", prev);
+    if (nextBtn) nextBtn.addEventListener("click", next);
+    if (modeBtn) modeBtn.addEventListener("click", toggleMode);
+  }
+
+  /** Bàn phím ảo trên điện thoại: đưa ô nhập đang focus ra giữa vùng nhìn thấy. */
+  function bindVirtualKeyboard() {
+    book.addEventListener("focusin", function (e) {
+      var el = e.target;
+      if (!coarsePointer.matches || !el.matches || !el.matches("input[type='text'], textarea")) return;
+      setTimeout(function () {
+        el.scrollIntoView({ block: "center", behavior: "auto" });
+      }, 320);
+    });
+  }
+
+  /* ---------------- khởi động ---------------- */
+
+  function init() {
+    book = document.getElementById("book");
+    if (!book) return;
+
+    paged = load(STORE_MODE) !== "scroll";
+    body.classList.add("book-ready");
+
+    computeOrder();
+    buildDots();
+
+    var initial = visibleNear(resolve(location.hash));
+    var start = initial || firstId();
+
+    body.classList.toggle("book-paged", paged);
+    if (paged) {
+      scenes.forEach(function (s) {
+        setHidden(s, true);
+      });
+      show(start, 0, { instant: true });
+    } else {
+      watchScroll();
+      currentId = start;
+      if (initial) show(start, 0, { instant: true });
+      else updateChrome();
+    }
+    if (initial && location.hash.replace(/^#/, "") !== initial) {
+      try {
+        history.replaceState(null, "", "#" + initial);
+      } catch (e) { /* bỏ qua */ }
+    }
+
+    window.addEventListener("hashchange", onHashChange);
+    document.addEventListener("lunamaris:render", refresh);
+    bindClicks();
+    bindKeys();
+    bindGestures();
+    bindVirtualKeyboard();
+  }
+
+  window.LunamarisBook = {
+    goTo: function (id) {
+      return book ? goTo(id) : false;
+    },
+    next: function () {
+      if (book) next();
+    },
+    prev: function () {
+      if (book) prev();
+    },
+    refresh: function () {
+      if (book) refresh();
+    },
+    current: function () {
+      return currentId;
+    },
+    isPaged: function () {
+      return !!book && paged;
+    }
+  };
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+})();
