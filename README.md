@@ -39,7 +39,9 @@ Lunamaris_NASA_Hackathon_2026/
 │   └── app.js                           # Điều phối State, Mission Stamps, Bộ lọc Hành tinh, Chuyển đổi EN/VI
 ├── types/
 │   └── dataset.types.ts                 # Kiểu dữ liệu TypeScript chuẩn hóa khớp 1:1 với NASA Open Data
-├── dac_ta_ky_thuat_lunamaris.md         # Tài liệu Đặc tả Kỹ thuật & Sản phẩm (PRD Chi tiết)
+├── docs/
+│   ├── CONTEXT_DU_AN.md                 # Tóm tắt context dự án (kế hoạch, cốt truyện, số liệu, mâu thuẫn cần chốt)
+│   └── dac_ta_ky_thuat_lunamaris.md     # Tài liệu Đặc tả Kỹ thuật & Sản phẩm (PRD Chi tiết)
 ├── Huong_Dan_Lay_Nguon_Du_Lieu_NASA_Lunamaris.docx # Hướng dẫn khai thác tài liệu & ảnh gốc NASA
 ├── .vercelignore                        # Loại tài liệu nội bộ khỏi bản deploy Vercel
 └── README.md                            # Tài liệu hướng dẫn dự án
@@ -55,7 +57,7 @@ Website đã được triển khai tại **https://lunamaris.vercel.app**. Để
 npx vercel deploy --prod
 ```
 
-> Các tài liệu nội bộ (`*.docx`, `dac_ta_ky_thuat_lunamaris.md`, `types/`, `.deepeval/`) được loại khỏi bản deploy qua file `.vercelignore`.
+> Các tài liệu nội bộ (`*.docx`, `docs/`, `types/`, `.deepeval/`) được loại khỏi bản deploy qua file `.vercelignore`.
 
 ### Chạy qua Local HTTP Server (Tùy chọn)
 
