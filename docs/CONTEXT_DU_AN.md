@@ -100,7 +100,7 @@ Các thư mục còn trống: C1/N1.1, N1.4, N1.5; C2/N2.1–N2.4, N2.6, N2.8; C
   - viết như thể máy gửi chữ thật.
 
 ### 3.3. Kỹ thuật
-- HTML/CSS/JS thuần, Tailwind qua CDN, không cần build; client-side 100%.
+- HTML/CSS/JS thuần; Tailwind hiện dùng CDN, **sẽ chuyển sang file CSS biên dịch sẵn** (xem mục 1.1 và 1.1a của đặc tả); client-side 100%, không backend.
 - Thiết kế cho màn hình 375px trước. Mục tiêu tải ~1,5 s trên mạng 4G.
 - Đồ họa dùng inline SVG và CSS filter, **không dùng WebGL hay 3D**.
 - Màu: nền `#151622`, `#1E2030`, xanh `#1B2B85`, nhấn vàng `#E7F434`. Tem Mặt Trăng `#38BDF8`, tem Sao Hỏa `#F97316`.

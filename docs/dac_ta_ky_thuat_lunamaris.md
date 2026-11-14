@@ -2,20 +2,45 @@
 **Tên dự án:** LUNAMARIS: Letters Across the Silent Seas  
 **Cuộc thi:** NASA International Space Apps Challenge 2026  
 **Đề tài:** Abandoned but not Forgotten: Storytelling about NASA's Discarded Equipment on the Moon and Mars  
-**Kiến trúc mục tiêu:** Single-Page Scrollytelling Web Application (Tối ưu cho AI Coding Agent: Claude Max / Argon / Qoder)
+**Kiến trúc mục tiêu:** Single-Page Interactive Story: truyện ảnh chạm để sang ảnh, trò chơi theo chặng, kèm chế độ đọc dạng cuộn (tối ưu cho AI Coding Agent: Claude Max / Argon / Qoder)  
+**Tài liệu liên quan:** [Thiết kế trò chơi, bộ phát truyện và luồng theo chặng](superpowers/specs/2026-11-14-mini-games-artemis-design.md) · [Context dự án](CONTEXT_DU_AN.md)
 
 ---
 
 ## 1. TỔNG QUAN KIẾN TRÚC KỸ THUẬT & QUY TẮC TUÂN THỦ (COMPLIANCE RULES)
 
 ### 1.1. Ngăn xếp công nghệ (Tech Stack)
-- **Kiến trúc:** Ứng dụng Web trang đơn (Single-Page Application - SPA) ưu tiên thiết bị di động (Mobile-First Responsive), hoạt động hoàn toàn phía máy khách (Client-side 100%, không cần Backend/Database).
-- **Công nghệ cốt lõi:** HTML5 ngữ nghĩa, Tailwind CSS (qua CDN), Vanilla JavaScript (ES6+) hoặc React 18 (Single-file JSX).
-- **Đồ họa tương tác:** Sử dụng **Inline SVG kết hợp bộ lọc CSS động** (Dynamic CSS Filters & SVG Polylines) điều khiển trực tiếp qua sự kiện `input` của thanh trượt `<input type="range">`. Tuyệt đối không dùng thư viện 3D/WebGL nặng nề.
-- **Cơ chế dự phòng (Fallback):** Mỗi thanh trượt bắt buộc phải đi kèm 3–4 nút bấm "Mốc trạng thái cố định" (Preset State Buttons). Khi người dùng bấm nút, thanh trượt tự nhảy tới giá trị đó và cập nhật giao diện (đảm bảo vẫn hoạt động 100% nếu thao tác kéo cảm ứng trên điện thoại bị kẹt).
+- **Kiến trúc:** Ứng dụng web một trang, thiết kế cho điện thoại trước (mobile-first) và **dùng đầy đủ trên cả điện thoại lẫn máy tính**. Chạy hoàn toàn trên trình duyệt (client-side 100%), **không có backend hay database**.
+- **Công nghệ cốt lõi:** HTML5 ngữ nghĩa và **Vanilla JavaScript (ES6+)**, chia thành các module trong `js/`. **Không dùng React/Next/Vue** hay các thư viện UI lớn (Bootstrap, MUI).
+- **CSS:** Tailwind được **biên dịch sẵn bằng Tailwind Standalone CLI** (không cần Node.js) thành một file CSS đã commit, sau đó **bỏ hẳn Tailwind CDN**. CSS riêng của dự án nằm trong `css/styles.css`.
+- **Đồ họa tương tác:** **Inline SVG kết hợp CSS transform/filter**, điều khiển qua sự kiện `input` của `<input type="range">` và qua Pointer Events. **Không dùng thư viện 3D, WebGL, canvas game hay game engine.** Canvas chỉ dùng để xuất thẻ Guardian ra PNG.
+- **Cơ chế dự phòng (Fallback):** Mỗi thanh trượt bắt buộc đi kèm 3–4 nút "Mốc trạng thái cố định" (Preset State Buttons). Bấm nút thì thanh trượt nhảy tới giá trị đó và giao diện cập nhật, để vẫn dùng được 100% khi thao tác kéo trên điện thoại bị kẹt.
+- **Dữ liệu:** `data/content.json` là **nguồn duy nhất**. `js/data.js` được sinh lại từ JSON này (để vẫn chạy khi mở file trực tiếp, không bị lỗi CORS). Không sửa tay số liệu trong `data.js`.
+- **Hosting:** Vercel, dự phòng bằng GitHub Pages. `.vercelignore` loại `docs/`, `*.docx`, `types/` khỏi bản deploy.
+
+### 1.1a. Yêu cầu UI/UX thống nhất
+
+Các yêu cầu này áp dụng cho mọi module.
+
+| Hạng mục | Yêu cầu |
+|---|---|
+| **Luồng trải nghiệm** | Câu chuyện chạy theo chặng: Mở đầu (truyện ảnh) → Ch.1 → chuyển tiếp → … → Ch.4 → chuyển tiếp → Trạm Artemis IV → Kết (truyện ảnh) → thẻ Guardian và thư DUSTER. Trạng thái nằm tập trung trong `state.stage`. Chế độ đọc dạng cuộn luôn được giữ. Chi tiết xem bản thiết kế liên quan. |
+| **Bộ phát truyện** (`js/story.js`) | Lớp phủ toàn màn hình (`role="dialog"`, `aria-modal`, cao `100dvh`, có `safe-area-inset`). Chạm, bấm chuột hoặc vuốt để sang ảnh. Bàn phím: → / Space sang tiếp, ← quay lại, Esc bỏ qua. Chữ hiện dần, lần chạm đầu cho hiện hết câu. Nút **Bỏ qua** và chấm tiến độ luôn hiện. Dữ liệu cảnh lấy từ `content.json` (`sequence`, `img`, `alt_vi/en`, `speaker`, `text_vi/en`). |
+| **Ảnh truyện** | WebP (AVIF nếu có), mỗi ảnh ~80–150 KB, cả bộ dưới ~3 MB. Bố cục đặt nội dung chính ở **vùng an toàn giữa ảnh** và hiển thị bằng `object-fit: cover` (riêng ảnh bị cắt hỏng mới làm bản cắt dọc qua `<picture>`). **Không viết chữ vào ảnh.** Ảnh lỗi hoặc thiếu thì hiện nền tối kèm lời thoại. |
+| **Trò chơi** (`js/games.js`) | Mỗi chương một thao tác (giữ, chạm hoặc kéo). Dùng **Pointer Events** chung cho chạm và chuột. Không dùng kéo-thả tự do. Mỗi trò có nút **Bỏ qua**. Thắng thì nhận thẻ luật dùng ở Trạm Artemis. |
+| **Đáp ứng màn hình** | Breakpoint Tailwind: mặc định (<640 px) **1 cột**; `md` (≥768 px) bắt đầu dàn 2 cột; `lg` (≥1024 px) khu chơi và lá thư nằm cạnh nhau, bản đồ Artemis bên trái và các thẻ bên phải. Kiểm tra ở 375 px, 768 px và 1280 px. Không có thanh cuộn ngang. |
+| **Chạm và nhấp** | Vùng chạm tối thiểu **44×44 px**. Đặt `touch-action: manipulation` cho các nút và vùng chơi. Bỏ qua các lần chạm trong lúc đang chuyển cảnh. Hiệu ứng hover chỉ đặt trong `@media (hover: hover)`. |
+| **Chuyển động** | Chỉ dùng CSS transition/animation (crossfade ~400 ms, zoom chậm nhẹ). Tôn trọng `prefers-reduced-motion`: tắt zoom, đổi cảnh ngay, dừng các vòng lặp quay. |
+| **Truy cập dễ dàng** | Độ tương phản đạt WCAG AA. Thanh trượt có `aria-valuetext` (ví dụ "160 mét"). Mọi trò chơi chơi được bằng bàn phím (Space giữ laser, phím mũi tên điều khiển thanh trượt). Có `:focus-visible` rõ ràng. Mọi ảnh có `alt` song ngữ. |
+| **Âm thanh** | Không tự phát. Chỉ phát sau lần chạm đầu tiên, dùng `<audio preload="none">`, file MP3 mono dưới 0,5 MB, luôn có nút tắt tiếng. |
+| **Song ngữ** | Từ điển EN/VI trong `content.json`. Đổi ngôn ngữ tức thời, không tải lại trang, không làm mất tiến độ đang chơi. |
+| **Ghi nhớ trên máy** | Chỉ dùng `localStorage` (có bọc try/catch) để lưu `lunamaris_seen_intro`, chặng hiện tại và các thẻ luật đã nhận. **Không lưu tên, biệt danh hay bất kỳ dữ liệu cá nhân nào.** |
+| **Link vào thẳng** | `#ch1`…`#ch4`, `#artemis` bỏ qua phần truyện và mở thẳng chặng đó (dành cho giám khảo và giáo viên). |
+| **Hiệu năng** | Màn hình đầu (ảnh mở đầu đầu tiên và chữ) hiện trong **~1,5 s trên 4G**. Toàn bộ JS và CSS (chưa nén) dưới ~250 KB. Ảnh đặt `loading="lazy"` và ghi `width`/`height`. Luôn tải trước 1–2 ảnh truyện kế tiếp, và tải ngầm bộ ảnh chuyển tiếp của chặng sau trong lúc người chơi đang chơi. Lighthouse Mobile Performance đạt từ 85 trở lên. |
+| **Phông chữ** | Tự lưu font kèm web (WOFF2, chỉ giữ bộ ký tự Latin và tiếng Việt), dùng `font-display: swap` và `preload` cho font nội dung chính. Không gọi Google Fonts lúc chạy. |
 
 ### 1.2. Các ràng buộc pháp lý bắt buộc của NASA Space Apps 2026
-1. **Cấm sử dụng Logo NASA:** Tuyệt đối KHÔNG hiển thị logo chính thức của NASA ("Meatball" hình tròn xanh hoặc "Worm" chữ đỏ) ở bất kỳ đâu trên trang web hay trên Thẻ Chứng nhận. Chỉ sử dụng biểu tượng SVG vector tự vẽ (hình mặt trăng, vệ tinh, sóng radar) và ghi nhận văn bản: *"Built for the 2026 NASA International Space Apps Challenge using公开 NASA Open Data"*.
+1. **Cấm sử dụng Logo NASA:** Tuyệt đối KHÔNG hiển thị logo chính thức của NASA ("Meatball" hình tròn xanh hoặc "Worm" chữ đỏ) ở bất kỳ đâu trên trang web hay trên Thẻ Chứng nhận. Chỉ sử dụng biểu tượng SVG vector tự vẽ (hình mặt trăng, vệ tinh, sóng radar) và ghi nhận văn bản: *"Built for the 2026 NASA International Space Apps Challenge using public NASA Open Data"*. Ảnh truyện do AI tạo phải được liệt kê trong mục SI Disclosure; ảnh NASA phải ghi công.
 2. **Nhãn phân định Nhận thức luận (Epistemic Labeling):** Mọi chương kể chuyện phải có nhãn gắn rõ ràng phân biệt giữa:
    - `[NARRATIVE INTERPRETATION GROUNDED IN TELEMETRY]` (Diễn giải văn học dựa trên thông số đo xa).
    - `[VERIFIED SCIENTIFIC & LEGAL RECORD]` (Hồ sơ khoa học và pháp lý đã kiểm chứng).
@@ -35,7 +60,7 @@
 - **Màu trạng thái cảnh báo (Alert Red / Safe Green):** `#EF4444` (Nguy hiểm) / `#10B981` (An toàn)
 - **Màu chữ (Typography Colors):** Chữ chính `#F8FAFC` (Trắng sáng), Chữ phụ/chú thích `#94A3B8` (Xám bạc).
 
-### 2.2. Phông chữ (Typography - Google Fonts CDN)
+### 2.2. Phông chữ (Typography - tự lưu font WOFF2, xem mục 1.1a)
 - **Tiêu đề (Headings):** `'Fira Sans', sans-serif` ( Trọng lượng: `700 Bold`, `900 Black`).
 - **Nội dung văn bản & Thư (Body & Narrative):** `'Overpass', sans-serif` (Trọng lượng: `400 Regular`, `600 SemiBold`).
 - **Số liệu đo xa & Tọa độ (Telemetry & Coordinates):** `'JetBrains Mono', monospace` hoặc `'Overpass Mono', monospace`.
@@ -43,6 +68,8 @@
 ---
 
 ## 3. CẤU TRÚC BỐ CỤC 6 PHẦN CỦA TRANG WEB (LAYOUT & WIREFRAME)
+
+> **Luồng theo chặng:** 6 phần dưới đây là bố cục của **chế độ đọc** (trang cuộn). Phía trên trang là **bộ phát truyện** (lớp phủ toàn màn hình), tự phát ở mở đầu, giữa các chặng và ở phần kết. Mỗi chương ở Phần 3 có thêm **một trò chơi**; thắng thì nhận thẻ luật. Xem mục 1.1a và bản thiết kế liên quan.
 
 ### Phần 1: Thanh điều hướng cố định (Sticky Header & Stamp Collector)
 - **Bên trái:** Tên dự án `LUNAMARIS` kèm chấm tròn phát sáng nhấp nháy (`animate-pulse` màu `#E7F434`).
@@ -148,6 +175,10 @@ Công cụ sinh mã cần lập trình chính xác 4 mô phỏng SVG và công t
 ## 5. ĐẶC TẢ MODULE ĐỘC LẬP 1: TRẠM QUYẾT ĐỊNH BÃI ĐÁP ARTEMIS (THE ARTEMIS LANDING SITE DECISION STATION)
 
 - **Mục tiêu:** Đặt người dùng (học sinh 11–15 tuổi) vào vai Chỉ huy Đổ bộ tàu Artemis, phải chọn khoảng cách hạ cánh xuống gần một di sản lịch sử trên Mặt Trăng.
+- **Cập nhật 14/11 (cơ chế chính):**
+  - Trạm được làm lại thành **bản đồ 4 vùng A–D**. Người chơi dùng **4 thẻ luật** nhận được ở 4 chương (Di tích vẫn hoạt động · Cách di tích ít nhất 2 km · Phải có nắng · Phải có điểm mốc) để gạch các vùng A, B, C, rồi hạ cánh ở D.
+  - Thao tác là **chạm thẻ, rồi chạm vùng**. Cách này chơi được trên cả điện thoại lẫn máy tính.
+  - Sơ đồ mặt cắt quỹ đạo bụi và 4 nút khoảng cách bên dưới được giữ lại làm phần minh họa cho thẻ "Cách di tích ít nhất 2 km".
 - **Hộp giải thích Vật lý Chân không (Vacuum Ballistics Callout):**  
   *"Tại sao đáp cách xa hàng trăm mét vẫn phá hủy di vật? Trên Mặt Trăng không có không khí cản lại và trọng lực chỉ bằng $1/6$ Trái Đất. Luồng khí phụt tên lửa sẽ bắn các hạt bụi sắc nhọn bay theo quỹ đạo đạn đạo với vận tốc $300\text{–}2.000\text{ m/s}$ (nhanh hơn đạn súng trường) đi xa hàng kilomet!"*
 - **Giao diện Tương tác:**
@@ -163,7 +194,7 @@ Công cụ sinh mã cần lập trình chính xác 4 mô phỏng SVG và công t
 ## 6. ĐẶC TẢ MODULE ĐỘC LẬP 2: GÓC GIÁO VIÊN 15 PHÚT, THẺ CHỨNG NHẬN & KHAI BÁO SI
 
 ### 6.1. Thẻ Chứng nhận "Space Heritage Guardian" (Không lưu dữ liệu cá nhân - Zero PII)
-- Sau khi chọn đúng mốc `≥ 2,000 m` ở Trạm Quyết định, người dùng được mời:
+- Sau khi hạ cánh ở vùng **D** (cách di tích ≥ 2.000 m) ở Trạm Quyết định, người dùng được mời:
   1. Chọn 1 trong 3 **Lời cam kết Bảo tồn (Conservation Pledges)** viết sẵn:
      - *Pledge A:* "I pledge to respect the 2.0 km lunar exclusion buffer so future generations can study untouched space hardware."
      - *Pledge B:* "I pledge to verify space history through open telemetry data rather than internet myths."
@@ -589,7 +620,7 @@ Dưới đây là toàn bộ đối tượng JSON hoàn chỉnh chứa cả Ti�
 Khi bước vào giờ thi chính thức (09:00 sáng Thứ Bảy 14/11/2026) hoặc khi tập dượt, vị trí **Lead** và **SW** chỉ cần sao chép toàn bộ nội dung file `RELIC_PULSE_PRD.md` này và dán vào công cụ sinh mã kèm câu lệnh dưới đây:
 
 > **Master Prompt:**  
-> *"Act as a Principal Frontend Architect and Data Visualization Engineer. Based strictly on the attached Product Requirements Document (`RELIC_PULSE_PRD.md`) and its embedded `RELIC_DATA` JSON object, build a complete, production-ready, single-file web application (`index.html`) using HTML5, Tailwind CSS (via CDN), Google Fonts (`Fira Sans`, `Overpass`, `JetBrains Mono`), and Vanilla JavaScript.*  
+> *"Act as a Principal Frontend Architect and Data Visualization Engineer. Based strictly on the attached Product Requirements Document (`RELIC_PULSE_PRD.md`) and its embedded `RELIC_DATA` JSON object, build a complete, production-ready static web application (`index.html` + ES modules in `js/`) using HTML5, a prebuilt Tailwind CSS file (Tailwind Standalone CLI, no CDN), self-hosted fonts (`Fira Sans`, `Overpass`, `JetBrains Mono`), and Vanilla JavaScript. Follow every UI/UX requirement in section 1.1a (mobile + desktop, Pointer Events, 44 px touch targets, prefers-reduced-motion, story player, stage flow).*  
 > *Requirements:*  
 > *1. Embed the entire `RELIC_DATA` JSON directly inside a `<script>` tag so the app runs with zero external fetch/CORS issues.*  
 > *2. Implement full Bilingual Toggle (`EN` / `VI`) across the entire UI, Hero section, 4 Relic Chapters, Decision Station, Classroom Guide, and SI Disclosure.*  
@@ -602,7 +633,7 @@ Khi bước vào giờ thi chính thức (09:00 sáng Thứ Bảy 14/11/2026) ho
 
 ## 9. DANH SÁCH KIỂM TRA NGHIỆM THU (ACCEPTANCE CHECKLIST - DEFINITION OF DONE)
 
-Trước mốc **Hard Freeze (06:30 sáng Chủ nhật 15/11/2026)**, Lead và RD dùng bảng kiểm 8 điểm này để nghiệm thu sản phẩm:
+Trước mốc **Hard Freeze (09:00 sáng Chủ nhật 15/11/2026, theo kế hoạch v5)**, Lead và RD dùng bảng kiểm 8 điểm này cùng các điểm UI/UX bổ sung bên dưới để nghiệm thu sản phẩm:
 - [ ] **Kiểm tra Mất mạng / Chặn ảnh:** Khi ảnh gốc từ máy chủ `nssdc.gsfc.nasa.gov` tải chậm, khung đồ họa SVG tương tác vẫn hiển thị rõ nét, không xuất hiện biểu tượng ảnh vỡ (broken image icon).
 - [ ] **Kiểm tra Toán học Thanh trượt:** Kéo thanh trượt Chương 1 đến năm `2026` hiện đúng `+216.6 cm`; Chương 2 tại mốc `155 m` ghi chú rõ độ lệch `160–180 m` của tài liệu năm 1969; Chương 3 tại `τ = 10.8` hiện đúng `22 Wh`; Chương 4 tại `Flight 72` hiện đúng `17.0 km` và trạng thái trạm thời tiết tĩnh 20 năm.
 - [ ] **Kiểm tra Nút bấm Dự phòng (Preset Buttons):** Bấm vào cả 3–4 nút mốc dưới mỗi thanh trượt trên màn hình điện thoại (`375px width`) đều cập nhật mượt mà số liệu và đồ họa SVG.
@@ -610,4 +641,10 @@ Trước mốc **Hard Freeze (06:30 sáng Chủ nhật 15/11/2026)**, Lead và R
 - [ ] **Kiểm tra Quy tắc Logo NASA:** Rà soát toàn bộ trang web không có bất kỳ file ảnh logo tròn màu xanh hay chữ đỏ của NASA.
 - [ ] **Kiểm tra Quy tắc Bảo vệ Trẻ vị thành niên (Under-18 Rule):** Trang web không thu thập họ tên thật/email/ảnh cá nhân của học sinh; Video 30 giây nhúng kèm không chứa giọng nói hay khuôn mặt của thành viên dưới 18 tuổi.
 - [ ] **Kiểm tra Nhãn SI Disclosure 2026:** Chân trang hiển thị rõ mục **"Super Intelligence (SI) Disclosure"** kèm danh sách công cụ và quy trình kiểm chứng thủ công của con người.
-- [ ] **Kiểm tra Tốc độ tải (Incognito Test):** Mở đường dẫn GitHub Pages / Netlify ở chế độ Ẩn danh trên điện thoại 4G tải xong hoàn toàn trong dưới 1,5 giây.
+- [ ] **Kiểm tra Tốc độ tải (Incognito Test):** Mở đường dẫn deploy (Vercel / GitHub Pages) ở chế độ Ẩn danh trên điện thoại 4G: màn hình đầu (ảnh mở đầu đầu tiên và chữ) hiện trong khoảng 1,5 giây.
+
+**Điểm UI/UX bổ sung:**
+- [ ] **Bộ phát truyện:** chạm, bấm chuột, vuốt và bàn phím đều chuyển được ảnh. Nút Bỏ qua dùng được ở mọi ảnh. Ảnh thiếu thì hiện nền tối kèm lời thoại, không có biểu tượng ảnh vỡ.
+- [ ] **4 trò chơi và Trạm Artemis:** chơi hết được trên điện thoại thật (375 px) và trên máy tính (1280 px, chuột và bàn phím). Không có thanh cuộn ngang, vùng chạm ≥ 44 px.
+- [ ] **Luồng theo chặng:** lần đầu vào thì tự phát mở đầu; lần sau thì hiện nút "Xem lại câu chuyện". Link `#artemis` mở thẳng chặng Artemis. Đổi EN/VI không làm mất tiến độ.
+- [ ] **Chuyển động giảm:** bật `prefers-reduced-motion` thì không còn zoom hay vòng lặp quay.
