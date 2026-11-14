@@ -812,23 +812,7 @@ window.UI_I18N = {
     footer_compliance_notice: "Built for the 2026 NASA International Space Apps Challenge using NASA Open Data. No official NASA logos ('Meatball' or 'Worm') are used, in strict compliance with NASA Brand Guidelines.",
     si_col_tool: "SI / AI Tool",
     si_col_role: "Technical Role in Development",
-    si_col_human: "Human Verification Gate (Manual Audit)",
-    /* [NOTEBOOK-QR 2026-11-14] Floating "?" button + NotebookLM QR side panel */
-    nb_btn_title: "Our NotebookLM notebook — QR code & link",
-    nb_eyebrow: "TEAM KNOWLEDGE BASE • NOTEBOOKLM",
-    nb_title: "Scan to open our NotebookLM",
-    nb_qr_alt: "QR code linking to the LUNAMARIS team NotebookLM notebook",
-    nb_scan_hint: "Point your phone camera at the code — most phones need no extra app.",
-    nb_link_label: "DIRECT LINK (CLICKABLE ON COMPUTER):",
-    nb_copy: "Copy link",
-    nb_copied: "Copied ✓",
-    nb_copy_fail: "Copy blocked — select the blue link and press Ctrl+C.",
-    nb_close: "Close panel",
-    nb_steps_title: "HOW TO USE",
-    nb_step1: "On your phone, open the Camera app (or any QR scanner).",
-    nb_step2: "Point the lens at the white square above, then tap the link notification that pops up.",
-    nb_step3: "On a computer, just click the blue link — the notebook opens in a new tab.",
-    nb_note: "Judging-day tip: put this QR on your slides or poster so judges can scan it live. If the link ever fails to open, ask the team to re-check the notebook's sharing settings."
+    si_col_human: "Human Verification Gate (Manual Audit)"
   },
   vi: {
     nav_stamps_label: "TEM TÍN HIỆU",
@@ -978,23 +962,7 @@ window.UI_I18N = {
     footer_compliance_notice: "Được xây dựng cho cuộc thi 2026 NASA International Space Apps Challenge sử dụng Dữ liệu Mở NASA (NASA Open Data). Tuyệt đối không sử dụng logo chính thức của NASA ('Meatball' hay 'Worm') theo đúng Quy chuẩn Thương hiệu.",
     si_col_tool: "Công cụ SI / AI",
     si_col_role: "Vai trò Kỹ thuật trong Dự án",
-    si_col_human: "Cổng Kiểm chứng Thủ công của Con người (Human Verification Gate)",
-    /* [NOTEBOOK-QR 2026-11-14] Nút "?" nổi + bảng mã QR NotebookLM */
-    nb_btn_title: "Sổ tay NotebookLM của nhóm — mã QR & liên kết",
-    nb_eyebrow: "KHO TRI THỨC NHÓM • NOTEBOOKLM",
-    nb_title: "Quét mã để mở NotebookLM của nhóm",
-    nb_qr_alt: "Mã QR dẫn tới sổ tay NotebookLM của nhóm LUNAMARIS",
-    nb_scan_hint: "Đưa camera điện thoại vào mã — hầu hết điện thoại không cần cài thêm ứng dụng.",
-    nb_link_label: "LIÊN KẾT TRỰC TIẾP (BẤM ĐƯỢC TRÊN MÁY TÍNH):",
-    nb_copy: "Sao chép liên kết",
-    nb_copied: "Đã sao chép ✓",
-    nb_copy_fail: "Trình duyệt chặn sao chép — hãy bôi đen liên kết màu xanh rồi ấn Ctrl+C.",
-    nb_close: "Đóng bảng",
-    nb_steps_title: "CÁCH DÙNG",
-    nb_step1: "Trên điện thoại, mở ứng dụng Camera (hoặc một trình quét QR bất kỳ).",
-    nb_step2: "Hướng ống kính vào ô vuông trắng phía trên, rồi chạm vào thông báo liên kết vừa hiện ra.",
-    nb_step3: "Trên máy tính, bấm thẳng vào liên kết màu xanh — sổ tay sẽ mở sang tab mới.",
-    nb_note: "Mẹo cho ngày thi: chiếu mã QR này lên slide hoặc poster để giám khảo quét trực tiếp. Nếu liên kết không mở được, hãy báo cả nhóm kiểm tra quyền chia sẻ của sổ tay."
+    si_col_human: "Cổng Kiểm chứng Thủ công của Con người (Human Verification Gate)"
   }
 };
 
