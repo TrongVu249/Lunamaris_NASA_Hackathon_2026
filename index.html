@@ -3,20 +3,20 @@
 
 <head>
   <meta charset="UTF-8" />
-  <!-- interactive-widget=resizes-content: khi bàn phím ảo mở trên Android, khung sách co lại
+  <!-- interactive-widget=resizes-content: khi bàn phím ảo mở trên Android, khung cảnh co lại
        thay vì bị bàn phím đè lên ô nhập biệt danh. -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content" />
   <title>LUNAMARIS: Letters Across the Silent Seas | NASA Space Apps 2026</title>
   <meta name="description"
     content="Interactive Telemetry & Dual-Voice Storytelling about NASA's Forgotten Hardware on the Moon and Mars — Built for the 2026 NASA International Space Apps Challenge." />
 
-  <!-- Logo chính thức của nhóm LUNAMARIS: icon thẻ trình duyệt + icon ở header (assets/) -->
+  <!-- Logo chính thức của nhóm LUNAMARIS: icon thẻ trình duyệt + icon ở thanh trên (assets/) -->
   <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
   <link rel="icon" type="image/png" sizes="192x192" href="assets/favicon-192.png" />
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
 
-  <!-- Google Fonts CDN: Fira Sans (700/900), Overpass (400/600), JetBrains Mono (400/700) -->
+  <!-- Google Fonts CDN: Fira Sans (tiêu đề), Overpass (thân bài), JetBrains Mono (chỉ cho số đo) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -26,30 +26,26 @@
   <!-- Tailwind CSS v3 CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Custom Design System, Book Shell & SVG Animations -->
+  <!-- Design system, cảnh toàn màn hình & hiệu ứng SVG -->
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 
 <body class="min-h-screen bg-[#151622] text-[#F8FAFC] selection:bg-[#E7F434] selection:text-[#151622]">
 
   <!-- =====================================================================
-       THANH TRÊN CỦA SÁCH: logo (về bìa) · tiêu đề chạy · tem · EN|VI
+       THANH TRÊN: logo (về màn mở đầu) · tem tín hiệu · EN|VI
        ===================================================================== -->
-  <header id="book-topbar" class="book-topbar">
+  <header id="book-topbar" class="topbar">
     <div class="topbar-inner">
-      <a href="#cover" id="brand-home-btn" class="topbar-brand group"
-        title="Về bìa sách / Back to cover"
-        aria-label="LUNAMARIS — về bìa sách / back to cover">
+      <a href="#start" id="brand-home-btn" class="topbar-brand"
+        title="Về màn mở đầu / Back to start"
+        aria-label="LUNAMARIS — về màn mở đầu / back to start">
         <img src="assets/lunamaris-logo.png" alt="" width="40" height="40" class="topbar-logo" />
         <span class="topbar-wordmark">LUNAMARIS</span>
       </a>
 
-      <!-- Tiêu đề chạy: book.js điền theo trang đang mở -->
-      <p id="book-running-title" class="topbar-title"></p>
-
-      <!-- Tem tín hiệu: điện thoại chỉ hiện "★ n/4", máy tính hiện đủ 4 tem -->
       <div class="topbar-stamps">
-        <span id="nav-stamps-label" class="sr-only">TEM TÍN HIỆU</span>
+        <span id="nav-stamps-label" class="sr-only">Tem tín hiệu</span>
         <div id="mission-stamps-bar" class="topbar-stamps-bar"></div>
       </div>
 
@@ -61,253 +57,190 @@
   </header>
 
   <!-- =====================================================================
-       QUYỂN SÁCH: mỗi <section class="book-scene"> là một trang.
-       Thứ tự trong DOM = thứ tự lật trang. Trang có data-story là chỗ chừa cho
-       bộ phát truyện (js/story.js, chưa làm) — bị bỏ qua khi chưa có nội dung.
+       CÁC CẢNH: mỗi <section class="book-scene"> là một cảnh toàn màn hình.
+       Thứ tự trong DOM = thứ tự trượt cảnh (js/book.js). data-world quyết định
+       màu đường chân trời; data-group quyết định nhóm trên đường tín hiệu.
+       Cảnh có data-story là chỗ chừa cho bộ phát truyện (chưa làm) — đang ẩn.
        ===================================================================== -->
-  <main id="book" class="book-desk">
+  <main id="book" class="scenes">
 
-    <!-- TRANG BÌA -->
-    <section class="book-scene" data-scene="cover" id="scene-cover">
+    <!-- MÀN MỞ ĐẦU: BẬT THU SÓNG -->
+    <section class="book-scene" data-scene="start" data-world="earth" data-group="earth" id="scene-start">
+      <div class="scene-horizon" aria-hidden="true"></div>
+      <div class="start-radar" aria-hidden="true">
+        <svg viewBox="0 0 600 600">
+          <circle cx="300" cy="300" r="95" fill="none" stroke="#38BDF8" stroke-width="1.2" class="radar-ring-1" />
+          <circle cx="300" cy="300" r="165" fill="none" stroke="#E7F434" stroke-width="1" class="radar-ring-2" />
+          <circle cx="300" cy="300" r="235" fill="none" stroke="#F97316" stroke-width="1" class="radar-ring-3" />
+          <circle cx="300" cy="300" r="280" fill="none" stroke="rgba(255,255,255,0.08)" stroke-dasharray="4 6" />
+          <line x1="300" y1="20" x2="300" y2="580" stroke="rgba(56,189,248,0.12)" stroke-width="1" />
+          <line x1="20" y1="300" x2="580" y2="300" stroke="rgba(56,189,248,0.12)" stroke-width="1" />
+          <!-- tia quét: chỉ chạy một lượt khi bấm "Bật thu sóng" -->
+          <g class="radar-sweep">
+            <path d="M300 300 L300 20 A280 280 0 0 1 498 102 Z" fill="url(#sweep-fill)" />
+          </g>
+          <defs>
+            <linearGradient id="sweep-fill" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#E7F434" stop-opacity="0" />
+              <stop offset="1" stop-color="#E7F434" stop-opacity="0.35" />
+            </linearGradient>
+          </defs>
+          <circle cx="300" cy="300" r="6" fill="#E7F434" />
+        </svg>
+      </div>
       <div class="scene-scroll">
-        <div id="hero-top" class="scene-page scene-page--cover">
-          <!-- Sóng radar đồng tâm: hình minh họa của bìa -->
-          <div class="cover-radar" aria-hidden="true">
-            <svg viewBox="0 0 600 600">
-              <circle cx="300" cy="300" r="95" fill="none" stroke="#38BDF8" stroke-width="1.2" class="radar-ring-1" />
-              <circle cx="300" cy="300" r="165" fill="none" stroke="#E7F434" stroke-width="1" class="radar-ring-2" />
-              <circle cx="300" cy="300" r="235" fill="none" stroke="#F97316" stroke-width="1" class="radar-ring-3" />
-              <circle cx="300" cy="300" r="280" fill="none" stroke="rgba(255,255,255,0.08)" stroke-dasharray="4 6" />
-              <line x1="300" y1="20" x2="300" y2="580" stroke="rgba(56,189,248,0.12)" stroke-width="1" />
-              <line x1="20" y1="300" x2="580" y2="300" stroke="rgba(56,189,248,0.12)" stroke-width="1" />
-            </svg>
-          </div>
-
-          <div class="cover-body">
-            <p class="cover-badge">
-              <span aria-hidden="true">🛰️</span>
-              <span id="hero-badge-text">2026 NASA INTERNATIONAL SPACE APPS CHALLENGE • ABANDONED BUT NOT FORGOTTEN</span>
-            </p>
-
-            <h1 id="hero-main-title" class="cover-title" data-scene-heading tabindex="-1">
-              LETTERS ACROSS THE SILENT SEAS
+        <div id="hero-top" class="scene-inner start">
+          <div class="start-copy">
+            <p id="hero-station-line1" class="start-station">Trạm mặt đất Hà Nội, 21.0285° N 105.8542° E</p>
+            <h1 class="start-title" data-scene-heading tabindex="-1">
+              <span class="start-brand">LUNAMARIS</span>
+              <span id="hero-main-title" class="start-tagline">Những lá thư qua biển lặng</span>
             </h1>
-            <p id="hero-subtitle" class="cover-subtitle">
-              Kể chuyện Hai Giọng &amp; Mô phỏng Thông số Đo xa về những Thiết bị NASA Bị Bỏ lại
-            </p>
-
-            <p id="hero-hook-text" class="cover-hook">
+            <p id="hero-hook-text" class="start-hook">
               Ngước nhìn bầu trời đêm thu Hà Nội, chúng ta thường ngỡ những sứ mệnh vũ trụ đã khép lại chỉ còn là sắt vụn
-              vô tri. Hãy bật công tắc thu sóng bên dưới: khắp các biển lặng Mặt Trăng và bình nguyên bụi đỏ Sao Hỏa,
-              những thiết bị bị bỏ lại của NASA vẫn đang gửi về hàng thập kỷ chân lý khoa học.
+              vô tri. Khắp các biển lặng Mặt Trăng và bình nguyên bụi đỏ Sao Hỏa, những thiết bị bị bỏ lại của NASA vẫn
+              đang gửi về hàng thập kỷ chân lý khoa học.
             </p>
 
-            <!-- Nút mở sách đặt ngay sau lời dẫn để luôn thấy được trên màn 1280×800 -->
-            <div class="cover-actions">
-              <a id="cta-tune-in-btn" href="#toc" class="btn-primary">Mở sách</a>
-              <a id="cta-artemis-btn" href="#artemis" class="btn-quiet">Trạm Mô phỏng Hạ cánh Artemis ⚡</a>
-              <a id="book-continue-btn" href="#toc" class="btn-quiet" hidden></a>
+            <div class="start-actions">
+              <button id="tune-in-btn" type="button" class="btn-signal">
+                <span class="btn-signal-dot" aria-hidden="true"></span>
+                <span id="tune-in-label">Bật thu sóng</span>
+              </button>
+              <a id="cta-artemis-btn" href="#artemis" class="link-quiet">Tới Trạm Artemis</a>
+              <a id="book-continue-btn" href="#signals" class="link-quiet" hidden></a>
             </div>
 
-            <!-- Hộp tín hiệu trạm Hà Nội (21.0285° N, 105.8542° E) -->
-            <div class="cover-station">
-              <div class="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-white/10">
-                <span id="hero-receiver-label" class="text-xs font-mono-tech text-slate-400 uppercase">
-                  DEEP-SPACE RECEIVER ARRAY:
-                </span>
-                <button id="receiver-toggle-btn" type="button"
-                  class="inline-flex items-center gap-2 px-3 min-h-[40px] rounded-full bg-slate-900 border border-[#10B981]/50 text-xs font-mono-tech font-bold text-[#10B981] cursor-pointer hover:bg-slate-800 transition"></button>
+            <dl class="start-facts">
+              <div>
+                <dt id="fact-laser-label">Khứ hồi laser Mặt Trăng</dt>
+                <dd id="fact-laser-value" class="num">2,56 s</dd>
               </div>
-              <div class="space-y-1.5 pt-2.5 font-mono-tech text-xs sm:text-sm">
-                <div class="flex items-start gap-2 text-[#E7F434] font-bold">
-                  <span aria-hidden="true">📍</span>
-                  <span id="hero-station-line1">RECEIVING STATION: HANOI, VIETNAM (21.0285° N, 105.8542° E)</span>
-                </div>
-                <div class="flex items-start gap-2 text-[#38BDF8]">
-                  <span aria-hidden="true">⏱️</span>
-                  <span id="hero-station-line2">LUNAR LASER ROUND-TRIP: 2.56 SECONDS | MARTIAN RADIO DELAY: 4 TO 24
-                    MINUTES</span>
-                </div>
+              <div>
+                <dt id="fact-mars-label">Độ trễ vô tuyến Sao Hỏa</dt>
+                <dd id="fact-mars-value" class="num">4–24 phút</dd>
               </div>
-            </div>
-            <p id="cover-swipe-hint" class="cover-hint">Vuốt sang trái hoặc bấm “Trang sau” để lật trang</p>
+            </dl>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- MỤC LỤC -->
-    <section class="book-scene" data-scene="toc" id="scene-toc">
+    <!-- BỐN TÍN HIỆU: bản đồ Mặt Trăng & Sao Hỏa (thay cho mục lục) -->
+    <section class="book-scene" data-scene="signals" data-world="earth" data-group="earth" id="scene-signals">
+      <div class="scene-horizon" aria-hidden="true"></div>
       <div class="scene-scroll">
-        <div class="scene-page scene-page--narrow">
-          <header class="toc-head">
-            <h2 id="toc-title" class="scene-title" data-scene-heading tabindex="-1">Mục lục</h2>
-            <div class="toc-filter">
-              <span id="toc-filter-label" class="toc-filter-label">Hiện chương:</span>
-              <div id="planet-filter-bar" class="toc-filter-bar"></div>
-            </div>
+        <div class="scene-inner signals">
+          <header class="scene-head">
+            <h2 id="signals-title" class="scene-title" data-scene-heading tabindex="-1">Bốn tín hiệu đang chờ</h2>
+            <p id="signals-lead" class="scene-lead">Chạm vào một điểm trên bản đồ để mở lá thư gửi từ nơi đó.</p>
           </header>
-          <nav id="toc-list" class="toc-list" aria-labelledby="toc-title"></nav>
-          <footer class="folio"><span data-folio></span></footer>
+
+          <div class="signals-body">
+            <div id="signal-map" class="signal-map"></div>
+
+            <div class="signals-side">
+              <div class="filter-row">
+                <span id="toc-filter-label" class="filter-label">Hiện</span>
+                <div id="planet-filter-bar" class="segmented"></div>
+              </div>
+              <ol id="signal-list" class="signal-list"></ol>
+              <p id="signals-more-label" class="signals-more-label">Sau bốn lá thư</p>
+              <ul id="signal-more" class="signal-more"></ul>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- Chỗ chừa: chuỗi truyện mở đầu -->
     <section class="book-scene" data-scene="story-intro" data-story="intro" id="scene-story-intro">
-      <div class="scene-scroll"><div class="scene-page scene-page--story"></div></div>
+      <div class="scene-scroll"><div class="scene-inner"></div></div>
     </section>
 
     <!-- CHƯƠNG 1–4: app.js render từng chương vào [data-chapter-slot] -->
-    <section class="book-scene" data-scene="ch1" id="scene-ch1">
-      <div class="scene-scroll">
-        <div class="scene-page scene-page--spread">
-          <div data-chapter-slot="apollo11-lrrr"></div>
-          <footer class="folio"><span data-folio></span></footer>
-        </div>
-      </div>
+    <section class="book-scene" data-scene="ch1" data-world="moon" data-group="moon" id="scene-ch1">
+      <div class="scene-horizon" aria-hidden="true"></div>
+      <div class="scene-scroll"><div class="scene-inner" data-chapter-slot="apollo11-lrrr"></div></div>
     </section>
 
     <section class="book-scene" data-scene="story-to-ch2" data-story="to_ch2" id="scene-story-to-ch2">
-      <div class="scene-scroll"><div class="scene-page scene-page--story"></div></div>
+      <div class="scene-scroll"><div class="scene-inner"></div></div>
     </section>
 
-    <section class="book-scene" data-scene="ch2" id="scene-ch2">
-      <div class="scene-scroll">
-        <div class="scene-page scene-page--spread">
-          <div data-chapter-slot="surveyor-3"></div>
-          <footer class="folio"><span data-folio></span></footer>
-        </div>
-      </div>
+    <section class="book-scene" data-scene="ch2" data-world="moon" data-group="moon" id="scene-ch2">
+      <div class="scene-horizon" aria-hidden="true"></div>
+      <div class="scene-scroll"><div class="scene-inner" data-chapter-slot="surveyor-3"></div></div>
     </section>
 
     <section class="book-scene" data-scene="story-to-ch3" data-story="to_ch3" id="scene-story-to-ch3">
-      <div class="scene-scroll"><div class="scene-page scene-page--story"></div></div>
+      <div class="scene-scroll"><div class="scene-inner"></div></div>
     </section>
 
-    <section class="book-scene" data-scene="ch3" id="scene-ch3">
-      <div class="scene-scroll">
-        <div class="scene-page scene-page--spread">
-          <div data-chapter-slot="opportunity-rover"></div>
-          <footer class="folio"><span data-folio></span></footer>
-        </div>
-      </div>
+    <section class="book-scene" data-scene="ch3" data-world="mars" data-group="mars" id="scene-ch3">
+      <div class="scene-horizon" aria-hidden="true"></div>
+      <div class="scene-scroll"><div class="scene-inner" data-chapter-slot="opportunity-rover"></div></div>
     </section>
 
     <section class="book-scene" data-scene="story-to-ch4" data-story="to_ch4" id="scene-story-to-ch4">
-      <div class="scene-scroll"><div class="scene-page scene-page--story"></div></div>
+      <div class="scene-scroll"><div class="scene-inner"></div></div>
     </section>
 
-    <section class="book-scene" data-scene="ch4" id="scene-ch4">
-      <div class="scene-scroll">
-        <div class="scene-page scene-page--spread">
-          <div data-chapter-slot="ingenuity-helicopter"></div>
-          <footer class="folio"><span data-folio></span></footer>
-        </div>
-      </div>
+    <section class="book-scene" data-scene="ch4" data-world="mars" data-group="mars" id="scene-ch4">
+      <div class="scene-horizon" aria-hidden="true"></div>
+      <div class="scene-scroll"><div class="scene-inner" data-chapter-slot="ingenuity-helicopter"></div></div>
     </section>
 
     <section class="book-scene" data-scene="story-to-artemis" data-story="to_artemis" id="scene-story-to-artemis">
-      <div class="scene-scroll"><div class="scene-page scene-page--story"></div></div>
+      <div class="scene-scroll"><div class="scene-inner"></div></div>
     </section>
 
     <!-- TRẠM QUYẾT ĐỊNH ARTEMIS (Module 01) -->
-    <section class="book-scene" data-scene="artemis" id="scene-artemis">
+    <section class="book-scene" data-scene="artemis" data-world="moon" data-group="artemis" id="scene-artemis">
+      <div class="scene-horizon" aria-hidden="true"></div>
       <div class="scene-scroll">
-        <div id="artemis-station" class="scene-page scene-page--wide space-y-6">
-          <div class="space-y-2">
-            <div
-              class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-[#1B2B85] text-[#E7F434] font-mono-tech text-xs font-bold">
-              <span aria-hidden="true">🚀</span>
-              <span id="artemis-tag">MODULE ĐỘC LẬP 01 • TRẠM QUYẾT ĐỊNH CHỈ HUY</span>
+        <div id="artemis-station" class="scene-inner stack">
+          <header class="scene-head">
+            <p id="artemis-tag" class="scene-context">Bài tập 1: bạn là chỉ huy đổ bộ</p>
+            <h2 id="artemis-title" class="scene-title" data-scene-heading tabindex="-1">Trạm quyết định bãi đáp Artemis</h2>
+            <p id="artemis-subtitle" class="scene-lead"></p>
+          </header>
+
+          <p id="artemis-physics-callout" class="note"></p>
+
+          <div class="instrument">
+            <div id="artemis-svg-container" class="instrument-view"></div>
+            <div class="instrument-body">
+              <p id="artemis-select-prompt" class="instrument-label">Chọn khoảng cách hạ cánh</p>
+              <div id="artemis-zone-buttons" class="zone-grid"></div>
             </div>
-            <h2 id="artemis-title" class="scene-title" data-scene-heading tabindex="-1">
-              TRẠM QUYẾT ĐỊNH BÃI ĐÁP SỨ MỆNH ARTEMIS
-            </h2>
-            <p id="artemis-subtitle" class="text-sm sm:text-base text-slate-300 max-w-3xl">
-              Nhập vai Chỉ huy Đổ bộ tàu Artemis. Hãy chọn khoảng cách hạ cánh xuống gần một di sản lịch sử trên Mặt
-              Trăng và quan sát hệ quả đạn đạo trong chân không.
-            </p>
-          </div>
-
-          <div
-            class="p-4 sm:p-5 rounded-xl bg-gradient-to-r from-[#1B2B85]/60 to-slate-900/90 border border-[#E7F434]/40 flex items-start gap-3.5">
-            <span class="text-2xl" aria-hidden="true">⚡</span>
-            <p id="artemis-physics-callout" class="text-sm sm:text-base text-slate-100 leading-relaxed font-body"></p>
-          </div>
-
-          <div id="artemis-svg-container" class="rounded-xl overflow-hidden border border-white/15 bg-[#0F111C]"></div>
-
-          <div class="space-y-2.5">
-            <div id="artemis-select-prompt" class="text-xs sm:text-sm font-mono-tech font-bold text-[#38BDF8]">
-              Chọn Khoảng cách Hạ cánh (4 Vùng Quy chuẩn):
-            </div>
-            <div id="artemis-zone-buttons" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3"></div>
           </div>
 
           <div id="artemis-outcome-panel"></div>
-          <footer class="folio"><span data-folio></span></footer>
         </div>
       </div>
     </section>
 
     <section class="book-scene" data-scene="story-ending" data-story="ending" id="scene-story-ending">
-      <div class="scene-scroll"><div class="scene-page scene-page--story"></div></div>
+      <div class="scene-scroll"><div class="scene-inner"></div></div>
     </section>
 
     <!-- THẺ SPACE HERITAGE GUARDIAN (Module 02) -->
-    <section class="book-scene" data-scene="guardian" id="scene-guardian">
+    <section class="book-scene" data-scene="guardian" data-world="earth" data-group="artemis" id="scene-guardian">
+      <div class="scene-horizon" aria-hidden="true"></div>
       <div class="scene-scroll">
-        <div id="guardian-certificate-section" class="scene-page scene-page--wide space-y-8">
-          <div class="space-y-2">
-            <div
-              class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-[#10B981]/20 text-[#10B981] border border-[#10B981]/40 font-mono-tech text-xs font-bold">
-              <span aria-hidden="true">🛡️</span>
-              <span id="cert-section-tag">MODULE ĐỘC LẬP 02 • THẺ CHỨNG NHẬN ZERO-PII</span>
-            </div>
-            <h2 id="cert-section-title" class="scene-title" data-scene-heading tabindex="-1">
-              THẺ CHỨNG NHẬN SPACE HERITAGE GUARDIAN
-            </h2>
-            <p id="cert-section-desc" class="text-sm sm:text-base text-slate-300 max-w-3xl"></p>
-          </div>
+        <div id="guardian-certificate-section" class="scene-inner stack">
+          <header class="scene-head">
+            <p id="cert-section-tag" class="scene-context">Bài tập 2: thẻ cam kết, không lưu dữ liệu cá nhân</p>
+            <h2 id="cert-section-title" class="scene-title" data-scene-heading tabindex="-1">Thẻ Space Heritage Guardian</h2>
+            <p id="cert-section-desc" class="scene-lead"></p>
+          </header>
 
           <div id="cert-lock-banner"></div>
 
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            <!-- Form cam kết + biệt danh (điện thoại: nằm dưới thẻ xem trước) -->
-            <div class="lg:col-span-5 space-y-5 order-2 lg:order-1">
-              <div class="space-y-2.5">
-                <label id="cert-step1-label" class="block text-xs sm:text-sm font-mono-tech font-bold text-[#E7F434]">
-                  1. Chọn Lời cam kết Bảo tồn (Conservation Pledge):
-                </label>
-                <div id="conservation-pledges-list" class="space-y-2.5"></div>
-              </div>
-
-              <div class="space-y-2">
-                <label id="cert-step2-label" for="guardian-name-input"
-                  class="block text-xs sm:text-sm font-mono-tech font-bold text-[#38BDF8]">
-                  2. Nhập Biệt danh / Tên hiển thị (Tùy chọn — Zero PII):
-                </label>
-                <input id="guardian-name-input" type="text" maxlength="48" autocomplete="off"
-                  placeholder="VD: Chỉ huy Minh - Trạm Hà Nội"
-                  class="w-full px-4 min-h-[48px] rounded-xl bg-[#151622] border border-white/20 focus:border-[#E7F434] focus:outline-none font-mono-tech text-base sm:text-sm text-white" />
-                <p id="cert-privacy-note" class="text-xs text-slate-400 leading-relaxed"></p>
-              </div>
-
-              <div class="flex flex-wrap gap-3 pt-2">
-                <button id="cert-download-btn" type="button"
-                  class="flex-1 px-4 min-h-[48px] rounded-xl bg-[#E7F434] hover:bg-[#d8e622] text-[#151622] font-mono-tech text-xs sm:text-sm font-bold shadow-lg transition cursor-pointer">
-                  ⬇ Tải Ảnh Chứng nhận (PNG)
-                </button>
-                <button id="cert-print-btn" type="button"
-                  class="px-4 min-h-[48px] rounded-xl bg-slate-800 hover:bg-slate-700 text-white border border-white/15 font-mono-tech text-xs sm:text-sm font-semibold transition cursor-pointer">
-                  🖨️ In / Lưu PDF
-                </button>
-              </div>
-            </div>
-
-            <!-- Thẻ xem trước (điện thoại: hiện trước form) -->
-            <div class="lg:col-span-7 order-1 lg:order-2">
+          <div class="guardian-grid">
+            <!-- Thẻ xem trước (điện thoại: hiện trước form) — vật thể nên giữ khung -->
+            <div class="guardian-card-col">
               <div id="guardian-certificate-card"
                 class="rounded-2xl p-5 sm:p-8 bg-gradient-to-br from-[#151622] via-[#1E2030] to-[#13172B] border-2 border-[#E7F434] shadow-2xl space-y-5 relative overflow-hidden">
                 <div class="flex items-center justify-between gap-4 border-b border-white/15 pb-4">
@@ -366,126 +299,114 @@
                 </div>
               </div>
             </div>
+
+            <!-- Lời cam kết + biệt danh + tải về -->
+            <div class="guardian-form">
+              <fieldset class="field">
+                <legend id="cert-step1-label" class="field-label">Chọn một lời cam kết</legend>
+                <div id="conservation-pledges-list" class="pledge-list" role="radiogroup" aria-labelledby="cert-step1-label"></div>
+              </fieldset>
+
+              <div class="field">
+                <label id="cert-step2-label" for="guardian-name-input" class="field-label">
+                  Biệt danh hiển thị (không bắt buộc)
+                </label>
+                <input id="guardian-name-input" type="text" maxlength="48" autocomplete="off"
+                  placeholder="VD: Chỉ huy Minh - Trạm Hà Nội" class="text-input" />
+                <p id="cert-privacy-note" class="field-help"></p>
+              </div>
+
+              <div class="guardian-actions">
+                <button id="cert-download-btn" type="button" class="btn-signal">⬇ Tải ảnh chứng nhận (PNG)</button>
+                <button id="cert-print-btn" type="button" class="btn-ghost">🖨️ In / Lưu PDF</button>
+              </div>
+            </div>
           </div>
-          <footer class="folio"><span data-folio></span></footer>
         </div>
       </div>
     </section>
 
     <!-- GÓC GIÁO VIÊN STEM 15 PHÚT -->
-    <section class="book-scene" data-scene="teacher" id="scene-teacher">
+    <section class="book-scene" data-scene="teacher" data-world="earth" data-group="appendix" id="scene-teacher">
+      <div class="scene-horizon" aria-hidden="true"></div>
       <div class="scene-scroll">
-        <div id="teacher-corner" class="scene-page scene-page--wide space-y-6">
-          <div class="space-y-1.5">
-            <div id="teacher-tag" class="text-xs font-mono-tech font-bold text-[#38BDF8] uppercase">
-              GIÁO DỤC STEM • GÓC GIÁO VIÊN 15 PHÚT
-            </div>
-            <h2 id="teacher-title" class="scene-title" data-scene-heading tabindex="-1">
-              GÓC GIÁO VIÊN STEM 15 PHÚT (DÀNH CHO HỌC SINH 11–15 TUỔI)
-            </h2>
-            <p id="teacher-desc" class="text-sm text-slate-300 max-w-3xl"></p>
-          </div>
-          <div id="teacher-cards-grid" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
-          <footer class="folio"><span data-folio></span></footer>
+        <div id="teacher-corner" class="scene-inner stack">
+          <header class="scene-head">
+            <p id="teacher-tag" class="scene-context">Dành cho giáo viên</p>
+            <h2 id="teacher-title" class="scene-title" data-scene-heading tabindex="-1">Góc giáo viên STEM 15 phút</h2>
+            <p id="teacher-desc" class="scene-lead"></p>
+          </header>
+          <ol id="teacher-cards-grid" class="timeline"></ol>
         </div>
       </div>
     </section>
 
-    <!-- PHỤ LỤC: NGUỒN NASA + KHAI BÁO SI -->
-    <section class="book-scene" data-scene="sources" id="scene-sources">
+    <!-- NGUỒN NASA + KHAI BÁO SI -->
+    <section class="book-scene" data-scene="sources" data-world="earth" data-group="appendix" id="scene-sources">
+      <div class="scene-horizon" aria-hidden="true"></div>
       <div class="scene-scroll">
-        <div id="book-sources" class="scene-page scene-page--wide space-y-10">
-          <div class="space-y-4">
-            <h2 id="footer-sources-title" class="scene-title" data-scene-heading tabindex="-1">
-              DANH MỤC NGUỒN DỮ LIỆU MỞ NASA &amp; HỒ SƠ PHÁP LÝ
-            </h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs font-mono-tech">
-              <a href="https://ilrs.gsfc.nasa.gov/lw19/docs/2014/Papers/3127_Faller_paper.pdf" target="_blank"
-                rel="noopener noreferrer" class="source-link">
-                <span>1. ILRS / NASA LRRR Paper (Faller 2014)</span>
-                <span aria-hidden="true">↗</span>
-              </a>
-              <a href="https://ntrs.nasa.gov/citations/19720019081" target="_blank" rel="noopener noreferrer"
-                class="source-link">
-                <span>2. NASA SP-284: Surveyor 3 Analysis (1972)</span>
-                <span aria-hidden="true">↗</span>
-              </a>
-              <a href="https://www.nasa.gov/wp-content/uploads/2017/10/617743main_nasa-usg_lunar_historic_sites_reva-508.pdf"
-                target="_blank" rel="noopener noreferrer" class="source-link">
-                <span>3. NASA 2011 Recommendations (2.0 km Rule)</span>
-                <span aria-hidden="true">↗</span>
-              </a>
-              <a href="https://www.govinfo.gov/app/details/STATUTE-134/context" target="_blank"
-                rel="noopener noreferrer" class="source-link">
-                <span>4. Public Law 116-275: One Small Step Act</span>
-                <span aria-hidden="true">↗</span>
-              </a>
-              <a href="https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2003-032A" target="_blank"
-                rel="noopener noreferrer" class="source-link">
-                <span>5. NSSDCA Opportunity Archive (2003-032A)</span>
-                <span aria-hidden="true">↗</span>
-              </a>
-              <a href="https://science.nasa.gov/mission/mars-2020-perseverance/ingenuity-mars-helicopter/"
-                target="_blank" rel="noopener noreferrer" class="source-link">
-                <span>6. NASA JPL Ingenuity Flight Log (2020-052B)</span>
-                <span aria-hidden="true">↗</span>
-              </a>
-            </div>
-          </div>
+        <div id="book-sources" class="scene-inner stack">
+          <header class="scene-head">
+            <h2 id="footer-sources-title" class="scene-title" data-scene-heading tabindex="-1">Nguồn dữ liệu mở NASA và hồ sơ pháp lý</h2>
+          </header>
 
-          <div class="surface-card rounded-2xl p-5 sm:p-6 border border-[#38BDF8]/30 space-y-4">
-            <div class="flex flex-wrap items-center justify-between gap-3">
-              <div class="flex flex-wrap items-center gap-2">
-                <span class="px-2.5 py-0.5 rounded bg-[#1B2B85] text-[#E7F434] font-mono-tech text-xs font-bold">
-                  2026 RULEBOOK COMPLIANT
-                </span>
-                <h3 id="footer-si-title" class="font-heading text-base sm:text-lg font-bold text-white">
-                  SUPER INTELLIGENCE (SI) DISCLOSURE — SPACE APPS 2026
-                </h3>
-              </div>
-              <button id="footer-si-btn" type="button"
-                class="px-3.5 min-h-[44px] rounded-lg bg-white/10 hover:bg-white/20 text-xs font-mono-tech text-[#E7F434] font-semibold transition cursor-pointer">
-                Open Full SI Disclosure Modal
-              </button>
+          <ol class="source-list">
+            <li><a href="https://ilrs.gsfc.nasa.gov/lw19/docs/2014/Papers/3127_Faller_paper.pdf" target="_blank"
+                rel="noopener noreferrer" class="source-link"><span>ILRS / NASA LRRR Paper (Faller 2014)</span><span aria-hidden="true">↗</span></a></li>
+            <li><a href="https://ntrs.nasa.gov/citations/19720019081" target="_blank" rel="noopener noreferrer"
+                class="source-link"><span>NASA SP-284: Surveyor 3 Analysis (1972)</span><span aria-hidden="true">↗</span></a></li>
+            <li><a href="https://www.nasa.gov/wp-content/uploads/2017/10/617743main_nasa-usg_lunar_historic_sites_reva-508.pdf"
+                target="_blank" rel="noopener noreferrer" class="source-link"><span>NASA 2011 Recommendations (2.0 km Rule)</span><span aria-hidden="true">↗</span></a></li>
+            <li><a href="https://www.govinfo.gov/app/details/STATUTE-134/context" target="_blank"
+                rel="noopener noreferrer" class="source-link"><span>Public Law 116-275: One Small Step Act</span><span aria-hidden="true">↗</span></a></li>
+            <li><a href="https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2003-032A" target="_blank"
+                rel="noopener noreferrer" class="source-link"><span>NSSDCA Opportunity Archive (2003-032A)</span><span aria-hidden="true">↗</span></a></li>
+            <li><a href="https://science.nasa.gov/mission/mars-2020-perseverance/ingenuity-mars-helicopter/"
+                target="_blank" rel="noopener noreferrer" class="source-link"><span>NASA JPL Ingenuity Flight Log (2020-052B)</span><span aria-hidden="true">↗</span></a></li>
+          </ol>
+
+          <section class="si-block" aria-labelledby="footer-si-title">
+            <div class="si-head">
+              <h3 id="footer-si-title" class="sub-title">Khai báo sử dụng AI (SI Disclosure)</h3>
+              <button id="footer-si-btn" type="button" class="btn-ghost">Mở bản đầy đủ</button>
             </div>
             <div id="footer-si-table-box"></div>
-          </div>
+          </section>
 
-          <div
-            class="pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
-            <p id="footer-compliance-notice" class="leading-relaxed"></p>
-            <p class="font-mono-tech text-slate-500 shrink-0">LUNAMARIS • HANOI 2026</p>
+          <div class="colophon">
+            <p id="footer-compliance-notice"></p>
+            <p class="colophon-mark">LUNAMARIS, Hà Nội 2026</p>
           </div>
-          <footer class="folio"><span data-folio></span></footer>
         </div>
       </div>
     </section>
   </main>
 
   <!-- =====================================================================
-       THANH LẬT TRANG (đáy màn hình)
+       THANH DƯỚI: Quay lại · đường tín hiệu · Tiếp · chế độ đọc cuộn
        ===================================================================== -->
-  <nav id="book-pager" class="book-pager" aria-label="Lật trang">
+  <nav id="book-pager" class="pager" aria-label="Chuyển cảnh">
     <button id="pager-mode" type="button" class="pager-mode" aria-pressed="false" title="Đọc dạng cuộn">
-      <!-- Biểu tượng đổi chế độ: book.js đổi giữa 2 hình -->
       <svg class="pager-mode-icon pager-mode-icon--scroll" viewBox="0 0 24 24" aria-hidden="true">
         <path d="M5 5h14M5 10h14M5 15h14M5 20h9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
       </svg>
       <svg class="pager-mode-icon pager-mode-icon--pages" viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M12 6c-2-1.5-5-2-8-1.5v13c3-.5 6 0 8 1.5 2-1.5 5-2 8-1.5v-13c-3-.5-6 0-8 1.5zm0 0v13" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+        <rect x="4" y="5" width="16" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="2" />
+        <path d="M14 9l3 3-3 3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
       </svg>
       <span id="pager-mode-label" class="sr-only">Đọc dạng cuộn</span>
     </button>
     <button id="pager-prev" type="button" class="pager-btn">
       <span aria-hidden="true">‹</span>
-      <span id="pager-prev-label" class="pager-btn-label">Trang trước</span>
+      <span id="pager-prev-label" class="pager-btn-label">Quay lại</span>
     </button>
     <div class="pager-center">
-      <ol id="pager-dots" class="pager-dots"></ol>
-      <span id="pager-status" class="pager-status" aria-live="polite"></span>
+      <ol id="signal-path" class="signal-path"></ol>
+      <span id="pager-group" class="pager-group" aria-hidden="true"></span>
+      <span id="pager-status" class="sr-only" aria-live="polite"></span>
     </div>
     <button id="pager-next" type="button" class="pager-btn pager-btn--next">
-      <span id="pager-next-label" class="pager-btn-label">Trang sau</span>
+      <span id="pager-next-label" class="pager-btn-label">Tiếp</span>
       <span aria-hidden="true">›</span>
     </button>
   </nav>
@@ -497,23 +418,20 @@
     class="fixed inset-0 z-[80] hidden items-center justify-center bg-black/80 backdrop-blur-xs p-4" role="dialog"
     aria-modal="true" aria-labelledby="modal-si-title">
     <div
-      class="surface-card max-w-3xl w-full max-h-[90dvh] overflow-y-auto rounded-2xl p-5 sm:p-8 border-2 border-[#E7F434] space-y-5 shadow-2xl">
+      class="max-w-3xl w-full max-h-[90dvh] overflow-y-auto rounded-2xl p-5 sm:p-8 bg-[#1E2030] border border-white/15 space-y-5 shadow-2xl">
       <div class="flex items-center justify-between gap-4 border-b border-white/15 pb-3">
-        <h3 id="modal-si-title" class="font-heading text-lg sm:text-xl font-black text-[#E7F434]">
-          SUPER INTELLIGENCE (SI) DISCLOSURE — SPACE APPS 2026
+        <h3 id="modal-si-title" class="font-heading text-lg sm:text-xl font-black text-white">
+          Khai báo sử dụng AI (SI Disclosure)
         </h3>
-        <button id="close-si-modal-btn" type="button"
-          class="shrink-0 px-3 min-h-[44px] rounded-lg bg-slate-800 hover:bg-slate-700 text-sm font-mono-tech text-white cursor-pointer">
-          ✕ ESC
-        </button>
+        <button id="close-si-modal-btn" type="button" class="btn-ghost shrink-0">✕ Đóng</button>
       </div>
 
       <div id="modal-si-table-box"></div>
 
-      <div class="p-3.5 rounded-xl bg-slate-950 border border-white/10 text-xs font-mono-tech text-slate-300">
-        ✓ Human Verification Gate: 100% of physical constants, COSPAR IDs, landing separation distances, and legal
+      <p class="text-sm text-slate-300 leading-relaxed">
+        Human Verification Gate: 100% of physical constants, COSPAR IDs, landing separation distances, and legal
         citations were manually audited against NASA SP-284, NASA 2011 Recommendations, NSSDCA, and ILRS archives.
-      </div>
+      </p>
     </div>
   </div>
 
@@ -521,7 +439,7 @@
        [NOTEBOOK-QR 2026-11-14] NÚT "?" NỔI + BẢNG MÃ QR NOTEBOOKLM
        Máy tính (≥768px): bảng trượt từ mép phải, chiếm 1/3 màn hình.
        Điện thoại (<768px): bảng mở FULL MÀN HÌNH, nội dung giống bản máy tính.
-       Khi ở chế độ sách, nút được đẩy lên trên thanh lật trang (css/styles.css).
+       Nút được đẩy lên trên thanh dưới (css/styles.css).
        ===================================================================== -->
   <button
     id="notebook-qr-btn"
@@ -531,7 +449,7 @@
     aria-haspopup="dialog"
     aria-expanded="false"
     aria-controls="notebook-qr-panel"
-    class="fixed bottom-5 right-5 z-[60] flex items-center justify-center w-12 h-12 rounded-full bg-[#e7f434] text-[#0e1120] font-heading text-2xl font-extrabold leading-none shadow-[0_8px_28px_rgba(0,0,0,0.5)] ring-2 ring-white/25 transition-transform duration-150 hover:scale-110 active:scale-95 focus:outline-none focus-visible:ring-4 focus-visible:ring-[#7fd4ff]"
+    class="fixed bottom-5 right-5 z-[60] flex items-center justify-center w-12 h-12 rounded-full bg-[#1E2030] text-[#e7f434] font-heading text-2xl font-extrabold leading-none shadow-[0_8px_28px_rgba(0,0,0,0.5)] ring-1 ring-white/20 transition-transform duration-150 hover:scale-110 active:scale-95 focus:outline-none focus-visible:ring-4 focus-visible:ring-[#7fd4ff]"
   >?</button>
 
   <aside
