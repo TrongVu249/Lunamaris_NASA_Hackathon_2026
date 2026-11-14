@@ -20,6 +20,8 @@
   var STORE_SCENE = "lunamaris_last_scene";
   var STORE_MODE = "lunamaris_reading_mode";
   var TURN_FALLBACK_MS = 900;
+  // Link cũ từ giao diện "quyển sách" vẫn mở đúng cảnh mới
+  var ALIASES = { cover: "start", toc: "signals", "hero-top": "start" };
   var SWIPE_MIN_PX = 60;
 
   var reduceMotion = window.matchMedia ? window.matchMedia("(prefers-reduced-motion: reduce)") : { matches: false };
@@ -53,6 +55,11 @@
     } catch (e) {
       return null;
     }
+  }
+
+  /** Chỉ ghi nhớ từ chương 1 trở đi, để màn mở đầu còn gợi ý "Tiếp tục ở …". */
+  function rememberScene(id) {
+    if (indexOf(id) > 1) store(STORE_SCENE, id);
   }
 
   function dict() {
@@ -124,6 +131,7 @@
     } catch (e) {
       id = raw;
     }
+    if (ALIASES[id]) id = ALIASES[id];
     if (sceneById(id)) return id;
     var el = document.getElementById(id);
     var scene = el && el.closest ? el.closest(".book-scene") : null;
@@ -225,7 +233,7 @@
 
     var prevScene = currentId ? sceneById(currentId) : null;
     currentId = id;
-    store(STORE_SCENE, id);
+    rememberScene(id);
 
     if (!paged) {
       var target = opts.target || nextScene;
@@ -339,24 +347,51 @@
     show(id, dir, { target: targetEl && targetEl.closest(".book-scene") !== targetEl ? targetEl : null });
   }
 
-  /* ---------------- thanh trên + thanh lật trang ---------------- */
+  /* ---------------- thanh dưới: đường tín hiệu + nút Quay lại / Tiếp ---------------- */
 
-  function buildDots() {
-    var list = document.getElementById("pager-dots");
+  var GROUP_COLORS = {
+    earth: "#5B6CD9",
+    moon: "#38BDF8",
+    mars: "#F97316",
+    artemis: "#10B981",
+    appendix: "#94A3B8"
+  };
+
+  function groupOf(scene) {
+    return (scene && scene.getAttribute("data-group")) || "appendix";
+  }
+
+  function groupName(group) {
+    var t = dict();
+    return t["group_" + group] || "";
+  }
+
+  function fullTitle(scene) {
+    var title = sceneTitle(scene);
+    return (title.num ? title.num + ": " : "") + title.text;
+  }
+
+  /** Đường tín hiệu: mỗi cảnh một nút tròn, nhóm theo nơi gửi (Hà Nội → Mặt Trăng → Sao Hỏa → Artemis → Phụ lục). */
+  function buildSignalPath() {
+    var list = document.getElementById("signal-path");
     if (!list) return;
     list.innerHTML = "";
+    var prevGroup = null;
     order.forEach(function (scene, i) {
+      var group = groupOf(scene);
       var li = document.createElement("li");
+      li.className = "sp-item" + (group !== prevGroup ? " is-group-start" : "");
+      li.style.setProperty("--gc", GROUP_COLORS[group] || GROUP_COLORS.appendix);
       var btn = document.createElement("button");
       btn.type = "button";
-      btn.className = "pager-dot";
+      btn.className = "sp-node";
       btn.setAttribute("data-goto", idOf(scene));
-      var title = sceneTitle(scene);
-      var label = (i + 1) + ". " + (title.num ? title.num + " " : "") + title.text;
+      var label = (i + 1) + ". " + fullTitle(scene);
       btn.setAttribute("aria-label", label);
       btn.title = label;
       li.appendChild(btn);
       list.appendChild(li);
+      prevGroup = group;
     });
   }
 
@@ -367,40 +402,47 @@
     var scene = sceneById(currentId);
     var title = sceneTitle(scene);
 
-    var rt = document.getElementById("book-running-title");
-    if (rt) {
-      rt.innerHTML = "";
-      if (title.num) {
-        var n = document.createElement("span");
-        n.className = "rt-num";
-        n.textContent = title.num;
-        rt.appendChild(n);
-      }
-      var txt = document.createElement("span");
-      txt.className = "rt-text";
-      txt.textContent = title.text;
-      rt.appendChild(txt);
-    }
-
     document.title = title.text ? title.text + " | LUNAMARIS" : baseTitle;
 
+    // Trình đọc màn hình: "Cảnh 4 / 10: Chương 2: …"
     var status = document.getElementById("pager-status");
     if (status && idx !== -1) {
-      status.textContent = fmt(t.pager_page_of || "{n} / {total}", { n: idx + 1, total: total });
+      status.textContent =
+        fmt(t.scene_of || "{n} / {total}", { n: idx + 1, total: total }) + ": " + fullTitle(scene);
+    }
+
+    // Nhãn nhìn thấy trên điện thoại: tên nhóm + vị trí trong nhóm ("Mặt Trăng 2/2")
+    var groupEl = document.getElementById("pager-group");
+    if (groupEl && scene) {
+      var g = groupOf(scene);
+      var inGroup = order.filter(function (s) {
+        return groupOf(s) === g;
+      });
+      var pos = inGroup.indexOf(scene) + 1;
+      groupEl.textContent = groupName(g) + (inGroup.length > 1 ? " " + pos + "/" + inGroup.length : "");
     }
 
     var prevBtn = document.getElementById("pager-prev");
     var nextBtn = document.getElementById("pager-next");
+    var nextScene = idx !== -1 && idx < total - 1 ? order[idx + 1] : null;
     if (prevBtn) {
       prevBtn.disabled = idx <= 0;
-      prevBtn.setAttribute("aria-label", t.pager_prev || "Previous page");
+      var prevScene = idx > 0 ? order[idx - 1] : null;
+      prevBtn.setAttribute(
+        "aria-label",
+        (t.pager_back || "Back") + (prevScene ? ": " + fullTitle(prevScene) : "")
+      );
     }
     if (nextBtn) {
-      nextBtn.disabled = idx === -1 || idx >= total - 1;
-      nextBtn.setAttribute("aria-label", t.pager_next || "Next page");
+      nextBtn.disabled = !nextScene;
+      var nextText = nextScene ? fmt(t.pager_next_to || "Next: {name}", { name: sceneTitle(nextScene).text }) : t.pager_next || "Next";
+      nextBtn.setAttribute(
+        "aria-label",
+        nextScene ? fmt(t.pager_next_to || "Next: {name}", { name: fullTitle(nextScene) }) : t.pager_next || "Next"
+      );
+      setText("pager-next-label", nextText);
     }
-    setText("pager-prev-label", t.pager_prev);
-    setText("pager-next-label", t.pager_next);
+    setText("pager-prev-label", t.pager_back);
 
     var mode = document.getElementById("pager-mode");
     if (mode) {
@@ -412,28 +454,15 @@
     var pager = document.getElementById("book-pager");
     if (pager && t.pager_nav_label) pager.setAttribute("aria-label", t.pager_nav_label);
 
-    var dots = document.querySelectorAll("#pager-dots .pager-dot");
-    Array.prototype.forEach.call(dots, function (d) {
-      if (d.getAttribute("data-goto") === currentId) d.setAttribute("aria-current", "page");
+    var nodes = document.querySelectorAll("#signal-path .sp-node");
+    Array.prototype.forEach.call(nodes, function (d) {
+      var i = indexOf(d.getAttribute("data-goto"));
+      d.classList.toggle("is-passed", i !== -1 && i < idx);
+      if (i === idx) d.setAttribute("aria-current", "step");
       else d.removeAttribute("aria-current");
     });
 
-    // Số trang ở chân mỗi trang + số trang trong mục lục
-    scenes.forEach(function (s) {
-      var i = order.indexOf(s);
-      var f = s.querySelector("[data-folio]");
-      if (f) {
-        f.textContent = i === -1 ? "" : String(i + 1);
-        var folio = f.closest(".folio");
-        if (folio) folio.classList.toggle("is-empty", i === -1);
-      }
-    });
-    Array.prototype.forEach.call(document.querySelectorAll("[data-page-of]"), function (el) {
-      var i = indexOf(el.getAttribute("data-page-of"));
-      el.textContent = i === -1 ? "" : String(i + 1);
-    });
-
-    // Nút "Đọc tiếp trang X" ở bìa
+    // Link "Tiếp tục ở …" ở màn mở đầu (chỉ khi lần trước đã vào tới một chương trở đi)
     var cont = document.getElementById("book-continue-btn");
     if (cont) {
       var last = load(STORE_SCENE);
@@ -442,7 +471,7 @@
       cont.hidden = !offerContinue;
       if (offerContinue) {
         cont.href = "#" + last;
-        cont.textContent = fmt(t.book_continue || "→ {n}", { n: li + 1 });
+        cont.textContent = fmt(t.continue_at || "{name}", { name: fullTitle(order[li]) });
       }
     }
   }
@@ -490,7 +519,7 @@
           var id = idOf(en.target);
           if (id && id !== currentId) {
             currentId = id;
-            store(STORE_SCENE, id);
+            rememberScene(id);
             updateChrome();
           }
         });
@@ -513,7 +542,7 @@
 
   function refresh() {
     computeOrder();
-    buildDots();
+    buildSignalPath();
     if (!paged) watchScroll();
     if (currentId && indexOf(currentId) === -1) {
       var fallback = visibleNear(currentId) || firstId();
@@ -685,7 +714,7 @@
     body.classList.add("book-ready");
 
     computeOrder();
-    buildDots();
+    buildSignalPath();
 
     var initial = visibleNear(resolve(location.hash));
     var start = initial || firstId();
