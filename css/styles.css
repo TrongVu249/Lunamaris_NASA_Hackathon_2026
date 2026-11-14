@@ -1538,3 +1538,47 @@ input[type="range"].telemetry-slider::-moz-range-thumb {
   }
 }
 
+/* =============================================================================
+   [NOTEBOOK-QR 2026-11-14] NÚT "?" NỔI + BẢNG MÃ QR NOTEBOOKLM
+   Phần lớn giao diện dùng class Tailwind trong index.html; ở đây chỉ bổ sung
+   ba thứ Tailwind CDN không tiện diễn đạt: khoá cuộn nền, cuộn mượt trên iOS,
+   thanh cuộn mảnh cho thân bảng và viền an toàn (notch) của điện thoại.
+   ============================================================================= */
+
+/* Khoá cuộn trang nền khi bảng QR mở full màn trên điện thoại */
+body.nb-no-scroll {
+  overflow: hidden;
+}
+
+/* Né viền an toàn (tai thỏ / thanh điều hướng) cho bảng full màn */
+#notebook-qr-panel {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Thân bảng cuộn mượt trên iOS + thanh cuộn mảnh, tiệp màu giao diện */
+.nb-scroll {
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: #3a4160 transparent;
+}
+.nb-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+.nb-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.nb-scroll::-webkit-scrollbar-thumb {
+  background: #3a4160;
+  border-radius: 8px;
+}
+
+/* Tôn trọng hệ điều hành bật "giảm chuyển động": bảng hiện ngay, không trượt */
+@media (prefers-reduced-motion: reduce) {
+  #notebook-qr-panel {
+    transition-duration: 0.01ms !important;
+  }
+  #notebook-qr-btn {
+    transition-duration: 0.01ms !important;
+  }
+}
+
