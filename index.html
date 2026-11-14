@@ -60,9 +60,15 @@
        CÁC CẢNH: mỗi <section class="book-scene"> là một cảnh toàn màn hình.
        Thứ tự trong DOM = thứ tự trượt cảnh (js/book.js). data-world quyết định
        màu đường chân trời; data-group quyết định nhóm trên đường tín hiệu.
-       Cảnh có data-story là chỗ chừa cho bộ phát truyện (chưa làm) — đang ẩn.
+       Cảnh có data-story: bộ phát truyện (js/story.js). Cảnh data-kind="game": trò chơi,
+       data-gate="locked" chặn nút Tiếp/vuốt cho tới khi thắng hoặc bấm Bỏ qua.
        ===================================================================== -->
   <main id="book" class="scenes">
+
+    <!-- TRUYỆN MỞ ĐẦU (js/story.js): lần đầu vào trang tự phát; xong thì sang màn "Bật thu sóng" -->
+    <section class="book-scene" data-scene="story-intro" data-story="intro" data-world="earth" data-group="earth" id="scene-story-intro">
+      <div class="scene-scroll"><div class="scene-inner"></div></div>
+    </section>
 
     <!-- MÀN MỞ ĐẦU: BẬT THU SÓNG -->
     <section class="book-scene" data-scene="start" data-world="earth" data-group="earth" id="scene-start">
@@ -109,6 +115,7 @@
               </button>
               <a id="cta-artemis-btn" href="#artemis" class="link-quiet">Tới Trạm Artemis</a>
               <a id="book-continue-btn" href="#signals" class="link-quiet" hidden></a>
+              <a id="replay-story-btn" href="#story-intro" class="link-quiet">Xem lại câu chuyện</a>
             </div>
 
             <dl class="start-facts">
@@ -140,10 +147,6 @@
             <div id="signal-map" class="signal-map"></div>
 
             <div class="signals-side">
-              <div class="filter-row">
-                <span id="toc-filter-label" class="filter-label">Hiện</span>
-                <div id="planet-filter-bar" class="segmented"></div>
-              </div>
               <ol id="signal-list" class="signal-list"></ol>
               <p id="signals-more-label" class="signals-more-label">Sau bốn lá thư</p>
               <ul id="signal-more" class="signal-more"></ul>
@@ -153,75 +156,62 @@
       </div>
     </section>
 
-    <!-- Chỗ chừa: chuỗi truyện mở đầu -->
-    <section class="book-scene" data-scene="story-intro" data-story="intro" id="scene-story-intro">
-      <div class="scene-scroll"><div class="scene-inner"></div></div>
-    </section>
-
     <!-- CHƯƠNG 1–4: app.js render từng chương vào [data-chapter-slot] -->
-    <section class="book-scene" data-scene="ch1" data-world="moon" data-group="moon" id="scene-ch1">
+    <section class="book-scene" data-scene="ch1" data-kind="game" data-gate="locked" data-world="moon" data-group="moon" id="scene-ch1">
       <div class="scene-horizon" aria-hidden="true"></div>
       <div class="scene-scroll"><div class="scene-inner" data-chapter-slot="apollo11-lrrr"></div></div>
     </section>
 
-    <section class="book-scene" data-scene="story-to-ch2" data-story="to_ch2" id="scene-story-to-ch2">
+    <section class="book-scene" data-scene="story-to-ch2" data-story="to_ch2" data-world="moon" data-group="moon" id="scene-story-to-ch2">
       <div class="scene-scroll"><div class="scene-inner"></div></div>
     </section>
 
-    <section class="book-scene" data-scene="ch2" data-world="moon" data-group="moon" id="scene-ch2">
+    <section class="book-scene" data-scene="ch2" data-kind="game" data-gate="locked" data-world="moon" data-group="moon" id="scene-ch2">
       <div class="scene-horizon" aria-hidden="true"></div>
       <div class="scene-scroll"><div class="scene-inner" data-chapter-slot="surveyor-3"></div></div>
     </section>
 
-    <section class="book-scene" data-scene="story-to-ch3" data-story="to_ch3" id="scene-story-to-ch3">
+    <section class="book-scene" data-scene="story-to-ch3" data-story="to_ch3" data-world="mars" data-group="mars" id="scene-story-to-ch3">
       <div class="scene-scroll"><div class="scene-inner"></div></div>
     </section>
 
-    <section class="book-scene" data-scene="ch3" data-world="mars" data-group="mars" id="scene-ch3">
+    <section class="book-scene" data-scene="ch3" data-kind="game" data-gate="locked" data-world="mars" data-group="mars" id="scene-ch3">
       <div class="scene-horizon" aria-hidden="true"></div>
       <div class="scene-scroll"><div class="scene-inner" data-chapter-slot="opportunity-rover"></div></div>
     </section>
 
-    <section class="book-scene" data-scene="story-to-ch4" data-story="to_ch4" id="scene-story-to-ch4">
+    <section class="book-scene" data-scene="story-to-ch4" data-story="to_ch4" data-world="mars" data-group="mars" id="scene-story-to-ch4">
       <div class="scene-scroll"><div class="scene-inner"></div></div>
     </section>
 
-    <section class="book-scene" data-scene="ch4" data-world="mars" data-group="mars" id="scene-ch4">
+    <section class="book-scene" data-scene="ch4" data-kind="game" data-gate="locked" data-world="mars" data-group="mars" id="scene-ch4">
       <div class="scene-horizon" aria-hidden="true"></div>
       <div class="scene-scroll"><div class="scene-inner" data-chapter-slot="ingenuity-helicopter"></div></div>
     </section>
 
-    <section class="book-scene" data-scene="story-to-artemis" data-story="to_artemis" id="scene-story-to-artemis">
+    <section class="book-scene" data-scene="story-to-artemis" data-story="to_artemis" data-world="earth" data-group="artemis" id="scene-story-to-artemis">
       <div class="scene-scroll"><div class="scene-inner"></div></div>
     </section>
 
-    <!-- TRẠM QUYẾT ĐỊNH ARTEMIS (Module 01) -->
-    <section class="book-scene" data-scene="artemis" data-world="moon" data-group="artemis" id="scene-artemis">
+    <!-- GAME 5: TRẠM QUYẾT ĐỊNH ARTEMIS IV — chạm thẻ luật rồi chạm vùng (js/games.js).
+         Trạm mặt cắt cũ (khoảng cách hạ cánh) nằm trong popup "Hồ sơ Khoa học". -->
+    <section class="book-scene" data-scene="artemis" data-kind="game" data-gate="locked" data-world="moon" data-group="artemis" id="scene-artemis">
       <div class="scene-horizon" aria-hidden="true"></div>
       <div class="scene-scroll">
         <div id="artemis-station" class="scene-inner stack">
           <header class="scene-head">
-            <p id="artemis-tag" class="scene-context">Bài tập 1: bạn là chỉ huy đổ bộ</p>
-            <h2 id="artemis-title" class="scene-title" data-scene-heading tabindex="-1">Trạm quyết định bãi đáp Artemis</h2>
-            <p id="artemis-subtitle" class="scene-lead"></p>
+            <h2 id="artemis-game-title" class="scene-title" data-scene-heading tabindex="-1">Chọn bãi đáp cho Artemis IV</h2>
+            <p id="artemis-game-lead" class="scene-lead"></p>
           </header>
-
-          <p id="artemis-physics-callout" class="note"></p>
-
-          <div class="instrument">
-            <div id="artemis-svg-container" class="instrument-view"></div>
-            <div class="instrument-body">
-              <p id="artemis-select-prompt" class="instrument-label">Chọn khoảng cách hạ cánh</p>
-              <div id="artemis-zone-buttons" class="zone-grid"></div>
-            </div>
+          <div id="artemis-game"></div>
+          <div class="game-foot">
+            <button id="artemis-game-skip" type="button" class="btn-ghost game-skip">Bỏ qua</button>
           </div>
-
-          <div id="artemis-outcome-panel"></div>
         </div>
       </div>
     </section>
 
-    <section class="book-scene" data-scene="story-ending" data-story="ending" id="scene-story-ending">
+    <section class="book-scene" data-scene="story-ending" data-story="ending" data-world="moon" data-group="artemis" id="scene-story-ending">
       <div class="scene-scroll"><div class="scene-inner"></div></div>
     </section>
 
@@ -412,6 +402,31 @@
   </nav>
 
   <!-- =====================================================================
+       HỒ SƠ KHOA HỌC: nút góc dưới phải cảnh game ⇄ X đóng (cùng một chỗ).
+       Popup che màn game: bộ mô phỏng cũ + hồ sơ nhà khảo cổ + nguồn (không có lá thư).
+       ===================================================================== -->
+  <section id="dossier-sheet" class="dossier-sheet" role="dialog" aria-modal="true" aria-labelledby="dossier-sheet-title" hidden>
+    <div class="dossier-sheet-scroll">
+      <div class="dossier-sheet-inner">
+        <h2 id="dossier-sheet-title" class="dossier-sheet-title" tabindex="-1">Hồ sơ Khoa học</h2>
+        <div id="dossier-sheet-body"></div>
+      </div>
+    </div>
+  </section>
+
+  <button id="dossier-btn" type="button" class="dossier-btn" aria-controls="dossier-sheet" aria-expanded="false">
+    <svg class="dossier-btn-icon dossier-btn-icon--open" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M6 3h9l4 4v14H6z M14 3v5h5 M9 12h7 M9 16h7" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+    </svg>
+    <svg class="dossier-btn-icon dossier-btn-icon--close" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" />
+    </svg>
+    <span id="dossier-btn-label">Hồ sơ Khoa học</span>
+  </button>
+
+  <p id="gate-toast" class="gate-toast" role="status" hidden></p>
+
+  <!-- =====================================================================
        SUPER INTELLIGENCE (SI) DISCLOSURE MODAL
        ===================================================================== -->
   <div id="si-disclosure-modal"
@@ -530,9 +545,12 @@
        MODULAR JAVASCRIPT SCRIPTS (ZERO-CORS DIRECT EXECUTION)
        ===================================================================== -->
   <script src="js/data.js"></script>
+  <script src="js/flow-data.js"></script>
   <script src="js/svg-engine.js"></script>
   <script src="js/decision-station.js"></script>
   <script src="js/certificate.js"></script>
+  <script src="js/story.js"></script>
+  <script src="js/games.js"></script>
   <script src="js/app.js"></script>
   <script src="js/book.js"></script>
   <script src="js/notebook-qr.js"></script>

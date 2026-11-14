@@ -43,6 +43,43 @@
     state.openAccordions[art.id] = false;
   });
 
+  /* ---------------------------------------------------------------------------
+   * TIẾN TRÌNH (localStorage, không có dữ liệu cá nhân):
+   *   { won: { artId: true }, landed: bool } — won = đã thắng hoặc bỏ qua trò của chương
+   * ------------------------------------------------------------------------- */
+  const PROGRESS_KEY = "lunamaris_progress";
+  const FLOW = window.LUNAMARIS_FLOW || { games: {}, rules: {}, story: {} };
+  state.chapterView = {}; // artId → "game" | "letter"
+  state.dossierOpen = false;
+
+  function loadProgress() {
+    try {
+      const raw = window.localStorage.getItem(PROGRESS_KEY);
+      const p = raw ? JSON.parse(raw) : null;
+      if (!p) return;
+      Object.keys(state.collectedStamps).forEach((id) => {
+        state.collectedStamps[id] = !!(p.won && p.won[id]);
+      });
+      state.badgeUnlocked = !!p.landed;
+      if (state.badgeUnlocked) state.selectedZoneId = "zone-green";
+    } catch (e) {
+      /* chế độ riêng tư / dữ liệu hỏng: bắt đầu lại */
+    }
+  }
+
+  function saveProgress() {
+    try {
+      window.localStorage.setItem(
+        PROGRESS_KEY,
+        JSON.stringify({ won: state.collectedStamps, landed: state.badgeUnlocked })
+      );
+    } catch (e) {
+      /* bỏ qua */
+    }
+  }
+
+  loadProgress();
+
   /* ===========================================================================
    * TIỆN ÍCH
    * =========================================================================== */
@@ -93,28 +130,56 @@
    * TEM TÍN HIỆU
    * =========================================================================== */
 
-  function collectStamp(artifactId) {
-    if (!state.collectedStamps[artifactId]) {
-      state.collectedStamps[artifactId] = true;
-      renderHeaderStamps();
-      renderCertificateSection();
-      renderSignals();
-      notifyBook();
+  /** Thắng (hoặc bỏ qua) trò của một chương: nhận tem = thẻ luật, lưu tiến trình, mở chặn đi tiếp. */
+  function completeGame(artifactId) {
+    const isNew = !state.collectedStamps[artifactId];
+    state.collectedStamps[artifactId] = true;
+    saveProgress();
+    renderHeaderStamps(isNew ? artifactId : null);
+    renderCertificateSection();
+    renderSignals();
+    renderArtemisGame(); // thẻ luật ở Game 5 sáng lên
+    updateGates();
+    notifyBook();
+  }
+
+  /** Cảnh game chưa thắng: book.js không cho "Tiếp"/vuốt qua (chỉ Bỏ qua hoặc thắng mới mở). */
+  function updateGates() {
+    DATA.artifacts.forEach((art) => {
+      const scene = document.getElementById(`scene-${sceneIdForArtifact(art)}`);
+      if (!scene) return;
+      if (state.collectedStamps[art.id]) scene.removeAttribute("data-gate");
+      else scene.setAttribute("data-gate", "locked");
+      scene.setAttribute("data-view", state.chapterView[art.id] || "game");
+    });
+    const artemis = document.getElementById("scene-artemis");
+    if (artemis) {
+      if (state.badgeUnlocked) artemis.removeAttribute("data-gate");
+      else artemis.setAttribute("data-gate", "locked");
     }
-    renderStampHint(artifactId);
+    syncSceneView();
   }
 
-  function renderStampHint(artifactId) {
-    const el = document.getElementById(`stamp-status-${artifactId}`);
-    if (!el) return;
-    const t = tr();
-    const has = state.collectedStamps[artifactId];
-    el.textContent = has ? t.stamp_collected_badge : t.unlock_stamp_hint;
-    el.classList.toggle("is-collected", has);
+  /** Báo cho CSS biết cảnh hiện tại đang ở "game" hay "letter" (ẩn nút Hồ sơ khi đọc thư). */
+  function syncSceneView() {
+    const cur = window.LunamarisBook ? window.LunamarisBook.current() : null;
+    const scene = cur ? document.querySelector(`[data-scene="${cur}"]`) : null;
+    document.body.setAttribute("data-scene-view", (scene && scene.getAttribute("data-view")) || "game");
   }
 
-  /** Thanh trên: 4 tem (máy tính) + "★ n/4" (mọi màn hình). */
-  function renderHeaderStamps() {
+  function stampIsUnlocked(art) {
+    const n = Number(art.chapter_num);
+    if (n <= 1) return true;
+    const prev = DATA.artifacts.find((a) => Number(a.chapter_num) === n - 1);
+    return !prev || !!state.collectedStamps[prev.id];
+  }
+
+  function allStamps() {
+    return DATA.artifacts.every((a) => state.collectedStamps[a.id]);
+  }
+
+  /** Thanh trên: 4 ô tem thẻ luật (máy tính) + "★ n/4" (mọi màn hình). */
+  function renderHeaderStamps(justEarned) {
     const t = tr();
     setTxt("nav-stamps-label", t.nav_stamps_label);
 
@@ -134,12 +199,13 @@
         .map((art) => {
           const has = state.collectedStamps[art.id];
           const n = Number(art.chapter_num);
-          const name = L(art, "name");
+          const rule = FLOW.rules[art.id];
+          const ruleTitle = rule ? L(rule, "title") : L(art, "name");
           return `
             <button type="button" data-scroll-chapter="${art.id}"
-              class="stamp-pill ${has ? "is-collected" : ""}" style="--c: ${planetColor(art)};"
-              title="${name}"
-              aria-label="${t.toc_chapter} ${n}: ${name}. ${has ? t.signal_stamp_done : t.signal_stamp_todo}">
+              class="stamp-pill ${has ? "is-collected" : ""} ${justEarned === art.id ? "is-new" : ""}" style="--c: ${planetColor(art)};"
+              title="${has ? ruleTitle : L(art, "name")}"
+              aria-label="${t.toc_chapter} ${n}: ${has ? `${t.rule_new}: ${ruleTitle}` : `${L(art, "name")}. ${t.signal_stamp_todo}`}">
               <span class="stamp-dot" aria-hidden="true"></span>
               <span>${n} ${shortNames[art.id] || ""}</span>
             </button>
@@ -151,50 +217,13 @@
     container.querySelectorAll("[data-scroll-chapter]").forEach((btn) => {
       btn.addEventListener("click", () => {
         const art = DATA.artifacts.find((a) => a.id === btn.getAttribute("data-scroll-chapter"));
-        if (!art) return;
-        if (state.filter !== "All") {
-          state.filter = "All";
-          renderFilterButtons();
-          renderChapters();
-          renderSignals();
-          notifyBook();
-        }
-        goScene(sceneIdForArtifact(art));
+        if (art) goScene(sceneIdForArtifact(art));
       });
     });
   }
 
-  /** Bộ lọc hành tinh (cảnh 4 tín hiệu) + trạng thái nút EN|VI. */
+  /** Trạng thái nút EN|VI. (Bộ lọc hành tinh đã bỏ: các tín hiệu đi theo thứ tự 1 → 4.) */
   function renderFilterButtons() {
-    const t = tr();
-    const filterContainer = document.getElementById("planet-filter-bar");
-    if (filterContainer) {
-      const filters = [
-        { key: "All", label: t.filter_all },
-        { key: "Moon", label: t.filter_moon },
-        { key: "Mars", label: t.filter_mars }
-      ];
-      filterContainer.innerHTML = filters
-        .map(
-          (f) =>
-            `<button type="button" class="seg-btn" data-filter-key="${f.key}" aria-pressed="${state.filter === f.key}">${f.label}</button>`
-        )
-        .join("");
-
-      filterContainer.querySelectorAll("[data-filter-key]").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          const key = btn.getAttribute("data-filter-key");
-          state.filter = key;
-          renderFilterButtons();
-          renderChapters();
-          renderSignals();
-          notifyBook();
-          const again = document.querySelector(`#planet-filter-bar [data-filter-key="${key}"]`);
-          if (again) again.focus();
-        });
-      });
-    }
-
     ["en", "vi"].forEach((lang) => {
       const b = document.getElementById(`lang-btn-${lang}`);
       if (!b) return;
@@ -218,6 +247,7 @@
     setTxt("fact-laser-value", t.fact_laser_value);
     setTxt("fact-mars-label", t.fact_mars_label);
     setTxt("fact-mars-value", t.fact_mars_value);
+    setTxt("replay-story-btn", t.replay_story);
   }
 
   /* ===========================================================================
@@ -271,14 +301,13 @@
     const t = tr();
     setTxt("signals-title", t.signals_title);
     setTxt("signals-lead", t.signals_lead);
-    setTxt("toc-filter-label", t.toc_filter_label);
     setTxt("signals-more-label", t.signals_more);
 
     const map = document.getElementById("signal-map");
     if (map) {
       const bodies = MAP_BODIES.map((b) => {
         const color = PLANET_COLOR[b.key];
-        const dim = state.filter !== "All" && state.filter !== b.key;
+        const dim = false;
         const pins = DATA.artifacts
           .filter((a) => a.celestial_body === b.key)
           .map((art) => {
@@ -288,14 +317,19 @@
             if (!p.visible) return "";
             const n = Number(art.chapter_num);
             const has = state.collectedStamps[art.id];
+            const locked = !has && !stampIsUnlocked(art);
             const x = p.x.toFixed(1);
             const y = p.y.toFixed(1);
-            return `
-              <a class="map-pin" href="#${sceneIdForArtifact(art)}" aria-label="${t.toc_chapter} ${n}: ${L(art, "name")}">
+            const shapes = `
                 <circle class="pin-hit" cx="${x}" cy="${y}" r="44" />
-                <circle cx="${x}" cy="${y}" r="34" fill="${color}" fill-opacity="0.13" />
+                <circle class="pin-halo" cx="${x}" cy="${y}" r="34" fill="${color}" fill-opacity="0.13" />
                 <circle class="pin-dot" cx="${x}" cy="${y}" r="20" fill="${has ? color : "#151622"}" stroke="${color}" stroke-width="3" />
-                <text class="pin-num" x="${x}" y="${(p.y + 7).toFixed(1)}" text-anchor="middle" fill="${has ? "#151622" : color}">${n}</text>
+                <text class="pin-num" x="${x}" y="${(p.y + 7).toFixed(1)}" text-anchor="middle" fill="${has ? "#151622" : color}">${n}</text>`;
+            // Chặng chưa tới: chấm mờ, không phải liên kết (danh sách bên cạnh vẫn có nút "Mở chặng này")
+            if (locked) return `<g class="map-pin is-locked" aria-hidden="true">${shapes}</g>`;
+            return `
+              <a class="map-pin ${has ? "" : "is-next"}" href="#${sceneIdForArtifact(art)}" aria-label="${t.toc_chapter} ${n}: ${L(art, "name")}. ${has ? t.sig_done : t.sig_open}">
+                ${shapes}
               </a>
             `;
           })
@@ -320,32 +354,62 @@
 
     const list = document.getElementById("signal-list");
     if (list) {
-      list.innerHTML = DATA.artifacts
-        .filter((art) => state.filter === "All" || art.celestial_body === state.filter)
-        .map((art) => {
-          const n = Number(art.chapter_num);
-          const has = state.collectedStamps[art.id];
+      const item = (o) => {
+        const status = o.has ? t.sig_done : o.locked ? t.sig_locked : t.sig_open;
+        const inner = `
+                <span class="signal-num" aria-hidden="true">${o.n}</span>
+                <span class="signal-name"><span class="sr-only">${o.srPrefix}</span>${o.name}</span>
+                <span class="signal-where">${o.where}</span>
+                <span class="signal-stamp ${o.has ? "is-collected" : ""}">
+                  <span aria-hidden="true">${o.has ? "★" : o.locked ? "·" : "○"}</span>
+                  <span class="signal-state">${status}</span>
+                </span>`;
+        // Khóa nhẹ: không chặn cứng — vẫn có nút "Mở chặng này" (cho giám khảo/giáo viên)
+        if (o.locked) {
           return `
-            <li class="signal-item" style="--c: ${planetColor(art)};">
-              <a href="#${sceneIdForArtifact(art)}">
-                <span class="signal-num" aria-hidden="true">${n}</span>
-                <span class="signal-name"><span class="sr-only">${t.toc_chapter} ${n}: </span>${L(art, "name")}</span>
-                <span class="signal-where">${art.location_name}</span>
-                <span class="signal-stamp ${has ? "is-collected" : ""}">
-                  <span aria-hidden="true">${has ? "★" : "○"}</span>
-                  <span class="sr-only">${has ? t.signal_stamp_done : t.signal_stamp_todo}</span>
-                </span>
-              </a>
-            </li>
-          `;
-        })
-        .join("");
+            <li class="signal-item is-locked" style="--c: ${o.color};">
+              <div class="signal-row">${inner}</div>
+              <a class="signal-unlock link-quiet" href="#${o.scene}">${t.sig_unlock}<span class="sr-only">: ${o.name}</span></a>
+            </li>`;
+        }
+        return `
+            <li class="signal-item ${o.has ? "is-done" : "is-next"}" style="--c: ${o.color};">
+              <a href="#${o.scene}">${inner}</a>
+            </li>`;
+      };
+
+      list.innerHTML =
+        DATA.artifacts
+          .map((art) => {
+            const n = Number(art.chapter_num);
+            const has = !!state.collectedStamps[art.id];
+            return item({
+              n,
+              has,
+              locked: !has && !stampIsUnlocked(art),
+              name: L(art, "name"),
+              where: art.location_name,
+              scene: sceneIdForArtifact(art),
+              color: planetColor(art),
+              srPrefix: `${t.toc_chapter} ${n}: `
+            });
+          })
+          .join("") +
+        item({
+          n: 5,
+          has: state.badgeUnlocked,
+          locked: !state.badgeUnlocked && !allStamps(),
+          name: t.sig_artemis,
+          where: t.sig_artemis_where,
+          scene: "artemis",
+          color: "#10B981",
+          srPrefix: ""
+        });
     }
 
     const more = document.getElementById("signal-more");
     if (more) {
       more.innerHTML = [
-        ["artemis", t.scene_title_artemis],
         ["guardian", t.scene_title_guardian],
         ["teacher", t.scene_title_teacher],
         ["sources", t.scene_title_sources]
@@ -368,6 +432,11 @@
 
     setTitle("start", t.scene_title_start);
     setTitle("signals", t.scene_title_signals);
+    const storyTitles = t.story_titles || {};
+    document.querySelectorAll("[data-story]").forEach((scene) => {
+      const seq = scene.getAttribute("data-story");
+      setTitle(scene.getAttribute("data-scene"), storyTitles[seq] || t.story_label);
+    });
     DATA.artifacts.forEach((art) => {
       setTitle(sceneIdForArtifact(art), L(art, "name"), `${t.toc_chapter} ${Number(art.chapter_num)}`);
     });
@@ -450,55 +519,24 @@
     }
   }
 
-  function chapterHtml(art) {
-    const t = tr();
-    const isMoon = art.celestial_body === "Moon";
-    const n = Number(art.chapter_num);
-    const name = L(art, "name");
-    const funcStatus = L(art, "functionality_status");
-    const paramName = L(art.slider_config, "parameter_name");
-    const currentVal = state.sliderValues[art.id];
-    const activeTab = state.activeTabs[art.id] || "machine";
-    const isOpen = !!state.openAccordions[art.id];
-    const showMachine = activeTab === "machine" || activeTab === "both";
-    const showDossier = activeTab === "dossier" || activeTab === "both";
+  /* ---------- Hồ sơ Khoa học: bộ mô phỏng cũ + hồ sơ + nguồn (không có lá thư) ---------- */
 
-    const nv = art.narrative_voice;
-    const ad = art.archaeologist_dossier;
-    const epNarrative = state.lang === "vi" ? `${nv.epistemic_label_en} • ${nv.epistemic_label_vi}` : nv.epistemic_label_en;
-    const epDossier = state.lang === "vi" ? `${ad.epistemic_label_en} • ${ad.epistemic_label_vi}` : ad.epistemic_label_en;
-    const discrepancyNote = L(ad, "discrepancy_note");
-
-    const links = ad.source_links
+  function sourceLinksHtml(art) {
+    return art.archaeologist_dossier.source_links
       .map(
         (lnk) =>
           `<li><a href="${lnk.url}" target="_blank" rel="noopener noreferrer"><span>${lnk.label}</span><span aria-hidden="true">↗</span></a></li>`
       )
       .join("");
+  }
 
-    const tabs = [
-      ["machine", t.tab_machine],
-      ["dossier", t.tab_dossier],
-      ["both", t.view_both_btn]
-    ]
-      .map(
-        ([key, label]) =>
-          `<button type="button" class="seg-btn" data-tab-btn="${art.id}" data-tab-target="${key}" aria-pressed="${activeTab === key}">${label}</button>`
-      )
-      .join("");
-
+  function instrumentHtml(art) {
+    const t = tr();
+    const paramName = L(art.slider_config, "parameter_name");
+    const currentVal = state.sliderValues[art.id];
+    const isOpen = !!state.openAccordions[art.id];
+    const discrepancyNote = L(art.archaeologist_dossier, "discrepancy_note");
     return `
-      <article id="chapter-${art.id}" class="chapter" style="--c: ${planetColor(art)};">
-        <header class="chapter-head">
-          <span class="chapter-num" aria-hidden="true">${n}</span>
-          <span class="chapter-world">${isMoon ? t.moon_badge : t.mars_badge}</span>
-          <h2 class="chapter-name" data-scene-heading tabindex="-1"><span class="sr-only">${t.toc_chapter} ${n}: </span>${name}</h2>
-          <dl class="chapter-facts">
-            <div><dt>${t.cospar_label}</dt><dd class="num">${art.cospar_id}</dd></div>
-            <div><dt>${t.location_label}</dt><dd>${art.location_name}</dd></div>
-          </dl>
-        </header>
-
         <section class="chapter-instrument instrument" aria-label="${t.telemetry_station_title}">
           <div class="instrument-view">
             <img src="${art.media.primary_image_url}" alt="" loading="lazy" onerror="this.style.display='none'"
@@ -508,7 +546,6 @@
           </div>
           <div id="telemetry-metrics-${art.id}" class="readouts"></div>
           <div class="instrument-body">
-            <p id="stamp-status-${art.id}" class="stamp-hint"></p>
             <div>
               <label for="slider-${art.id}" class="instrument-label">${paramName}</label>
               <input id="slider-${art.id}" type="range"
@@ -535,74 +572,58 @@
                 <h4>${t.where_number_formula_title}</h4>
                 <p>${discrepancyNote}</p>
                 <h4>${t.where_number_sources_title}</h4>
-                <ul class="link-list">${links}</ul>
+                <ul class="link-list">${sourceLinksHtml(art)}</ul>
               </div>
             </div>
           </div>
-        </section>
-
-        <div class="chapter-voices">
-          <div class="segmented voice-switch" role="group" aria-label="${t.voice_switch_label}">${tabs}</div>
-
-          <section id="panel-machine-${art.id}" class="voice-panel" ${showMachine ? "" : "hidden"}>
-            <span class="epistemic">${epNarrative}</span>
-            <p class="letter-route">${t.postmark_from} <strong>${art.location_name}</strong> ${t.postmark_to}</p>
-            <blockquote class="letter">${L(nv, "letter")}</blockquote>
-          </section>
-
-          <section id="panel-dossier-${art.id}" class="voice-panel" ${showDossier ? "" : "hidden"}>
-            <span class="epistemic epistemic--dossier">${epDossier}</span>
-            <div class="dossier">
-              <div>
-                <h3>${t.dossier_sec1_title}</h3>
-                <p>${L(ad, "how_it_operated")}</p>
-              </div>
-              <div>
-                <h3>${t.dossier_sec2_title}</h3>
-                <p class="dossier-state">${funcStatus}</p>
-                <p>${discrepancyNote}</p>
-              </div>
-              <div>
-                <h3>${t.dossier_sec3_title}</h3>
-                <p>${L(ad, "conservation_law")}</p>
-                <ul class="link-list">${links}</ul>
-              </div>
-            </div>
-          </section>
-        </div>
-      </article>
-    `;
+        </section>`;
   }
 
-  /** Render một chương vào cảnh của nó và gắn sự kiện chỉ cho chương đó. */
-  function renderChapter(art) {
-    const slot = document.querySelector(`[data-chapter-slot="${art.id}"]`);
-    if (!slot) return;
-    slot.innerHTML = chapterHtml(art);
-    updateChapterTelemetryDOM(art.id);
-    renderStampHint(art.id);
+  function dossierHtml(art) {
+    const t = tr();
+    const ad = art.archaeologist_dossier;
+    const epDossier = state.lang === "vi" ? `${ad.epistemic_label_en} • ${ad.epistemic_label_vi}` : ad.epistemic_label_en;
+    return `
+        <section class="voice-panel">
+          <span class="epistemic epistemic--dossier">${epDossier}</span>
+          <div class="dossier">
+            <div>
+              <h3>${t.dossier_sec1_title}</h3>
+              <p>${L(ad, "how_it_operated")}</p>
+            </div>
+            <div>
+              <h3>${t.dossier_sec2_title}</h3>
+              <p class="dossier-state">${L(art, "functionality_status")}</p>
+              <p>${L(ad, "discrepancy_note")}</p>
+            </div>
+            <div>
+              <h3>${t.dossier_sec3_title}</h3>
+              <p>${L(ad, "conservation_law")}</p>
+              <ul class="link-list">${sourceLinksHtml(art)}</ul>
+            </div>
+          </div>
+        </section>`;
+  }
 
-    const slider = slot.querySelector("[data-artifact-slider]");
+  /** Gắn sự kiện cho bộ mô phỏng trong popup (thanh trượt, mốc, "Số này lấy từ đâu"). Không làm thắng game. */
+  function bindInstrument(root, art) {
+    const slider = root.querySelector("[data-artifact-slider]");
     if (slider) {
       slider.addEventListener("input", (e) => {
         state.sliderValues[art.id] = Number(e.target.value);
-        collectStamp(art.id);
         updateChapterTelemetryDOM(art.id);
       });
     }
-
-    slot.querySelectorAll("[data-artifact-preset]").forEach((btn) => {
+    root.querySelectorAll("[data-artifact-preset]").forEach((btn) => {
       btn.addEventListener("click", () => {
         const val = Number(btn.getAttribute("data-preset-val"));
         state.sliderValues[art.id] = val;
         const s = document.getElementById(`slider-${art.id}`);
         if (s) s.value = val;
-        collectStamp(art.id);
         updateChapterTelemetryDOM(art.id);
       });
     });
-
-    const accBtn = slot.querySelector("[data-accordion-toggle]");
+    const accBtn = root.querySelector("[data-accordion-toggle]");
     if (accBtn) {
       accBtn.addEventListener("click", () => {
         const open = !state.openAccordions[art.id];
@@ -612,29 +633,240 @@
         accBtn.setAttribute("aria-expanded", String(open));
       });
     }
+  }
 
-    slot.querySelectorAll("[data-tab-btn]").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const target = btn.getAttribute("data-tab-target");
-        state.activeTabs[art.id] = target;
-        renderChapter(art); // chỉ render lại chương này, cảnh hiện tại giữ nguyên
-        const again = slot.querySelector(`[data-tab-btn][data-tab-target="${target}"]`);
-        if (again) again.focus();
-      });
+  /* ---------- Cảnh chương: trạng thái "game" (chơi) hoặc "letter" (thư + thẻ luật) ---------- */
+
+  function chapterHeadHtml(art, headingText) {
+    const t = tr();
+    const n = Number(art.chapter_num);
+    const isMoon = art.celestial_body === "Moon";
+    return `
+        <header class="chapter-head game-head">
+          <span class="chapter-num" aria-hidden="true">${n}</span>
+          <span class="chapter-world">${isMoon ? t.moon_badge : t.mars_badge}</span>
+          <h2 class="chapter-name" data-scene-heading tabindex="-1"><span class="sr-only">${t.toc_chapter} ${n}: </span>${headingText}</h2>
+        </header>`;
+  }
+
+  function gameShellHtml(art) {
+    const t = tr();
+    const g = FLOW.games[art.id] || {};
+    const won = !!state.collectedStamps[art.id];
+    return `
+      <article id="chapter-${art.id}" class="chapter game" style="--c: ${planetColor(art)};">
+        <div class="game-intro">
+          ${chapterHeadHtml(art, L(art, "name"))}
+          <blockquote class="game-cue">
+            <p>${L(g, "cue")}</p>
+            <footer>Columbina</footer>
+          </blockquote>
+        </div>
+        <div class="game-play" data-game-play></div>
+        <div class="game-foot">
+          ${won
+            ? `<button type="button" class="link-quiet" data-game-reread>${t.game_reread}</button>`
+            : `<button type="button" class="btn-ghost game-skip" data-game-skip title="${t.skip_game_hint}">${t.skip_game}</button>
+               <span class="game-skip-hint">${t.skip_game_hint}</span>`}
+        </div>
+      </article>`;
+  }
+
+  function letterHtml(art) {
+    const t = tr();
+    const nv = art.narrative_voice;
+    const rule = FLOW.rules[art.id];
+    const epNarrative = state.lang === "vi" ? `${nv.epistemic_label_en} • ${nv.epistemic_label_vi}` : nv.epistemic_label_en;
+    return `
+      <article id="chapter-${art.id}" class="chapter letter-view" style="--c: ${planetColor(art)};">
+        ${chapterHeadHtml(art, `${t.letter_from} ${shortPlace(art)}`)}
+        <div class="letter-body">
+          <div class="seal" aria-hidden="true"><span class="seal-half seal-half--l"></span><span class="seal-half seal-half--r"></span></div>
+          <span class="epistemic">${epNarrative}</span>
+          <p class="letter-route">${t.postmark_from} <strong>${art.location_name}</strong> ${t.postmark_to}</p>
+          <blockquote class="letter">${L(nv, "letter")}</blockquote>
+          ${rule
+            ? `<div class="rule-stamp rule-stamp--earned" style="--c: ${planetColor(art)};">
+                 <span class="rule-stamp-n num" aria-hidden="true">${Number(art.chapter_num)}</span>
+                 <span class="rule-stamp-k">${t.rule_new}</span>
+                 <strong class="rule-stamp-title">${L(rule, "title")}</strong>
+                 <span class="rule-stamp-sub">${L(rule, "sub")}</span>
+               </div>`
+            : ""}
+          <div class="letter-actions">
+            <button type="button" class="btn-signal" data-letter-next>${t.letter_continue}</button>
+            <button type="button" class="link-quiet" data-letter-replay>${t.game_replay}</button>
+          </div>
+        </div>
+      </article>`;
+  }
+
+  /** "Mare Tranquillitatis (Sea of Tranquility — …)" → "Mare Tranquillitatis" (cho tiêu đề thư). */
+  function shortPlace(art) {
+    return String(art.location_name || "").split(/[(,]/)[0].trim() || L(art, "name");
+  }
+
+  /** Render một chương vào cảnh của nó theo trạng thái hiện tại. */
+  function renderChapter(art, focus) {
+    const slot = document.querySelector(`[data-chapter-slot="${art.id}"]`);
+    if (!slot) return;
+    const view = state.chapterView[art.id] || "game";
+
+    if (view === "letter") {
+      slot.innerHTML = letterHtml(art);
+      const nextBtn = slot.querySelector("[data-letter-next]");
+      if (nextBtn) nextBtn.addEventListener("click", () => window.LunamarisBook && window.LunamarisBook.next());
+      const replay = slot.querySelector("[data-letter-replay]");
+      if (replay) {
+        replay.addEventListener("click", () => {
+          if (window.LunamarisGames) window.LunamarisGames.reset(art.id);
+          setChapterView(art, "game", true);
+        });
+      }
+    } else {
+      slot.innerHTML = gameShellHtml(art);
+      const play = slot.querySelector("[data-game-play]");
+      if (window.LunamarisGames && play) {
+        window.LunamarisGames.mount(art, play, {
+          lang: state.lang,
+          t: tr(),
+          onOpenLetter: () => {
+            completeGame(art.id);
+            setChapterView(art, "letter", true);
+          }
+        });
+      }
+      const skip = slot.querySelector("[data-game-skip]");
+      if (skip) {
+        skip.addEventListener("click", () => {
+          completeGame(art.id);
+          setChapterView(art, "letter", true);
+        });
+      }
+      const reread = slot.querySelector("[data-game-reread]");
+      if (reread) reread.addEventListener("click", () => setChapterView(art, "letter", true));
+    }
+
+    if (focus) {
+      const sc = slot.closest(".scene-scroll");
+      if (sc) sc.scrollTop = 0;
+      const h = slot.querySelector("[data-scene-heading]");
+      if (h) h.focus({ preventScroll: true });
+    }
+  }
+
+  function setChapterView(art, view, focus) {
+    state.chapterView[art.id] = view;
+    updateGates();
+    renderChapter(art, focus);
+  }
+
+  /** Render cả 4 chương. */
+  function renderChapters() {
+    DATA.artifacts.forEach((art) => renderChapter(art));
+    updateGates();
+  }
+
+  /* ---------- Game 5: Trạm Artemis IV ---------- */
+
+  function renderArtemisGame() {
+    const t = tr();
+    setTxt("artemis-game-title", t.art_title);
+    setTxt("artemis-game-lead", t.art_lead);
+    setTxt("artemis-game-skip", t.skip_game);
+    const artSkip = document.getElementById("artemis-game-skip");
+    if (artSkip) artSkip.hidden = state.badgeUnlocked;
+    const slot = document.getElementById("artemis-game");
+    if (!slot || !window.LunamarisGames) return;
+    window.LunamarisGames.mountArtemis(slot, {
+      lang: state.lang,
+      t,
+      landed: state.badgeUnlocked,
+      cards: DATA.artifacts.map((art) => ({
+        id: art.id,
+        n: Number(art.chapter_num),
+        color: planetColor(art),
+        rule: FLOW.rules[art.id],
+        earned: !!state.collectedStamps[art.id]
+      })),
+      onComplete: finishArtemis
     });
   }
 
-  /** Render cả 4 chương; chương bị bộ lọc ẩn thì cảnh của nó gắn data-skip. */
-  function renderChapters() {
-    DATA.artifacts.forEach((art) => {
-      const scene = document.getElementById(`scene-${sceneIdForArtifact(art)}`);
-      const visible = state.filter === "All" || art.celestial_body === state.filter;
-      if (scene) {
-        if (visible) scene.removeAttribute("data-skip");
-        else scene.setAttribute("data-skip", "");
-      }
-      renderChapter(art);
-    });
+  function finishArtemis() {
+    state.badgeUnlocked = true;
+    state.selectedZoneId = "zone-green";
+    saveProgress();
+    renderCertificateSection();
+    renderSignals();
+    renderArtemisGame();
+    updateGates();
+    notifyBook();
+    if (window.LunamarisBook) window.LunamarisBook.next();
+  }
+
+  /* ---------- Popup Hồ sơ Khoa học ---------- */
+
+  function currentArtifact() {
+    const cur = window.LunamarisBook ? window.LunamarisBook.current() : null;
+    return DATA.artifacts.find((a) => sceneIdForArtifact(a) === cur) || null;
+  }
+
+  function renderDossierSheet() {
+    const t = tr();
+    const body = document.getElementById("dossier-sheet-body");
+    if (!body) return;
+    const art = currentArtifact();
+    setTxt("dossier-sheet-title", art ? `${t.dossier_title}: ${L(art, "name")}` : `${t.dossier_title}: ${t.scene_title_artemis}`);
+    if (art) {
+      body.innerHTML = `<div class="dossier-grid" style="--c: ${planetColor(art)};">${instrumentHtml(art)}${dossierHtml(art)}</div>`;
+      updateChapterTelemetryDOM(art.id);
+      bindInstrument(body, art);
+    } else {
+      // Trạm mặt cắt cũ (khoảng cách hạ cánh) — chỉ để khám phá, không mở khóa huy hiệu
+      body.innerHTML = `
+        <div class="stack">
+          <header class="scene-head">
+            <p id="artemis-tag" class="scene-context"></p>
+            <h3 id="artemis-title" class="sub-title"></h3>
+            <p id="artemis-subtitle" class="scene-lead"></p>
+          </header>
+          <p id="artemis-physics-callout" class="note"></p>
+          <div class="instrument">
+            <div id="artemis-svg-container" class="instrument-view"></div>
+            <div class="instrument-body">
+              <p id="artemis-select-prompt" class="instrument-label"></p>
+              <div id="artemis-zone-buttons" class="zone-grid"></div>
+            </div>
+          </div>
+          <div id="artemis-outcome-panel"></div>
+        </div>`;
+      renderDecisionStation();
+    }
+  }
+
+  function setDossierOpen(open) {
+    const sheet = document.getElementById("dossier-sheet");
+    const btn = document.getElementById("dossier-btn");
+    if (!sheet || !btn) return;
+    const t = tr();
+    state.dossierOpen = open;
+    if (open) {
+      if (window.LunamarisGames) window.LunamarisGames.pause();
+      renderDossierSheet();
+      sheet.hidden = false;
+      document.body.classList.add("dossier-open");
+      const sc = sheet.querySelector(".dossier-sheet-scroll");
+      if (sc) sc.scrollTop = 0;
+      const h = document.getElementById("dossier-sheet-title");
+      if (h) h.focus({ preventScroll: true });
+    } else {
+      sheet.hidden = true;
+      document.body.classList.remove("dossier-open");
+    }
+    btn.setAttribute("aria-expanded", String(open));
+    btn.setAttribute("aria-label", open ? t.dossier_close : t.dossier_btn);
+    setTxt("dossier-btn-label", open ? t.dossier_close : t.dossier_btn);
   }
 
   /* ===========================================================================
@@ -674,12 +906,10 @@
 
       btnsBox.querySelectorAll("[data-zone-id]").forEach((btn) => {
         btn.addEventListener("click", () => {
-          const zId = btn.getAttribute("data-zone-id");
-          state.selectedZoneId = zId;
-          const zObj = ds.zones.find((item) => item.id === zId);
-          if (zObj && zObj.unlocks_badge) state.badgeUnlocked = true;
+          // Trong popup Hồ sơ Khoa học: chỉ để khám phá — huy hiệu mở ở Game 5 (bản đồ 4 vùng)
+          state.selectedZoneId = btn.getAttribute("data-zone-id");
           renderDecisionStation();
-          renderCertificateSection();
+          const zId = state.selectedZoneId;
           const again = document.querySelector(`#artemis-zone-buttons [data-zone-id="${zId}"]`);
           if (again) again.focus();
         });
@@ -747,8 +977,13 @@
         quickBtn.addEventListener("click", () => {
           state.selectedZoneId = "zone-green";
           state.badgeUnlocked = true;
+          saveProgress();
           renderDecisionStation();
           renderCertificateSection();
+          renderArtemisGame();
+          renderSignals();
+          updateGates();
+          notifyBook();
         });
       }
     }
@@ -885,14 +1120,36 @@
     renderSignals();
     renderChapters();
     renderDecisionStation();
+    renderArtemisGame();
     renderCertificateSection();
     renderClassroomAndFooter();
     renderSceneTitles();
+    if (state.dossierOpen) renderDossierSheet();
+    setTxt("dossier-btn-label", state.dossierOpen ? tr().dossier_close : tr().dossier_btn);
     notifyBook();
   }
 
   function initApp() {
     renderAll();
+
+    // Nút "Hồ sơ Khoa học" (góc dưới phải cảnh game) ⇄ X đóng, cùng một chỗ
+    const dossierBtn = document.getElementById("dossier-btn");
+    if (dossierBtn) dossierBtn.addEventListener("click", () => setDossierOpen(!state.dossierOpen));
+    const artSkip = document.getElementById("artemis-game-skip");
+    if (artSkip) artSkip.addEventListener("click", finishArtemis);
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && state.dossierOpen) {
+        e.preventDefault();
+        setDossierOpen(false);
+        if (dossierBtn) dossierBtn.focus();
+      }
+    });
+    // Đổi cảnh: đóng popup, cập nhật trạng thái game/thư cho CSS
+    window.addEventListener("hashchange", () => {
+      if (state.dossierOpen) setDossierOpen(false);
+      setTimeout(syncSceneView, 0);
+    });
+    setTimeout(syncSceneView, 0);
 
     ["en", "vi"].forEach((lang) => {
       const b = document.getElementById(`lang-btn-${lang}`);

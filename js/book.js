@@ -19,6 +19,7 @@
 
   var STORE_SCENE = "lunamaris_last_scene";
   var STORE_MODE = "lunamaris_reading_mode";
+  var STORE_SEEN = "lunamaris_seen_intro";
   var TURN_FALLBACK_MS = 900;
   // Link cũ từ giao diện "quyển sách" vẫn mở đúng cảnh mới
   var ALIASES = { cover: "start", toc: "signals", "hero-top": "start" };
@@ -57,9 +58,23 @@
     }
   }
 
-  /** Chỉ ghi nhớ từ chương 1 trở đi, để màn mở đầu còn gợi ý "Tiếp tục ở …". */
+  /** Chỉ ghi nhớ từ chương 1 trở đi (không tính truyện), để màn mở đầu còn gợi ý "Tiếp tục ở …". */
   function rememberScene(id) {
-    if (indexOf(id) > 1) store(STORE_SCENE, id);
+    var sc = sceneById(id);
+    if (!sc || sc.hasAttribute("data-story") || id === "start" || id === "signals") return;
+    store(STORE_SCENE, id);
+  }
+
+  /** Loại cảnh cho CSS: story (truyện) | game (chương & Artemis) | page. */
+  function kindOf(scene) {
+    if (!scene) return "page";
+    if (scene.hasAttribute("data-story")) return "story";
+    return scene.getAttribute("data-kind") || "page";
+  }
+
+  function markCurrent(scene) {
+    body.setAttribute("data-scene-kind", kindOf(scene));
+    body.setAttribute("data-scene-view", (scene && scene.getAttribute("data-view")) || "game");
   }
 
   function dict() {
@@ -163,6 +178,8 @@
   }
 
   function dialogOpen() {
+    var ds = document.getElementById("dossier-sheet");
+    if (ds && !ds.hidden) return true;
     var si = document.getElementById("si-disclosure-modal");
     if (si && !si.classList.contains("hidden")) return true;
     var nb = document.getElementById("notebook-qr-panel");
@@ -209,8 +226,9 @@
   }
 
   function mountStory(scene) {
+    // Mỗi lần vào cảnh truyện đều phát lại từ câu đầu
     var seq = scene.getAttribute("data-story");
-    if (!seq || mountedStories[seq] || !storyReady(seq)) return;
+    if (!seq || !storyReady(seq)) return;
     var S = window.LunamarisStory;
     if (typeof S.mount !== "function") return;
     mountedStories[seq] = true;
@@ -234,6 +252,7 @@
     var prevScene = currentId ? sceneById(currentId) : null;
     currentId = id;
     rememberScene(id);
+    markCurrent(nextScene);
 
     if (!paged) {
       var target = opts.target || nextScene;
@@ -318,8 +337,37 @@
     return true;
   }
 
+  /** Cảnh game chưa xong: không cho "Tiếp"/vuốt qua; nhắc người chơi bấm Bỏ qua. */
+  function gated() {
+    var cur = sceneById(currentId);
+    return !!(cur && cur.getAttribute("data-gate") === "locked");
+  }
+
+  function nudgeGate() {
+    var cur = sceneById(currentId);
+    var status = document.getElementById("pager-status");
+    if (status) status.textContent = dict().gate_locked || "";
+    if (!cur) return;
+    cur.classList.remove("gate-nudge");
+    void cur.offsetWidth;
+    cur.classList.add("gate-nudge");
+    var note = document.getElementById("gate-toast");
+    if (note) {
+      note.textContent = dict().gate_locked || "";
+      note.hidden = false;
+      clearTimeout(nudgeGate.timer);
+      nudgeGate.timer = setTimeout(function () {
+        note.hidden = true;
+      }, 2600);
+    }
+  }
+
   function next() {
     if (finishTurn) return; // đang lật: bỏ qua thao tác dồn dập
+    if (gated()) {
+      nudgeGate();
+      return;
+    }
     var i = indexOf(currentId);
     if (i !== -1 && i < order.length - 1) goTo(idOf(order[i + 1]));
   }
@@ -435,6 +483,7 @@
     }
     if (nextBtn) {
       nextBtn.disabled = !nextScene;
+      nextBtn.classList.toggle("is-gated", gated());
       var nextText = nextScene ? fmt(t.pager_next_to || "Next: {name}", { name: sceneTitle(nextScene).text }) : t.pager_next || "Next";
       nextBtn.setAttribute(
         "aria-label",
@@ -467,7 +516,7 @@
     if (cont) {
       var last = load(STORE_SCENE);
       var li = indexOf(last);
-      var offerContinue = !!last && li > 1 && last !== currentId;
+      var offerContinue = !!last && li !== -1 && last !== currentId;
       cont.hidden = !offerContinue;
       if (offerContinue) {
         cont.href = "#" + last;
@@ -520,6 +569,7 @@
           if (id && id !== currentId) {
             currentId = id;
             rememberScene(id);
+            markCurrent(en.target);
             updateChrome();
           }
         });
@@ -716,8 +766,11 @@
     computeOrder();
     buildSignalPath();
 
+    // Lần đầu vào trang (chưa xem mở đầu, không có link vào thẳng): phát truyện mở đầu.
+    // Các lần sau: vào màn bắt đầu.
     var initial = visibleNear(resolve(location.hash));
-    var start = initial || firstId();
+    var seenIntro = !!load(STORE_SEEN);
+    var start = initial || (seenIntro ? visibleNear("start") : firstId()) || firstId();
 
     body.classList.toggle("book-paged", paged);
     if (paged) {

@@ -26,18 +26,21 @@ Dự án còn tích hợp 2 Module thực chiến độc lập:
 
 ```text
 Lunamaris_NASA_Hackathon_2026/
-├── index.html                           # Các cảnh toàn màn hình: bật thu sóng, 4 tín hiệu (bản đồ), 4 chương, Artemis, Guardian, Giáo viên, Nguồn
+├── index.html                           # Các cảnh toàn màn hình: truyện mở đầu, bật thu sóng, 4 tín hiệu, 4 game + thư, truyện chuyển cảnh, Game 5 Artemis, truyện kết, Guardian, Giáo viên, Nguồn; nút + popup "Hồ sơ Khoa học"
 ├── css/
 │   └── styles.css                       # Hệ thống thiết kế NASA Space Apps Palette, cảnh + đường chân trời, hiệu ứng chuyển cảnh, Keyframes SVG
 ├── data/
 │   └── content.json                     # Dữ liệu chuẩn hóa gốc (Song ngữ EN/VI) đối chiếu NASA Open Data
 ├── js/
 │   ├── data.js                          # Mô-đun nạp dữ liệu Zero-CORS (LUNAMARIS_DATA & Từ điển UI_I18N)
+│   ├── flow-data.js                     # Lời thoại các chuỗi truyện, cấu hình 4 game, 4 thẻ luật, chữ giao diện mới (EN/VI)
 │   ├── svg-engine.js                    # Công thức Toán học & Đồ họa Interactive SVG cho 4 Chương Di vật
-│   ├── decision-station.js              # Sơ đồ Mặt cắt Đạn đạo Chân không & 4 Vùng Bãi đáp Artemis
+│   ├── decision-station.js              # Sơ đồ Mặt cắt Đạn đạo Chân không (nằm trong popup Hồ sơ Khoa học của Artemis)
 │   ├── certificate.js                   # Bộ tạo Thẻ Chứng nhận Space Heritage Guardian (Zero-PII Canvas PNG)
-│   ├── app.js                           # Điều phối State, Mission Stamps, Bộ lọc Hành tinh, Chuyển đổi EN/VI
-│   └── book.js                          # Bộ máy chuyển cảnh: cảnh mới vào từ phải, vuốt/phím ←→, hash #start #signals #ch1…, đường tín hiệu, chế độ đọc cuộn
+│   ├── story.js                         # Bộ phát truyện chạm-để-sang (chữ phủ trên nền cảnh, ảnh tùy chọn)
+│   ├── games.js                         # 5 trò chơi: giữ laser, 3 thanh trượt tới mục tiêu, bản đồ 4 vùng Artemis IV
+│   ├── app.js                           # Điều phối State, tiến trình (localStorage), thẻ luật, cảnh game/thư, popup Hồ sơ, EN/VI
+│   └── book.js                          # Bộ máy chuyển cảnh: cảnh mới vào từ phải, vuốt/phím ←→, hash #start #signals #ch1…, chặn "Tiếp" khi chưa xong game, chế độ đọc cuộn
 ├── types/
 │   └── dataset.types.ts                 # Kiểu dữ liệu TypeScript chuẩn hóa khớp 1:1 với NASA Open Data
 ├── docs/
