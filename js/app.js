@@ -22,7 +22,7 @@
       "opportunity-rover": false,
       "ingenuity-helicopter": false
     },
-    selectedZoneId: "zone-orange", // Default to 155 m historical Apollo 12 comparison
+    selectedZoneId: "zone-orange", // Default to 180 m historical Apollo 12 comparison
     badgeUnlocked: false,
     selectedPledgeIndex: 0,
     guardianName: "",
