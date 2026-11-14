@@ -3,7 +3,8 @@
 **Cuộc thi:** 2026 NASA International Space Apps Challenge  
 **Đề tài:** *Abandoned but not Forgotten: Storytelling about NASA's Discarded Equipment on the Moon and Mars*  
 **Trạm neo tọa độ địa phương:** Hanoi Ground Receiving Station, Vietnam (`21.0285° N, 105.8542° E`)  
-**Repository:** [Lunamaris_NASA_Hackathon_2026](https://github.com/TrongVu249/Lunamaris_NASA_Hackathon_2026.git)
+**Repository:** [Lunamaris_NASA_Hackathon_2026](https://github.com/TrongVu249/Lunamaris_NASA_Hackathon_2026.git)  
+**Live Demo:** 🚀 [lunamaris.vercel.app](https://lunamaris.vercel.app)
 
 ---
 
@@ -40,10 +41,21 @@ Lunamaris_NASA_Hackathon_2026/
 │   └── dataset.types.ts                 # Kiểu dữ liệu TypeScript chuẩn hóa khớp 1:1 với NASA Open Data
 ├── dac_ta_ky_thuat_lunamaris.md         # Tài liệu Đặc tả Kỹ thuật & Sản phẩm (PRD Chi tiết)
 ├── Huong_Dan_Lay_Nguon_Du_Lieu_NASA_Lunamaris.docx # Hướng dẫn khai thác tài liệu & ảnh gốc NASA
+├── .vercelignore                        # Loại tài liệu nội bộ khỏi bản deploy Vercel
 └── README.md                            # Tài liệu hướng dẫn dự án
 ```
 
 > **Chạy ngay không cần cài đặt (Zero-CORS Architecture):** Bạn có thể nhấp đúp mở trực tiếp file `index.html` trên bất kỳ trình duyệt nào (Chrome, Edge, Firefox, Safari) hoặc triển khai thẳng lên GitHub Pages / Vercel / Netlify mà không cần Node.js build step.
+
+### Bản triển khai trên Vercel
+
+Website đã được triển khai tại **https://lunamaris.vercel.app**. Để cập nhật bản production sau khi chỉnh sửa:
+
+```bash
+npx vercel deploy --prod
+```
+
+> Các tài liệu nội bộ (`*.docx`, `dac_ta_ky_thuat_lunamaris.md`, `types/`, `.deepeval/`) được loại khỏi bản deploy qua file `.vercelignore`.
 
 ### Chạy qua Local HTTP Server (Tùy chọn)
 
