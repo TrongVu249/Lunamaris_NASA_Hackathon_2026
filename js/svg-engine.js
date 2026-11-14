@@ -138,17 +138,17 @@
         statusText: lang === "vi" ? statusVi : statusEn,
         metrics: [
           {
-            label: lang === "vi" ? "SỐ NĂM HOẠT ĐỘNG (Δt)" : "ACTIVE YEARS (Δt)",
+            label: lang === "vi" ? "Số năm hoạt động (Δt)" : "Active years (Δt)",
             value: `${deltaT} ${lang === "vi" ? "năm" : "yrs"}`,
             sub: `${Y} − 1969`
           },
           {
-            label: lang === "vi" ? "ĐỘ TRÔI QUỸ ĐẠO (Δd)" : "LUNAR RECESSION (Δd)",
+            label: lang === "vi" ? "Độ trôi quỹ đạo (Δd)" : "Lunar recession (Δd)",
             value: `+${deltaDCm} cm`,
             sub: `~${deltaDMeters} m (3.8 cm/yr)`
           },
           {
-            label: lang === "vi" ? "KHỨ HỒI LASER" : "LASER ROUND-TRIP",
+            label: lang === "vi" ? "Khứ hồi laser" : "Laser round trip",
             value: `2.56 s`,
             sub: `${prismCount}`
           }
@@ -343,17 +343,17 @@
         statusText: lang === "vi" ? surfaceStateVi : surfaceStateEn,
         metrics: [
           {
-            label: lang === "vi" ? "KHOẢNG CÁCH HẠ CÁNH (D)" : "SEPARATION DISTANCE (D)",
+            label: lang === "vi" ? "Khoảng cách hạ cánh (D)" : "Separation distance (D)",
             value: `${D} m`,
             sub: D === 180 ? "NASA: ~180 m (197 yards)" : "Range: 50 – 2,500 m"
           },
           {
-            label: lang === "vi" ? "VẬN TỐC HẠT BỤI (v)" : "EJECTA VELOCITY (v)",
+            label: lang === "vi" ? "Vận tốc hạt bụi (v)" : "Ejecta velocity (v)",
             value: velocityStr,
             sub: "1/6g Vacuum Ballistics"
           },
           {
-            label: lang === "vi" ? "BỀ MẶT CAMERA SURVEYOR 3" : "SURVEYOR 3 SURFACE",
+            label: lang === "vi" ? "Bề mặt camera Surveyor 3" : "Surveyor 3 surface",
             value: D >= 2000 ? "Pristine White" : D >= 500 ? "Fine Dust Film" : "Tan + Pitted",
             sub: "NASA SP-284 Verified"
           }
@@ -503,17 +503,17 @@
         statusText: lang === "vi" ? stateVi : stateEn,
         metrics: [
           {
-            label: lang === "vi" ? "ĐỘ MỜ KHÍ QUYỂN (τ)" : "OPTICAL DEPTH (Tau τ)",
+            label: lang === "vi" ? "Độ mờ khí quyển (τ)" : "Optical depth (τ)",
             value: `τ = ${tau.toFixed(1)}`,
             sub: tau >= 10.8 ? "Sol 5111 Historic Peak" : `Direct Sun: ~${sunTransmission}%`
           },
           {
-            label: lang === "vi" ? "CÔNG SUẤT ĐIỆN (E)" : "SOLAR ENERGY (E)",
+            label: lang === "vi" ? "Công suất điện (E)" : "Solar energy (E)",
             value: `${wattHours} Wh/sol`,
             sub: `${batteryPct}% of 700 Wh Nominal`
           },
           {
-            label: lang === "vi" ? "QUÃNG ĐƯỜNG ĐÃ LĂN BÁNH" : "TOTAL ODOMETER",
+            label: lang === "vi" ? "Quãng đường đã lăn bánh" : "Total odometer",
             value: `45.16 km`,
             sub: "5,111 Sols (Design: 90 Sols)"
           }
@@ -664,17 +664,17 @@
         statusText: lang === "vi" ? phaseVi : phaseEn,
         metrics: [
           {
-            label: lang === "vi" ? "CHUYẾN BAY & VÒNG QUAY" : "FLIGHT & ROTOR RPM",
+            label: lang === "vi" ? "Chuyến bay và vòng quay" : "Flight and rotor rpm",
             value: `Flight ${F}`,
             sub: rpmStr
           },
           {
-            label: lang === "vi" ? "TỔNG QUÃNG ĐƯỜNG BAY" : "CUMULATIVE DISTANCE",
+            label: lang === "vi" ? "Tổng quãng đường bay" : "Cumulative distance",
             value: distanceStr,
             sub: F === 72 ? "14× Design Target" : "1% Earth Air Density"
           },
           {
-            label: lang === "vi" ? "TỔNG THỜI GIAN BAY" : "CUMULATIVE FLIGHT TIME",
+            label: lang === "vi" ? "Tổng thời gian bay" : "Cumulative flight time",
             value: timeStr,
             sub: F === 72 ? "Stationary ~20 Yr Logger" : "Target: 5 Flights / 30 Sols"
           }
