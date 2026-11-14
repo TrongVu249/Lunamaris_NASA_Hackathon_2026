@@ -9,6 +9,15 @@
     content="Interactive Telemetry & Dual-Voice Storytelling about NASA's Forgotten Hardware on the Moon and Mars — Built for the 2026 NASA International Space Apps Challenge."
   />
 
+  <!-- [LOGO 2026-11-14] Logo chính thức của nhóm LUNAMARIS.
+       Dùng cho: (1) icon thẻ trình duyệt bên dưới, (2) icon cạnh chữ LUNAMARIS ở header.
+       File gốc 1054x1024 có nền caro giả trong suốt -> đã tách nền, cắt vuông,
+       xuất lại thành 5 file ở thư mục assets/. -->
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/favicon-192.png" />
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+
   <!-- [REDESIGN 2026-11-13 • A+B HYBRID] Đổi hệ chữ cho học sinh:
        Baloo 2 (tiêu đề tròn trịa), Nunito (nội dung dễ đọc),
        JetBrains Mono (chỉ dùng cho khoảnh khắc số liệu),
@@ -36,21 +45,20 @@
        ===================================================================== -->
   <header class="sticky top-0 z-50 bg-[#0e1120]/92 backdrop-blur-md border-b border-white/10">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
-      <!-- Trái: thương hiệu dự án (vector tự vẽ — không dùng logo NASA).
+      <!-- Trái: thương hiệu dự án (logo chính thức của nhóm — không dùng logo NASA).
            [HOME-BUTTON 2026-11-14] Logo kiêm nút "về hộp thư": bấm vào sẽ đóng
            tập phim đang mở và quay lại màn hình 4 lá thư, KHÔNG reset tiến độ
            (tem / sticker nằm trong state nên vẫn còn nguyên). -->
       <a href="#hero-top" id="brand-home-btn" class="flex items-center gap-2.5 group"
          title="Về hộp thư / Back to the mailbox"
          aria-label="LUNAMARIS — về hộp thư, giữ nguyên tiến độ / back to the mailbox, progress kept">
-        <div class="relative flex items-center justify-center w-8 h-8 rounded-lg bg-[#1b2136] border border-[#e7f434]/40">
-          <svg viewBox="0 0 24 24" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="3" fill="#e7f434" />
-            <path d="M4.93 4.93a10 10 0 0 1 14.14 0" stroke="#7fd4ff" />
-            <path d="M7.76 7.76a6 6 0 0 1 8.48 0" stroke="#e7f434" />
-            <path d="M19.07 19.07a10 10 0 0 1-14.14 0" stroke="#ff8a4c" />
-          </svg>
-        </div>
+        <img
+          src="assets/lunamaris-logo.png"
+          alt="LUNAMARIS"
+          width="40"
+          height="40"
+          class="w-10 h-10 sm:w-11 sm:h-11 rounded-full shrink-0 bg-[#1b2136] ring-1 ring-white/10 transition group-hover:ring-[#e7f434]/70"
+        />
         <div class="flex items-center gap-2">
           <span class="font-heading text-lg sm:text-xl font-extrabold tracking-wide text-[#f5f7ff] group-hover:text-[#e7f434] transition">
             LUNAMARIS
