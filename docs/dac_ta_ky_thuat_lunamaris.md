@@ -12,7 +12,8 @@
 ### 1.1. Ngăn xếp công nghệ (Tech Stack)
 - **Kiến trúc:** Ứng dụng web một trang, thiết kế cho điện thoại trước (mobile-first) và **dùng đầy đủ trên cả điện thoại lẫn máy tính**. Chạy hoàn toàn trên trình duyệt (client-side 100%), **không có backend hay database**.
 - **Công nghệ cốt lõi:** HTML5 ngữ nghĩa và **Vanilla JavaScript (ES6+)**, chia thành các module trong `js/`. **Không dùng React/Next/Vue** hay các thư viện UI lớn (Bootstrap, MUI).
-- **CSS:** Tailwind được **biên dịch sẵn bằng Tailwind Standalone CLI** (không cần Node.js) thành một file CSS đã commit, sau đó **bỏ hẳn Tailwind CDN**. CSS riêng của dự án nằm trong `css/styles.css`.
+- **CSS:** **Giữ Tailwind CSS qua CDN** (`cdn.tailwindcss.com`) như bản đang chạy, để không phải chuyển đổi gì trước Hard Freeze. CSS riêng của dự án (hiệu ứng, keyframes, vùng chạm, reduced-motion) nằm trong `css/styles.css`. Màu động sinh từ JS dùng inline `style`, không ghép tên class.
+  - *Để sau cuộc thi:* chuyển sang Tailwind biên dịch sẵn (Standalone CLI + bước build trên Vercel) để giảm tải script lúc đầu. Cách viết class không đổi.
 - **Đồ họa tương tác:** **Inline SVG kết hợp CSS transform/filter**, điều khiển qua sự kiện `input` của `<input type="range">` và qua Pointer Events. **Không dùng thư viện 3D, WebGL, canvas game hay game engine.** Canvas chỉ dùng để xuất thẻ Guardian ra PNG.
 - **Cơ chế dự phòng (Fallback):** Mỗi thanh trượt bắt buộc đi kèm 3–4 nút "Mốc trạng thái cố định" (Preset State Buttons). Bấm nút thì thanh trượt nhảy tới giá trị đó và giao diện cập nhật, để vẫn dùng được 100% khi thao tác kéo trên điện thoại bị kẹt.
 - **Dữ liệu:** `data/content.json` là **nguồn duy nhất**. `js/data.js` được sinh lại từ JSON này (để vẫn chạy khi mở file trực tiếp, không bị lỗi CORS). Không sửa tay số liệu trong `data.js`.
@@ -36,8 +37,8 @@ Các yêu cầu này áp dụng cho mọi module.
 | **Song ngữ** | Từ điển EN/VI trong `content.json`. Đổi ngôn ngữ tức thời, không tải lại trang, không làm mất tiến độ đang chơi. |
 | **Ghi nhớ trên máy** | Chỉ dùng `localStorage` (có bọc try/catch) để lưu `lunamaris_seen_intro`, chặng hiện tại và các thẻ luật đã nhận. **Không lưu tên, biệt danh hay bất kỳ dữ liệu cá nhân nào.** |
 | **Link vào thẳng** | `#ch1`…`#ch4`, `#artemis` bỏ qua phần truyện và mở thẳng chặng đó (dành cho giám khảo và giáo viên). |
-| **Hiệu năng** | Màn hình đầu (ảnh mở đầu đầu tiên và chữ) hiện trong **~1,5 s trên 4G**. Toàn bộ JS và CSS (chưa nén) dưới ~250 KB. Ảnh đặt `loading="lazy"` và ghi `width`/`height`. Luôn tải trước 1–2 ảnh truyện kế tiếp, và tải ngầm bộ ảnh chuyển tiếp của chặng sau trong lúc người chơi đang chơi. Lighthouse Mobile Performance đạt từ 85 trở lên. |
-| **Phông chữ** | Tự lưu font kèm web (WOFF2, chỉ giữ bộ ký tự Latin và tiếng Việt), dùng `font-display: swap` và `preload` cho font nội dung chính. Không gọi Google Fonts lúc chạy. |
+| **Hiệu năng** | Màn hình đầu (ảnh mở đầu đầu tiên và chữ) hiện trong **~1,5 s trên 4G**. JS và CSS của dự án (không tính Tailwind CDN) dưới ~250 KB. Phần dư hiệu năng nằm chủ yếu ở **ảnh**, vì Tailwind CDN giữ nguyên. Ảnh đặt `loading="lazy"` và ghi `width`/`height`. Luôn tải trước 1–2 ảnh truyện kế tiếp, và tải ngầm bộ ảnh chuyển tiếp của chặng sau trong lúc người chơi đang chơi. Lighthouse Mobile Performance: mục tiêu từ 85 trở lên, tối thiểu 70 khi còn dùng CDN. |
+| **Phông chữ** | Giữ Google Fonts như hiện tại, với `preconnect` và `display=swap` (đã có trong `index.html`). Chỉ tải các độ đậm đang dùng. *Để sau cuộc thi:* tự lưu font WOFF2. |
 
 ### 1.2. Các ràng buộc pháp lý bắt buộc của NASA Space Apps 2026
 1. **Cấm sử dụng Logo NASA:** Tuyệt đối KHÔNG hiển thị logo chính thức của NASA ("Meatball" hình tròn xanh hoặc "Worm" chữ đỏ) ở bất kỳ đâu trên trang web hay trên Thẻ Chứng nhận. Chỉ sử dụng biểu tượng SVG vector tự vẽ (hình mặt trăng, vệ tinh, sóng radar) và ghi nhận văn bản: *"Built for the 2026 NASA International Space Apps Challenge using public NASA Open Data"*. Ảnh truyện do AI tạo phải được liệt kê trong mục SI Disclosure; ảnh NASA phải ghi công.
@@ -60,7 +61,7 @@ Các yêu cầu này áp dụng cho mọi module.
 - **Màu trạng thái cảnh báo (Alert Red / Safe Green):** `#EF4444` (Nguy hiểm) / `#10B981` (An toàn)
 - **Màu chữ (Typography Colors):** Chữ chính `#F8FAFC` (Trắng sáng), Chữ phụ/chú thích `#94A3B8` (Xám bạc).
 
-### 2.2. Phông chữ (Typography - tự lưu font WOFF2, xem mục 1.1a)
+### 2.2. Phông chữ (Typography - Google Fonts, `preconnect` + `display=swap`)
 - **Tiêu đề (Headings):** `'Fira Sans', sans-serif` ( Trọng lượng: `700 Bold`, `900 Black`).
 - **Nội dung văn bản & Thư (Body & Narrative):** `'Overpass', sans-serif` (Trọng lượng: `400 Regular`, `600 SemiBold`).
 - **Số liệu đo xa & Tọa độ (Telemetry & Coordinates):** `'JetBrains Mono', monospace` hoặc `'Overpass Mono', monospace`.
@@ -620,7 +621,7 @@ Dưới đây là toàn bộ đối tượng JSON hoàn chỉnh chứa cả Ti�
 Khi bước vào giờ thi chính thức (09:00 sáng Thứ Bảy 14/11/2026) hoặc khi tập dượt, vị trí **Lead** và **SW** chỉ cần sao chép toàn bộ nội dung file `RELIC_PULSE_PRD.md` này và dán vào công cụ sinh mã kèm câu lệnh dưới đây:
 
 > **Master Prompt:**  
-> *"Act as a Principal Frontend Architect and Data Visualization Engineer. Based strictly on the attached Product Requirements Document (`RELIC_PULSE_PRD.md`) and its embedded `RELIC_DATA` JSON object, build a complete, production-ready static web application (`index.html` + ES modules in `js/`) using HTML5, a prebuilt Tailwind CSS file (Tailwind Standalone CLI, no CDN), self-hosted fonts (`Fira Sans`, `Overpass`, `JetBrains Mono`), and Vanilla JavaScript. Follow every UI/UX requirement in section 1.1a (mobile + desktop, Pointer Events, 44 px touch targets, prefers-reduced-motion, story player, stage flow).*  
+> *"Act as a Principal Frontend Architect and Data Visualization Engineer. Based strictly on the attached Product Requirements Document (`RELIC_PULSE_PRD.md`) and its embedded `RELIC_DATA` JSON object, build a complete, production-ready static web application (`index.html` + ES modules in `js/`) using HTML5, Tailwind CSS (via CDN, as currently deployed), Google Fonts (`Fira Sans`, `Overpass`, `JetBrains Mono`) with preconnect and display=swap, and Vanilla JavaScript. Never build Tailwind class names by string concatenation; use inline styles for dynamic colors. Follow every UI/UX requirement in section 1.1a (mobile + desktop, Pointer Events, 44 px touch targets, prefers-reduced-motion, story player, stage flow).*  
 > *Requirements:*  
 > *1. Embed the entire `RELIC_DATA` JSON directly inside a `<script>` tag so the app runs with zero external fetch/CORS issues.*  
 > *2. Implement full Bilingual Toggle (`EN` / `VI`) across the entire UI, Hero section, 4 Relic Chapters, Decision Station, Classroom Guide, and SI Disclosure.*  
