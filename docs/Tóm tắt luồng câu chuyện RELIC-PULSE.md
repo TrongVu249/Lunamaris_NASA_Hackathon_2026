@@ -25,7 +25,7 @@ Câu chuyện được thiết kế theo mô hình **Vòng lặp Di sản (Herit
 ## 2. CHI TIẾT LUỒNG CÂU CHUYỆN THEO TỪNG HỒI
 
 ### HỒI 1: MỞ ĐẦU – CA TRỰC ĐÊM VÀ NHỮNG TÍN HIỆU BỊ LÃNG QUÊN (Cảnh 1 – 3)
-* **Bối cảnh:** 02:40 sáng tại phòng trực Trạm mặt đất Hà Nội. Người chơi vào ca trực đêm đầu tiên cùng nhân vật dẫn chuyện **Columbina**.
+* **Bối cảnh:** 02:40 sáng tại phòng trực Trạm mặt đất Hà Nội. Người chơi vào ca trực đêm đầu tiên cùng nhân vật dẫn chuyện **Trần Thu Nguyệt (Thu Nguyệt)**.
 * **Tình huống thời sự (Inciting Incident):** Dòng tin dưới đáy màn hình báo hiệu sứ mệnh **Artemis IV** đang chuẩn bị đưa con người trở lại Mặt Trăng, nhưng **bãi đáp cho trạm đo bụi DUSTER vẫn chưa chốt**.
 * **Sự kiện kích hoạt:** Máy thu bất ngờ kêu *tích… tích…* từ 4 chấm sáng (2 trên Mặt Trăng, 2 trên Sao Hỏa) và đẩy ra 4 phong bì niêm phong. Để mở từng phong bì, người chơi phải trực tiếp điều khiển cơ chế vận hành của thiết bị đó.
 

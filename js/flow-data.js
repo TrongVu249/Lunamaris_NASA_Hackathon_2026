@@ -11,7 +11,7 @@
 (function () {
   "use strict";
 
-  var C = "Columbina";
+  var C = { vi: "Thu Nguyệt", en: "Thu Nguyet" };
 
   window.LUNAMARIS_FLOW = {
     story: {
@@ -22,7 +22,7 @@
           text_en: "It's 02:40 and Hanoi is asleep. In the control room, the only light comes from the screens, where a news line crawls by: Artemis IV will soon take people back to the Moon, but no one has picked a spot for the DUSTER dust station."
         },
         {
-          id: "intro-2", world: "earth", speaker: C, img: "assets/story/intro-02-columbina.webp",
+          id: "intro-2", world: "earth", speaker: C, img: "assets/story/intro-02-thunguyet.webp",
           text_vi: "Ca đêm đầu tiên hả? Đừng lo, giờ này chẳng có gì xảy ra đâu.",
           text_en: "First night shift? Don't worry, nothing ever happens at this hour."
         },
@@ -123,12 +123,12 @@
           text_en: "On the map, the lander in zone D sits still. The astronauts set down a small rover carrying the DUSTER dust instruments and head back. The lander lifts off, and DUSTER stays behind."
         },
         {
-          id: "end-2", world: "moon", speaker: null, img: "assets/story/ending-02-columbina-gaze.webp",
-          text_vi: "Columbina ngả người ra ghế, lần đầu tiên trong đêm trông cô nhẹ nhõm. Cô nhìn nó rất lâu.",
-          text_en: "Columbina leans back in her chair, relieved for the first time tonight. She watches it for a long time."
+          id: "end-2", world: "moon", speaker: null, img: "assets/story/ending-02-thunguyet-gaze.webp",
+          text_vi: "Thu Nguyệt ngả người ra ghế, lần đầu tiên trong đêm trông cô nhẹ nhõm. Cô nhìn nó rất lâu.",
+          text_en: "Thu Nguyet leans back in her chair, relieved for the first time tonight. She watches it for a long time."
         },
         {
-          id: "end-3", world: "moon", speaker: C, img: "assets/story/ending-02-columbina-gaze.webp",
+          id: "end-3", world: "moon", speaker: C, img: "assets/story/ending-02-thunguyet-gaze.webp",
           text_vi: "Bạn thấy không?",
           text_en: "Do you see it?"
         },
@@ -143,7 +143,7 @@
           text_en: "One day DUSTER will be an old machine too. Fifty years from now, someone will sit right here at two in the morning and hear it call."
         },
         {
-          id: "end-6", world: "earth", speaker: C, img: "assets/story/ending-02-columbina-gaze.webp",
+          id: "end-6", world: "earth", speaker: C, img: "assets/story/ending-02-thunguyet-gaze.webp",
           text_vi: "Thế nó nên nói gì với họ nhỉ?",
           text_en: "So what should it tell them?"
         }

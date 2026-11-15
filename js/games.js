@@ -448,7 +448,7 @@
       '<div class="art-side">' +
       '<h3 class="art-cards-label" id="art-cards-label">' + esc(t.art_cards_label) + "</h3>" +
       '<ul class="art-cards" aria-labelledby="art-cards-label">' + cardsHtml + "</ul>" +
-      '<p class="art-say" aria-live="polite"><span class="art-say-who">Columbina</span><span data-say></span></p>' +
+      '<p class="art-say" aria-live="polite"><span class="art-say-who">' + esc(t.character_name || (ctx.lang === "vi" ? "Thu Nguyệt" : "Thu Nguyet")) + '</span><span data-say></span></p>' +
       '<div class="art-actions">' +
       '<button type="button" class="btn-signal" data-land disabled>' + esc(t.art_land_btn) + "</button>" +
       '<button type="button" class="btn-signal" data-laser hidden>' + esc(t.art_laser_btn) + "</button>" +

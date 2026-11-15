@@ -141,7 +141,7 @@ Các thư mục còn trống: C1/N1.1, N1.4, N1.5; C2/N2.1–N2.4, N2.6, N2.8; C
 > Không nên dựa vào giờ sửa tệp để xác định bản mới nhất. Nhiều tệp có vẻ được tải về hoặc chép từ nơi khác, và giờ sửa của Final_v2 lại sớm hơn VI.
 
 ### 4.2. Nhân vật
-- **Columbina:** người dẫn đường, nhà lưu trữ di sản trẻ tuổi. Lời thoại ngắn, đời thường. 
+- **Trần Thu Nguyệt (Thu Nguyệt):** người dẫn đường, nhà lưu trữ di sản trẻ tuổi. Lời thoại ngắn, đời thường. 
 - **Người chơi:** trực ban tập sự ca đêm ở trạm Hà Nội, là người ra quyết định ở Trạm Artemis.
 - **Bốn cỗ máy tự kể:**
   - LRRR: "người gác hải đăng".

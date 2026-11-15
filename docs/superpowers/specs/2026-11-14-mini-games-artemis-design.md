@@ -34,7 +34,7 @@ Mỗi chương dạy người đọc **một bài học bằng trải nghiệm**
   - **D:** có nắng, có đá làm mốc, cách di tích hơn 2 km.
 - Bên dưới bản đồ là 4 thẻ luật (thẻ chưa nhận thì mờ).
 - **Chạm một thẻ, rồi chạm một vùng:**
-  - Áp đúng: hiệu ứng ngắn (vòng 2 km phủ A, bóng tối phủ B, các điểm mốc tắt ở C), vùng bị gạch, Columbina nói một câu.
+  - Áp đúng: hiệu ứng ngắn (vòng 2 km phủ A, bóng tối phủ B, các điểm mốc tắt ở C), vùng bị gạch, Thu Nguyệt nói một câu.
   - Áp sai: lắc nhẹ, kèm một câu gợi ý.
 - Gạch xong A, B, C thì nút **Hạ cánh ở D** sáng lên. Bấm vào thì tàu hạ xuống, bắn laser lại ("Nó vẫn trả lời"), rồi mở thẻ Guardian và lá thư DUSTER.
 - Phần mặt cắt bụi hiện có được giữ lại làm hình minh họa cho thẻ Surveyor.
@@ -99,4 +99,4 @@ Mở đầu (truyện) → [Ch.1 trò chơi → thư → thẻ luật] → chuy�
 Chi tiết hoạt cảnh SVG, câu thoại gợi ý khi áp sai thẻ, cách chia file JS. Dự kiến thêm `js/story.js` (bộ phát truyện) và `js/games.js` (4 trò chơi), sửa `js/decision-station.js` và `js/app.js` (quản lý `state.stage`).
 
 ## Thứ tự cắt nếu trễ
-Hiệu ứng khi áp thẻ → hoạt cảnh hạ cánh → ảnh truyện thiếu (thay bằng nền tối kèm lời thoại) → hiệu ứng zoom chậm → câu thoại Columbina. **Luôn giữ:** bộ phát truyện (dù chỉ có chữ), 4 trò, cơ chế thẻ luật, loại vùng và chọn D, nút Bỏ qua.
+Hiệu ứng khi áp thẻ → hoạt cảnh hạ cánh → ảnh truyện thiếu (thay bằng nền tối kèm lời thoại) → hiệu ứng zoom chậm → câu thoại Thu Nguyệt. **Luôn giữ:** bộ phát truyện (dù chỉ có chữ), 4 trò, cơ chế thẻ luật, loại vùng và chọn D, nút Bỏ qua.

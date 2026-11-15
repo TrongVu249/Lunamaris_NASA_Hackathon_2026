@@ -1,6 +1,6 @@
 ---
 name: loi-ke-tu-nhien
-description: Use when writing or rewriting LUNAMARIS story text (narration beats, Columbina's lines, game cues, rule-card lines, the machines' letters, DUSTER's letter) in Vietnamese or English, especially when it reads like stage directions, a news report, or a translation instead of a person telling a story to 11–15 year olds.
+description: Use when writing or rewriting LUNAMARIS story text (narration beats, Thu Nguyet's lines, game cues, rule-card lines, the machines' letters, DUSTER's letter) in Vietnamese or English, especially when it reads like stage directions, a news report, or a translation instead of a person telling a story to 11–15 year olds.
 ---
 
 # Lời kể tự nhiên cho LUNAMARIS
@@ -13,9 +13,9 @@ Người kể là người lớn đang kể cho một đứa em 11–15 tuổi n
 
 ## Nguồn sự thật
 
-- Chi tiết lấy từ cảnh tương ứng trong `docs/Kich_ban_relic_Final_v2.md`. Kịch bản có nhiều chi tiết đời thường đã bị bỏ mất trên web (Columbina ngồi co chân, cốc trà nguội, thành phố đã ngủ, "Cô im một lúc"). Hãy lấy chúng lại.
+- Chi tiết lấy từ cảnh tương ứng trong `docs/Kich_ban_relic_Final_v2.md`. Kịch bản có nhiều chi tiết đời thường đã bị bỏ mất trên web (Thu Nguyệt ngồi co chân, cốc trà nguội, thành phố đã ngủ, "Cô im một lúc"). Hãy lấy chúng lại.
 - Con số, ngày tháng, đơn vị và tên riêng giữ **nguyên văn** (`02:40` vẫn là `02:40`).
-- Chi tiết nào không có trong kịch bản hay trong thư thì không viết. Đặc biệt không viết điều trái với cảnh, ví dụ "chỉ còn một người trong phòng" trong khi Columbina đang ngồi đó.
+- Chi tiết nào không có trong kịch bản hay trong thư thì không viết. Đặc biệt không viết điều trái với cảnh, ví dụ "chỉ còn một người trong phòng" trong khi Thu Nguyệt đang ngồi đó.
 
 ## Công thức theo loại chữ
 
@@ -28,7 +28,7 @@ Chữ trên màn hình (dòng tin chạy) được đặt sau dấu hai chấm, 
 
 Khi viết cả một chuỗi nhịp, mỗi nhịp mở bằng một kiểu câu khác. Ví dụ: một nhịp mở bằng giờ, nhịp sau mở bằng âm thanh, nhịp sau nữa mở bằng một hành động. Ví dụ bên dưới ("Đã 02:40, …") là một cách mở, không phải khuôn cho mọi nhịp.
 
-**Thoại Columbina:** nói như chị khóa trên trực đêm. Câu ngắn, có tiểu từ (*hả, đấy, kìa, nhỉ, đi*), hơi trêu, xưng *mình*, gọi người chơi là *bạn*. Câu ngắn đắt giá thì giữ nguyên ("…Trừ cái đó.", "Bạn thấy không?"). Chỉ sửa câu mang dấu vết dịch: "Do chúng ta." → "Mà là tại chúng mình đấy."
+**Thoại Thu Nguyệt:** nói như chị khóa trên trực đêm. Câu ngắn, có tiểu từ (*hả, đấy, kìa, nhỉ, đi*), hơi trêu, xưng *mình*, gọi người chơi là *bạn*. Câu ngắn đắt giá thì giữ nguyên ("…Trừ cái đó.", "Bạn thấy không?"). Chỉ sửa câu mang dấu vết dịch: "Do chúng ta." → "Mà là tại chúng mình đấy."
 
 **Giọng Bắc (Hà Nội)** cho mọi nhân vật và người kể: dùng *chúng mình / bọn mình, giúp, thế, nhé, ạ, đâu*. Không dùng từ miền Nam như *tụi, giùm, nè, hen, vậy nha, nhỏ xíu*.
 
@@ -41,7 +41,7 @@ Khi viết cả một chuỗi nhịp, mỗi nhịp mở bằng một kiểu câu
 
 Thẻ luật (`rules.*.sub_vi/sub_en` trong `js/flow-data.js`) trích nguyên văn một câu trong thư, ví dụ "160 m vẫn chưa đủ xa." / "160 m was still not far enough.". Nếu viết lại câu được trích, phải sửa `sub` cho khớp từng chữ. Thư nằm ở hai nơi là `js/data.js` và `data/content.json`, hai nơi phải giống hệt nhau.
 
-**Lời dẫn trò chơi:** `cue`/`win` là lời Columbina hoặc lời kể, theo hai công thức trên. `goal`/`far`/`near` là hướng dẫn thao tác: động từ đứng đầu, nói rõ phải làm gì.
+**Lời dẫn trò chơi:** `cue`/`win` là lời Thu Nguyệt hoặc lời kể, theo hai công thức trên. `goal`/`far`/`near` là hướng dẫn thao tác: động từ đứng đầu, nói rõ phải làm gì.
 
 **Người chơi:** chữ *bạn* có trong bản gốc thì giữ *bạn*. Ở cú lật cuối truyện, "lá thư **bạn** vừa viết" là câu đắt nhất, không đổi thành "người trực ban".
 

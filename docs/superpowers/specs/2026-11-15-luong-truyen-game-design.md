@@ -41,7 +41,7 @@ Giữ nhận diện đã có trên nhánh `redesign/ui-ux`, không thêm font ha
 ┌ thanh trên: logo · 4 ô tem · EN/VI ┐
 │ Apollo 11 · Biển Yên Tĩnh          │
 │ "Muốn nói chuyện với nó thì phải   │
-│  chiếu ánh sáng vào."  — Columbina │
+│  chiếu ánh sáng vào."  — Thu Nguyệt │
 │ ┌──────────── SVG ─────────────┐   │
 │ └──────────────────────────────┘   │
 │ Giữ nút cho tới khi ánh sáng về    │
@@ -119,7 +119,7 @@ Mỗi đoạn truyện là một `book-scene[data-story]` đã chừa sẵn. M�
 
 **Luật áp tem ở Game 5:**
 - **Cặp đúng:** LRRR → A làm hiện chấm gương. Surveyor → A vẽ vòng 2 km và gạch A. Opportunity → B phủ bóng tối và gạch B. Ingenuity → C tắt các điểm mốc và gạch C.
-- **Áp sai:** bản đồ lắc nhẹ kèm một câu gợi ý của Columbina, đặt trong `aria-live`.
+- **Áp sai:** bản đồ lắc nhẹ kèm một câu gợi ý của Thu Nguyệt, đặt trong `aria-live`.
 - **Bàn phím:** Tab chọn tem, Enter rồi chọn vùng. Các vùng là `<button>` phủ lên SVG.
 - **Thanh trượt:** dùng `input[type=range]` gốc, nên phím mũi tên chạy sẵn. Game 2–4 bắt đầu ở giá trị `game.start`, không dùng `default_val` vì giá trị đó đang là trạng thái thắng.
 

@@ -187,7 +187,8 @@
       this.img.removeAttribute("src");
     }
 
-    this.speaker.textContent = s.speaker || (tt.story_titles && tt.story_titles[this.seq]) || tt.story_label || "";
+    var spk = typeof s.speaker === "object" && s.speaker ? (L === "en" ? s.speaker.en : s.speaker.vi) : s.speaker;
+    this.speaker.textContent = spk || (tt.story_titles && tt.story_titles[this.seq]) || tt.story_label || "";
     this.speaker.classList.toggle("is-narration", !s.speaker);
     this.root.classList.toggle("is-narration", !s.speaker);
     this.hint.textContent = tt.story_tap || "";

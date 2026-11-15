@@ -687,7 +687,7 @@
           ${chapterHeadHtml(art, L(art, "name"))}
           <blockquote class="game-cue">
             <p>${L(g, "cue")}</p>
-            <footer>Columbina</footer>
+            <footer>${t.character_name || (state.lang === "vi" ? "Thu Nguyệt" : "Thu Nguyet")}</footer>
           </blockquote>
         </div>
         <div class="game-play" data-game-play></div>

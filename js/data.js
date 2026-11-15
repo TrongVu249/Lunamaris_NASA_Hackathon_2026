@@ -420,6 +420,8 @@
 
   window.UI_I18N = {
     en: {
+      character_name: "Thu Nguyet",
+      character_full_name: "Tran Thu Nguyet",
       nav_stamps_label: "Signal stamps",
       filter_all: "All (4)",
       filter_moon: "Moon (2)",
@@ -576,6 +578,8 @@
       nb_note: "Judging-day tip: put this QR on your slides or poster so judges can scan it live. If the link ever fails to open, ask the team to re-check the notebook's sharing settings."
     },
     vi: {
+      character_name: "Thu Nguyệt",
+      character_full_name: "Trần Thu Nguyệt",
       nav_stamps_label: "Tem tín hiệu",
       filter_all: "Tất cả (4)",
       filter_moon: "Mặt Trăng (2)",

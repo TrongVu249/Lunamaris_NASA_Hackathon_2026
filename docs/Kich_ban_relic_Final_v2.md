@@ -8,29 +8,29 @@ Phần trong ngoặc vuông là ghi chú thao tác và hiệu ứng cho nhóm l�
 
 Phòng tối, chỉ còn ánh sáng từ dãy màn hình. Ngoài cửa sổ, thành phố đã ngủ. Dưới đáy màn hình, một dòng tin chạy chậm: *Artemis IV chuẩn bị đưa con người trở lại Mặt Trăng. Bãi đáp cho trạm đo bụi DUSTER: chưa chốt.*
 
-Columbina ngồi co chân trên ghế, tay cầm cốc trà đã nguội. Cô quay sang người chơi.
+Trần Thu Nguyệt ngồi co chân trên ghế, tay cầm cốc trà đã nguội. Cô quay sang người chơi.
 
-COLUMBINA: Ca đêm đầu tiên hả? Đừng lo, giờ này chẳng có gì xảy ra đâu.
+THU NGUYỆT: Ca đêm đầu tiên hả? Đừng lo, giờ này chẳng có gì xảy ra đâu.
 
 Máy thu ở góc bàn kêu lên. *Tích… tích… tích…*
 
-Columbina đặt cốc xuống.
+Thu Nguyệt đặt cốc xuống.
 
-COLUMBINA: …Trừ cái đó.
+THU NGUYỆT: …Trừ cái đó.
 
 **CẢNH 2. BẢN ĐỒ**
 
 \[Bản đồ mở ra. Mặt Trăng xám bên trái, Sao Hỏa đỏ bên phải. Bốn chấm sáng nhấp nháy theo nhịp tích tích.\]
 
-COLUMBINA: Hai trên Mặt Trăng, hai trên Sao Hỏa. Toàn những cỗ máy người ta để lại từ lâu rồi.
+THU NGUYỆT: Hai trên Mặt Trăng, hai trên Sao Hỏa. Toàn những cỗ máy người ta để lại từ lâu rồi.
 
-COLUMBINA: Không ai nghe chúng nữa. Nên mình nghe.
+THU NGUYỆT: Không ai nghe chúng nữa. Nên mình nghe.
 
 **CẢNH 3. PHONG BÌ**
 
 \[Bốn phong bì niêm phong trượt ra từ máy thu, xếp thành hàng. Mỗi phong bì có một con dấu mờ.\]
 
-COLUMBINA: Mỗi tín hiệu là một lá thư. Nhưng muốn mở thì phải hiểu nó đã sống thế nào. Bạn mở cái đầu tiên đi.
+THU NGUYỆT: Mỗi tín hiệu là một lá thư. Nhưng muốn mở thì phải hiểu nó đã sống thế nào. Bạn mở cái đầu tiên đi.
 
 \[Nút: Mở thư\]
 
@@ -40,13 +40,13 @@ COLUMBINA: Mỗi tín hiệu là một lá thư. Nhưng muốn mở thì phải 
 
 Màn hình gần như đen. Không có tiếng động. Ở giữa là một tấm khung nhỏ nằm trên nền đất xám.
 
-COLUMBINA: Cái này không có pin, không có radio. Nó không gọi được ai cả.
+THU NGUYỆT: Cái này không có pin, không có radio. Nó không gọi được ai cả.
 
-COLUMBINA: Muốn nói chuyện với nó thì phải chiếu ánh sáng vào.
+THU NGUYỆT: Muốn nói chuyện với nó thì phải chiếu ánh sáng vào.
 
 \[Người chơi nhấn giữ nút Laser. Một tia xanh bắn từ Trái Đất lên. Đồng hồ chạy: 0,5… 1,0… 1,5… 2,0… 2,56 giây. Một chấm sáng nhỏ quay về. Con dấu trên phong bì nứt ra.\]
 
-COLUMBINA (khẽ): Nó vẫn trả lời.
+THU NGUYỆT (khẽ): Nó vẫn trả lời.
 
 **THƯ**
 
@@ -66,7 +66,7 @@ COLUMBINA (khẽ): Nó vẫn trả lời.
 
 \[Sổ tay kỹ sư, mở khi bấm: Mỗi lần bắn laser chỉ vài hạt ánh sáng quay về được. Bây giờ các gương Apollo chỉ trả về khoảng 1/10 tín hiệu so với tính toán, gần trăng tròn còn yếu thêm khoảng 10 lần nữa; các nhà khoa học nghi là do một lớp bụi mỏng phủ trên lăng kính (Murphy và cộng sự, 2010). Nút: Nguồn NASA (https://nssdc.gsfc.nasa.gov/nmc/experiment/display.action?id=1969-059C-04).\]
 
-COLUMBINA: Người ta đặt nó xuống rồi đi. Chắc không ai nghĩ nó sẽ làm việc lâu đến thế.
+THU NGUYỆT: Người ta đặt nó xuống rồi đi. Chắc không ai nghĩ nó sẽ làm việc lâu đến thế.
 
 ## CHƯƠNG 2. VẾT SẸO – SURVEYOR 3
 
@@ -74,11 +74,11 @@ COLUMBINA: Người ta đặt nó xuống rồi đi. Chắc không ai nghĩ nó 
 
 Một cỗ máy ba chân đứng trong lòng hố nông. Lớp sơn ngả màu nâu bẩn. Gió không có, nhưng máy thu rè rè như có gì đó cọ vào kim loại.
 
-COLUMBINA: Cái này từng bị thương.
+THU NGUYỆT: Cái này từng bị thương.
 
 Cô im một lúc.
 
-COLUMBINA: Do chúng ta.
+THU NGUYỆT: Do chúng ta.
 
 \[Người chơi điều khiển một tàu đổ bộ hạ xuống ở góc màn hình. Động cơ phun xuống, bụi bắn ngang mặt đất như cát phun, quất vào Surveyor 3. Lớp sơn trắng chuyển dần sang nâu. Đồng hồ khoảng cách dừng ở: khoảng 160 m. Con dấu nứt.\]
 
@@ -100,7 +100,7 @@ COLUMBINA: Do chúng ta.
 
 \[Sổ tay kỹ sư: Đất chịu được khoảng $10\text{ psi}$, tức khoảng $0,7\text{ kg/cm}^2$. Ảnh tàu quỹ đạo LRO (2011) đo được tàu Intrepid đáp cách Surveyor 3 khoảng 538 ft (≈ 164 m); website dùng 160 m theo NASA SVS. Những mảnh Surveyor 3 mang về Trái Đất cho thấy bụi từ tàu đổ bộ bay xa và mạnh đến mức nào. Năm 2011, NASA khuyên các tàu sau này hạ cánh cách xa di tích. Nút: Nguồn NASA (https://science.nasa.gov/mission/surveyor-3/).\]
 
-COLUMBINA: Người ta còn chọn chỗ đáp gần nó cho tiện đi bộ sang xem. Ai ngờ.
+THU NGUYỆT: Người ta còn chọn chỗ đáp gần nó cho tiện đi bộ sang xem. Ai ngờ.
 
 ## CHƯƠNG 3. CƠN BÃO – OPPORTUNITY
 
@@ -108,9 +108,9 @@ COLUMBINA: Người ta còn chọn chỗ đáp gần nó cho tiện đi bộ san
 
 Bầu trời màu cam, rồi đỏ thẫm. Gió rít. Một chiếc xe sáu bánh đứng yên giữa sườn thung lũng, tấm pin phủ một lớp bụi mỏng.
 
-COLUMBINA: Ôi. Bão bụi. Cả hành tinh luôn.
+THU NGUYỆT: Ôi. Bão bụi. Cả hành tinh luôn.
 
-COLUMBINA: Nhìn đồng hồ điện kìa.
+THU NGUYỆT: Nhìn đồng hồ điện kìa.
 
 \[Người chơi kéo thanh "độ dày của bụi" từ trái sang phải. Bầu trời tối dần, đến cuối thì giữa trưa đen như nửa đêm. Đồng hồ điện tụt từ 645 về 22 Wh. Khi đồng hồ chạm 22, một gói chữ số 0 và 1 hiện ra. Người chơi kéo gói đó vào ăng-ten. Con dấu nứt.\]
 
@@ -134,7 +134,7 @@ COLUMBINA: Nhìn đồng hồ điện kìa.
 
 \[Sổ tay kỹ sư: $22\text{ Wh}$ đủ thắp một bóng đèn LED $10\text{ W}$ trong khoảng 2 giờ, mà đó là năng lượng cho cả một ngày. Nút: Nguồn NASA (https://science.nasa.gov/mission/mer-opportunity/).\]
 
-COLUMBINA: Nó không hỏng gì cả. Nó chỉ không còn thấy mặt trời.
+THU NGUYỆT: Nó không hỏng gì cả. Nó chỉ không còn thấy mặt trời.
 
 ## CHƯƠNG 4. CHUYẾN BAY THỨ 72 – INGENUITY
 
@@ -142,7 +142,7 @@ COLUMBINA: Nó không hỏng gì cả. Nó chỉ không còn thấy mặt trời
 
 Tiếng cánh quạt quay rít, nhanh và cao. Một chiếc trực thăng nhỏ như cái hộp, bốn chân mảnh, đứng trên nền cát.
 
-COLUMBINA (bật cười): Cái này thì chưa bao giờ chịu ngồi yên.
+THU NGUYỆT (bật cười): Cái này thì chưa bao giờ chịu ngồi yên.
 
 \[Người chơi kéo thanh số chuyến bay từ 1 lên 72. Mỗi chuyến vẽ thêm một đoạn đường bay trên bản đồ. Ba nút mốc: chuyến 1, 19/4/2021 · chuyến 5, kế hoạch chỉ đến đây · chuyến 72, 18/1/2024.\]
 
@@ -150,7 +150,7 @@ COLUMBINA (bật cười): Cái này thì chưa bao giờ chịu ngồi yên.
 
 Im lặng.
 
-COLUMBINA: Không ai cứu được nó đâu. Nhưng giờ mình biết vì sao nó ngã.
+THU NGUYỆT: Không ai cứu được nó đâu. Nhưng giờ mình biết vì sao nó ngã.
 
 \[Con dấu nứt.\]
 
@@ -178,11 +178,11 @@ COLUMBINA: Không ai cứu được nó đâu. Nhưng giờ mình biết vì sao
 
 Bốn lá thư nằm mở trên bàn. Máy thu im. Dòng tin dưới màn hình đổi màu hổ phách và chạy nhanh hơn: *Artemis IV cần chọn bãi đáp và vị trí đặt trạm DUSTER trước bình minh. Bốn vùng ứng viên.*
 
-Columbina nhìn dòng tin, rồi nhìn bốn lá thư.
+Thu Nguyệt nhìn dòng tin, rồi nhìn bốn lá thư.
 
-COLUMBINA: Khoan.
+THU NGUYỆT: Khoan.
 
-COLUMBINA: Chúng nó trả lời câu này từ lâu rồi.
+THU NGUYỆT: Chúng nó trả lời câu này từ lâu rồi.
 
 **CẢNH 9. BẢN ĐỒ BỐN VÙNG**
 
@@ -190,33 +190,33 @@ COLUMBINA: Chúng nó trả lời câu này từ lâu rồi.
 
 \[Kéo thư LRRR lên: gần vùng A hiện một chấm nhỏ. Người chơi bấm Laser như ở chương 1, ánh sáng quay về sau 2,56 giây.\]
 
-COLUMBINA: Ở đây có một thứ vẫn đang làm việc.
+THU NGUYỆT: Ở đây có một thứ vẫn đang làm việc.
 
 \[Kéo thư Surveyor 3 lên: quanh chấm đó hiện một vòng tròn. Người chơi kéo bán kính vòng tròn. Ở 160 m, dòng chữ nhỏ hiện lên: *Surveyor 3 bị bụi ở khoảng cách này.* Kéo đến 2 km, vòng tròn chuyển xanh: *khoảng cách NASA khuyến nghị.* Vùng A nằm trọn trong vòng và bị gạch.\]
 
-COLUMBINA: Gần quá. Bụi sẽ phủ lên nó.
+THU NGUYỆT: Gần quá. Bụi sẽ phủ lên nó.
 
 \[Kéo thư Oppy lên: người chơi kéo thanh góc chiếu mặt trời. Vùng B nằm lọt thỏm dưới đáy hố sâu, chìm vào vùng bóng tối lạnh giá quanh năm và bị gạch.\]
 
-COLUMBINA: Đáy hố khuất nắng. Không có mặt trời thì pin nào cũng cạn. Oppy hiểu rõ cái lạnh đó hơn ai hết.
+THU NGUYỆT: Đáy hố khuất nắng. Không có mặt trời thì pin nào cũng cạn. Oppy hiểu rõ cái lạnh đó hơn ai hết.
 
 \[Kéo thư Ingenuity lên: người chơi bật camera định vị hạ cánh. Các chấm xanh bám vào sườn đá ở vùng D, nhưng vùng C trống trơn vì lớp bụi Mặt Trăng phẳng lì và chói lóa, không có miệng hố nhỏ nào làm mốc. Vùng C bị gạch.\]
 
-COLUMBINA: Mặt đất đồng nhất quá, camera hạ cánh không có điểm mốc để bám. Tàu sẽ trượt giống Ingenuity.
+THU NGUYỆT: Mặt đất đồng nhất quá, camera hạ cánh không có điểm mốc để bám. Tàu sẽ trượt giống Ingenuity.
 
 \[Còn lại vùng D. Lá thư Surveyor 3 sáng lên lần nữa: *đất ở đây đủ chắc.*\]
 
-COLUMBINA: Vậy là D.
+THU NGUYỆT: Vậy là D.
 
 **CẢNH 10. HẠ CÁNH**
 
 \[Người chơi bấm Hạ cánh. Tàu đổ bộ Artemis IV hạ xuống vùng D. Bụi bốc lên rồi lắng xuống, dừng lại xa trước vòng tròn xanh.\]
 
-COLUMBINA: Bắn thử laser lần nữa đi.
+THU NGUYỆT: Bắn thử laser lần nữa đi.
 
 \[Người chơi bấm Laser. Đồng hồ chạy 2,56 giây. Chấm sáng quay về.\]
 
-COLUMBINA: Nó vẫn trả lời.
+THU NGUYỆT: Nó vẫn trả lời.
 
 Cô ngả người ra ghế. Lần đầu tiên trong đêm, cô có vẻ nhẹ nhõm.
 
@@ -224,17 +224,17 @@ Cô ngả người ra ghế. Lần đầu tiên trong đêm, cô có vẻ nhẹ 
 
 Trên bản đồ, con tàu ở vùng D đứng yên. Các phi hành gia đặt xuống chiếc xe nhỏ mang bộ đo bụi **DUSTER**, rồi quay lại tàu. Tàu cất cánh. **DUSTER** ở lại.
 
-Columbina nhìn nó rất lâu.
+Thu Nguyệt nhìn nó rất lâu.
 
-COLUMBINA: Bạn thấy không?
+THU NGUYỆT: Bạn thấy không?
 
-COLUMBINA: Cái máy mới đó tên là DUSTER. Người ta đặt nó lại để đo bụi Mặt Trăng — đúng thứ bụi từng làm khổ cái gương, làm xước Surveyor và che mắt Oppy.
+THU NGUYỆT: Cái máy mới đó tên là DUSTER. Người ta đặt nó lại để đo bụi Mặt Trăng — đúng thứ bụi từng làm khổ cái gương, làm xước Surveyor và che mắt Oppy.
 
-COLUMBINA: Rồi DUSTER cũng sẽ nằm lại đó. Năm mươi năm nữa, sẽ có ai đó ngồi đúng chỗ này lúc hai giờ sáng, và nghe nó gọi.
+THU NGUYỆT: Rồi DUSTER cũng sẽ nằm lại đó. Năm mươi năm nữa, sẽ có ai đó ngồi đúng chỗ này lúc hai giờ sáng, và nghe nó gọi.
 
 Cô quay sang người chơi.
 
-COLUMBINA: Vậy nó nên nói gì với họ?
+THU NGUYỆT: Vậy nó nên nói gì với họ?
 
 **CẢNH 12. LÁ THƯ THỨ NĂM**
 
