@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DEMO Phương án 1 — Thư viện "Bằng chứng hình ảnh" trong popup Hồ sơ Khoa học</title>
+<style>
+  /* ===== Token màu lấy từ css/styles.css của dự án để demo đúng "chất" web hiện tại ===== */
+  :root {
+    --bg-cinder: #151622;
+    --bg-surface: #1E2030;
+    --panel: #1E2030;
+    --accent-neon-yellow: #E7F434;
+    --signal-lunar-cyan: #38BDF8;
+    --text-primary: #F8FAFC;
+    --text-secondary: #94A3B8;
+    --rule: rgba(255, 255, 255, 0.12);
+    --gutter: 20px;
+    --topbar-h: 56px;
+    --pager-h: 64px;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: 'Fira Sans', 'Segoe UI', sans-serif;
+    background: var(--bg-cinder);
+    color: var(--text-primary);
+    min-height: 100vh;
+  }
+
+  /* ===== Nền giả lập cảnh chương 01 (chỉ để demo có ngữ cảnh) ===== */
+  .fake-scene {
+    min-height: 100vh;
+    padding: 24px var(--gutter) 140px;
+    background:
+      radial-gradient(1200px 500px at 70% -10%, rgba(56, 189, 248, 0.10), transparent 60%),
+      var(--bg-cinder);
+  }
+  .fake-scene h1 { font-size: 1.1rem; font-weight: 900; letter-spacing: 0.04em; color: var(--signal-lunar-cyan); text-transform: uppercase; }
+  .fake-scene p { color: var(--text-secondary); max-width: 60ch; line-height: 1.6; }
+  .demo-note {
+    display: inline-block;
+    margin-top: 16px;
+    padding: 10px 14px;
+    border: 1px dashed var(--accent-neon-yellow);
+    border-radius: 10px;
+    color: var(--accent-neon-yellow);
+    font-size: 0.85rem;
+    line-height: 1.5;
+    max-width: 60ch;
+  }
+
+  /* ===== Nút mở popup (mô phỏng dossier-btn thật) ===== */
+  .dossier-btn {
+    position: fixed;
+    z-index: 60;
+    left: 50%;
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    transform: translateX(-50%);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 22px;
+    border-radius: 999px;
+    border: 1px solid var(--rule);
+    background: var(--accent-neon-yellow);
+    color: #151622;
+    font-family: inherit;
+    font-weight: 900;
+    font-size: 0.95rem;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  }
+  .dossier-btn:hover { filter: brightness(1.06); }
+  body.dossier-open .dossier-btn { display: none; }
+
+  /* ===== Popup Hồ sơ Khoa học (mô phỏng dossier-sheet thật) ===== */
+  .dossier-sheet {
+    position: fixed;
+    z-index: 65;
+    inset: 0;
+    background: #11121d;
+    border-top: 1px solid var(--rule);
+    animation: sheet-in 0.22s ease both;
+  }
+  .dossier-sheet[hidden] { display: none; }
+  @keyframes sheet-in {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: none; }
+  }
+  .dossier-sheet-scroll { height: 100%; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+  .dossier-sheet-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 24px var(--gutter) 96px;
+  }
+  .dossier-sheet-title {
+    margin: 0 0 6px;
+    font-weight: 900;
+    font-size: clamp(1.4rem, 4.2vw, 2rem);
+    line-height: 1.15;
+  }
+  .dossier-close {
+    position: absolute;
+    top: 16px; right: 16px;
+    width: 40px; height: 40px;
+    border-radius: 999px;
+    border: 1px solid var(--rule);
+    background: var(--panel);
+    color: var(--text-primary);
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  .dossier-grid { display: grid; gap: 32px; }
+  @media (min-width: 1024px) {
+    .dossier-grid { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 48px; align-items: start; }
+  }
+
+  /* ===== Panel thiết bị (rút gọn từ instrument thật) ===== */
+  .instrument {
+    overflow: hidden;
+    border-radius: 16px;
+    border: 1px solid rgba(248, 250, 252, 0.1);
+    background: var(--panel);
+  }
+  .instrument-view { position: relative; aspect-ratio: 16 / 9; background: #0D101B; border-bottom: 1px solid var(--rule); overflow: hidden; }
+  .instrument-view img.hero {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    opacity: 0.25;
+    mix-blend-mode: luminosity;
+    pointer-events: none;
+  }
+  .instrument-view .placeholder-art {
+    position: absolute; inset: 0;
+    display: grid; place-items: center;
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .instrument-credit {
+    position: absolute; left: 0; right: 0; bottom: 0; z-index: 20;
+    padding: 4px 10px;
+    background: rgba(13, 16, 27, 0.85);
+    font-size: 0.66rem;
+    color: var(--text-secondary);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .instrument-body { padding: 16px; color: var(--text-secondary); font-size: 0.85rem; line-height: 1.6; }
+
+  /* =========================================================================
+     PHẦN MỚI: Thư viện "Bằng chứng hình ảnh" (Phương án 1)
+     ========================================= */
+  .gallery-sec {
+    margin-top: 20px;
+    border: 1px solid var(--rule);
+    border-radius: 16px;
+    background: var(--panel);
+    padding: 16px;
+    position: relative;
+  }
+  .gallery-sec h3 {
+    margin: 0 0 4px;
+    font-size: 0.95rem;
+    font-weight: 900;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .new-badge {
+    font-size: 0.62rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: var(--accent-neon-yellow);
+    color: #151622;
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+  .gallery-sec .gallery-sub {
+    margin: 0 0 14px;
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+  }
+  .gallery-strip {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+  .gallery-thumb {
+    flex: 0 0 auto;
+    width: 168px;
+    border-radius: 12px;
+    border: 1px solid var(--rule);
+    background: #0D101B;
+    padding: 0;
+    cursor: pointer;
+    overflow: hidden;
+    text-align: left;
+    font-family: inherit;
+    color: inherit;
+    transition: border-color 0.15s ease, transform 0.15s ease;
+  }
+  .gallery-thumb:hover, .gallery-thumb:focus-visible {
+    border-color: var(--accent-neon-yellow);
+    transform: translateY(-2px);
+    outline: none;
+  }
+  .gallery-thumb .thumb-media {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    background: #0D101B;
+  }
+  .gallery-thumb .thumb-media img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .gallery-thumb .play-icon {
+    position: absolute; inset: 0;
+    display: grid; place-items: center;
+    background: rgba(13, 16, 27, 0.35);
+  }
+  .gallery-thumb .play-icon span {
+    width: 42px; height: 42px;
+    border-radius: 999px;
+    background: rgba(231, 244, 52, 0.92);
+    color: #151622;
+    display: grid; place-items: center;
+    font-size: 1rem;
+    padding-left: 3px; /* căn giữa tam giác play */
+  }
+  .gallery-thumb .thumb-cap {
+    padding: 8px 10px 10px;
+    font-size: 0.72rem;
+    line-height: 1.4;
+    color: var(--text-secondary);
+  }
+  .gallery-thumb .thumb-type {
+    display: inline-block;
+    margin-bottom: 4px;
+    font-size: 0.6rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--signal-lunar-cyan);
+  }
+
+  /* ===== Hồ sơ (rút gọn từ dossier thật) ===== */
+  .voice-panel .epistemic {
+    display: inline-block;
+    font-size: 0.62rem;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--signal-lunar-cyan);
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    padding: 4px 10px;
+    margin-bottom: 12px;
+  }
+  .voice-panel h3 { font-size: 0.9rem; font-weight: 900; margin: 18px 0 6px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .voice-panel p { margin: 0; color: var(--text-secondary); font-size: 0.85rem; line-height: 1.65; }
+
+  /* =========================================
+     LIGHTBOX: cửa sổ xem ảnh/video full
+     ========================================= */
+  .lightbox {
+    position: fixed;
+    z-index: 90;
+    inset: 0;
+    background: rgba(9, 10, 17, 0.94);
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    animation: lb-in 0.18s ease both;
+  }
+  .lightbox[hidden] { display: none; }
+  @keyframes lb-in { from { opacity: 0; } to { opacity: 1; } }
+  .lightbox-box {
+    position: relative;
+    max-width: 860px;
+    width: 100%;
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .lightbox-media { background: #0D101B; }
+  .lightbox-media img, .lightbox-media video {
+    display: block;
+    width: 100%;
+    max-height: 62vh;
+    object-fit: contain;
+    background: #0D101B;
+  }
+  .lightbox-info { padding: 14px 16px 16px; }
+  .lightbox-caption { margin: 0 0 6px; font-size: 0.95rem; font-weight: 700; line-height: 1.45; }
+  .lightbox-credit { margin: 0; font-size: 0.72rem; color: var(--text-secondary); line-height: 1.5; }
+  .lightbox-close {
+    position: absolute;
+    top: 10px; right: 10px;
+    z-index: 5;
+    width: 38px; height: 38px;
+    border-radius: 999px;
+    border: 1px solid var(--rule);
+    background: rgba(13, 16, 27, 0.85);
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    cursor: pointer;
+  }
+  .lightbox-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 5;
+    width: 42px; height: 42px;
+    border-radius: 999px;
+    border: 1px solid var(--rule);
+    background: rgba(13, 16, 27, 0.85);
+    color: var(--text-primary);
+    font-size: 1.1rem;
+    cursor: pointer;
+  }
+  .lightbox-nav:hover, .lightbox-close:hover { border-color: var(--accent-neon-yellow); color: var(--accent-neon-yellow); }
+  .lightbox-nav.prev { left: 10px; }
+  .lightbox-nav.next { right: 10px; }
+  .lightbox-counter {
+    margin-top: 8px;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+
+  <!-- Nền giả lập: cảnh chương 01 của luồng truyện -->
+  <main class="fake-scene">
+    <h1>Chương 01 · Mặt Trăng — DEMO giao diện</h1>
+    <p>Đây là bản demo độc lập (không phải web thật). Nút vàng bên dưới mô phỏng nút
+      <strong>"Hồ sơ Khoa học"</strong> của dự án. Bên trong popup có thêm mục mới:
+      <strong>"Bằng chứng hình ảnh"</strong> — bấm thumbnail sẽ mở lightbox xem ảnh to / phát video.</p>
+    <div class="demo-note">
+      Media dùng thật từ NASA: ảnh AS11-40-5948 (gương LRRR Apollo 11, 1969) và video
+      "First Video of NASA's Ingenuity Mars Helicopter in Flight" (JPL, 19/04/2021) — chỉ để thử cơ chế.
+    </div>
+  </main>
+
+  <!-- Nút mở popup Hồ sơ Khoa học -->
+  <button id="dossier-btn" type="button" class="dossier-btn">🗂 Hồ sơ Khoa học</button>
+
+  <!-- ===== Popup Hồ sơ Khoa học (dossier-sheet) ===== -->
+  <section id="dossier-sheet" class="dossier-sheet" role="dialog" aria-modal="true" aria-labelledby="dossier-sheet-title" hidden>
+    <div class="dossier-sheet-scroll">
+      <div class="dossier-sheet-inner" style="position:relative;">
+        <button id="dossier-close" type="button" class="dossier-close" aria-label="Đóng hồ sơ">✕</button>
+        <h2 id="dossier-sheet-title" class="dossier-sheet-title">Hồ sơ Khoa học: Tầng Hạ cánh Apollo 11 Eagle &amp; Gương Phản xạ Laser (LRRR)</h2>
+
+        <div class="dossier-grid" style="--c: #38BDF8; margin-top: 16px;">
+
+          <!-- Cột trái: thiết bị (rút gọn) + THƯ VIỆN MỚI -->
+          <div>
+            <section class="instrument" aria-label="Trạm đo xa">
+              <div class="instrument-view">
+                <img class="hero" src="https://images-assets.nasa.gov/image/as11-40-5948/as11-40-5948~large.jpg" alt="" loading="lazy" />
+                <div class="placeholder-art">[ Hình SVG mô phỏng thiết bị — giữ nguyên như web thật ]</div>
+                <div class="instrument-credit">Ảnh: NASA / NSSDCA Photo ID AS11-40-5948</div>
+              </div>
+              <div class="instrument-body">
+                (Phần thanh trượt năm quan trắc 1969–2026, các mốc preset và mục "Số này lấy từ đâu?"
+                được giữ nguyên như bản thật — demo lược bỏ cho gọn.)
+              </div>
+            </section>
+
+            <!-- ===== PHẦN MỚI (Phương án 1): Thư viện Bằng chứng hình ảnh ===== -->
+            <section class="gallery-sec" aria-label="Bằng chứng hình ảnh">
+              <h3>📷 Bằng chứng hình ảnh <span class="new-badge">Phần mới</span></h3>
+              <p class="gallery-sub">Ảnh &amp; video thật của thiết bị này, nguồn NASA. Bấm vào ô để xem lớn.</p>
+              <div class="gallery-strip" id="gallery-strip">
+                <button type="button" class="gallery-thumb" data-idx="0">
+                  <div class="thumb-media">
+                    <img src="https://images-assets.nasa.gov/image/as11-40-5948/as11-40-5948~large.jpg" alt="Gương phản xạ laser LRRR trên Mặt Trăng" loading="lazy" />
+                  </div>
+                  <div class="thumb-cap">
+                    <span class="thumb-type">Ảnh</span><br />
+                    Gương LRRR do Armstrong &amp; Aldrin đặt xuống Biển Tĩnh Lặng, 20/07/1969.
+                  </div>
+                </button>
+                <button type="button" class="gallery-thumb" data-idx="1">
+                  <div class="thumb-media">
+                    <img src="https://images-assets.nasa.gov/image/PIA24665/PIA24665~medium.jpg" alt="Trực thăng Ingenuity trên Sao Hỏa" loading="lazy" />
+                    <div class="play-icon"><span aria-hidden="true">▶</span></div>
+                  </div>
+                  <div class="thumb-cap">
+                    <span class="thumb-type">Video</span><br />
+                    Video đầu tiên của Ingenuity bay trên Sao Hỏa (JPL, 19/04/2021) — video demo.
+                  </div>
+                </button>
+              </div>
+            </section>
+          </div>
+
+          <!-- Cột phải: hồ sơ khoa học (rút gọn) -->
+          <section class="voice-panel">
+            <span class="epistemic">Hồ sơ khoa học &amp; pháp lý đã kiểm chứng</span>
+            <h3>Thiết bị này từng vận hành ra sao?</h3>
+            <p>Gương phản xạ Laser Mặt Trăng (LRRR) sử dụng 100 lăng kính góc bằng thạch anh nung chảy
+              siêu tinh khiết (3,8 cm/lăng kính). Tia laser từ Trái Đất mất ~2,56 giây khứ hồi, chứng minh
+              Mặt Trăng đang xa dần 3,8 cm/năm.</p>
+            <h3>Luật &amp; vùng bảo vệ</h3>
+            <p>Tranquility Base được bảo vệ bởi Vành đai Hiện vật 75 mét và Bán kính Vùng cấm Hạ cánh 2,0 km
+              theo Public Law 116-275 (2020).</p>
+          </section>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== LIGHTBOX xem ảnh/video ===== -->
+  <div id="lightbox" class="lightbox" role="dialog" aria-modal="true" aria-label="Xem ảnh và video" hidden>
+    <div class="lightbox-box">
+      <button id="lb-close" type="button" class="lightbox-close" aria-label="Đóng">✕</button>
+      <button id="lb-prev" type="button" class="lightbox-nav prev" aria-label="Trước">←</button>
+      <button id="lb-next" type="button" class="lightbox-nav next" aria-label="Sau">→</button>
+      <div class="lightbox-media" id="lb-media"></div>
+      <div class="lightbox-info">
+        <p class="lightbox-caption" id="lb-caption"></p>
+        <p class="lightbox-credit" id="lb-credit"></p>
+        <div class="lightbox-counter" id="lb-counter"></div>
+      </div>
+    </div>
+  </div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ===== Dữ liệu gallery — sau này sẽ nằm trong media.gallery của từng thiết bị ở js/data.js ===== */
+  var GALLERY = [
+    {
+      type: "image",
+      url: "https://images-assets.nasa.gov/image/as11-40-5948/as11-40-5948~large.jpg",
+      caption: "Gương phản xạ laser LRRR của Apollo 11 tại Biển Tĩnh Lặng (20/07/1969) — vẫn hoạt động thụ động suốt 57 năm.",
+      credit: "Ảnh: NASA / NSSDCA Photo ID AS11-40-5948 (public domain)."
+    },
+    {
+      type: "video",
+      url: "https://images-assets.nasa.gov/video/JPL-20210419-TECHf-0001-First%20Video%20of%20NASA%E2%80%99s%20Ingenuity%20Mars%20Helicopter%20in%20Flight/JPL-20210419-TECHf-0001-First%20Video%20of%20NASA%E2%80%99s%20Ingenuity%20Mars%20Helicopter%20in%20Flight~mobile.mp4",
+      poster: "https://images-assets.nasa.gov/image/PIA24665/PIA24665~medium.jpg",
+      caption: "Video đầu tiên về chuyến bay của trực thăng Ingenuity trên Sao Hỏa, do camera Hazcam của Perseverance ghi lại (19/04/2021). [Video demo — bản thật sẽ thay bằng video của đúng thiết bị.]",
+      credit: "Video: NASA/JPL-Caltech (public domain)."
+    }
+  ];
+
+  var sheet = document.getElementById("dossier-sheet");
+  var body = document.body;
+  var lb = document.getElementById("lightbox");
+  var lbMedia = document.getElementById("lb-media");
+  var lbCaption = document.getElementById("lb-caption");
+  var lbCredit = document.getElementById("lb-credit");
+  var lbCounter = document.getElementById("lb-counter");
+  var current = 0;
+
+  /* Mở/đóng popup Hồ sơ Khoa học */
+  function setSheet(open) {
+    sheet.hidden = !open;
+    body.classList.toggle("dossier-open", open);
+    if (open) {
+      document.getElementById("dossier-sheet-title").focus();
+    }
+  }
+  document.getElementById("dossier-btn").addEventListener("click", function () { setSheet(true); });
+  document.getElementById("dossier-close").addEventListener("click", function () { setSheet(false); });
+
+  /* Render lightbox theo index */
+  function showItem(i) {
+    current = (i + GALLERY.length) % GALLERY.length;
+    var item = GALLERY[current];
+    if (item.type === "video") {
+      lbMedia.innerHTML =
+        '<video controls autoplay playsinline poster="' + item.poster + '">' +
+        '<source src="' + item.url + '" type="video/mp4">Trình duyệt không phát được video.</video>';
+    } else {
+      lbMedia.innerHTML = '<img src="' + item.url + '" alt="" />';
+    }
+    lbCaption.textContent = item.caption;
+    lbCredit.textContent = item.credit;
+    lbCounter.textContent = (current + 1) + " / " + GALLERY.length + " · " + (item.type === "video" ? "Video" : "Ảnh");
+  }
+
+  function openLb(i) {
+    showItem(i);
+    lb.hidden = false;
+    document.getElementById("lb-close").focus();
+  }
+
+  function closeLb() {
+    lb.hidden = true;
+    lbMedia.innerHTML = ""; /* dừng video khi đóng */
+  }
+
+  /* Thumbnail trong gallery strip */
+  document.getElementById("gallery-strip").addEventListener("click", function (e) {
+    var thumb = e.target.closest(".gallery-thumb");
+    if (thumb) openLb(parseInt(thumb.dataset.idx, 10));
+  });
+
+  document.getElementById("lb-close").addEventListener("click", closeLb);
+  document.getElementById("lb-prev").addEventListener("click", function () { showItem(current - 1); });
+  document.getElementById("lb-next").addEventListener("click", function () { showItem(current + 1); });
+
+  /* Bấm nền tối = đóng lightbox (đóng lightbox trước, popup vẫn mở) */
+  lb.addEventListener("click", function (e) { if (e.target === lb) closeLb(); });
+
+  /* Bàn phím: Esc đóng lớp trên cùng, mũi tên chuyển ảnh khi lightbox mở */
+  document.addEventListener("keydown", function (e) {
+    if (lb.hidden) {
+      if (e.key === "Escape" && !sheet.hidden) setSheet(false);
+      return;
+    }
+    if (e.key === "Escape") closeLb();
+    else if (e.key === "ArrowLeft") showItem(current - 1);
+    else if (e.key === "ArrowRight") showItem(current + 1);
+  });
+})();
+</script>
+</body>
+</html>

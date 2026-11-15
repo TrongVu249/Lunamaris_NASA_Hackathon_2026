@@ -273,7 +273,14 @@
       art_laser_btn: "Fire the laser once more",
       art_still_answers: "It still answers.",
       art_continue: "Continue",
-      scene_title_story_intro: "Prologue"
+      scene_title_story_intro: "Prologue",
+      enclosure_ps: "P.S. — Columbina enclosed a real photo and a film clip with this letter.",
+      enclosure_hint: "Tap the photo to view it full size and watch the film.",
+      gallery_title: "Visual evidence",
+      gallery_sub: "Real photos & footage of this machine. Tap a tile to view.",
+      media_modal_title: "Image dossier",
+      label_photo: "Photo",
+      label_video: "Video"
     },
     vi: {
       signals_lead: "Nghe lần lượt từng tín hiệu. Mỗi lá thư mở ra khi bạn hiểu cỗ máy đó đã sống thế nào.",
@@ -322,7 +329,14 @@
       art_laser_btn: "Bắn laser lần nữa",
       art_still_answers: "Nó vẫn trả lời.",
       art_continue: "Đi tiếp",
-      scene_title_story_intro: "Mở đầu"
+      scene_title_story_intro: "Mở đầu",
+      enclosure_ps: "Tái bút: Columbina đính kèm lá thư này một tấm ảnh thật và một đoạn phim.",
+      enclosure_hint: "Chạm vào tấm ảnh để xem cỡ lớn và xem phim.",
+      gallery_title: "Bằng chứng hình ảnh",
+      gallery_sub: "Ảnh & video thật của cỗ máy này. Chạm vào ô để xem.",
+      media_modal_title: "Hồ sơ hình ảnh",
+      label_photo: "Ảnh",
+      label_video: "Video"
     }
   };
 
