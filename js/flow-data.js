@@ -5,7 +5,7 @@
  *  - LUNAMARIS_FLOW.rules   : thẻ luật nhận được sau mỗi lá thư, dùng ở Game 5 (Artemis)
  *  - Bổ sung chữ giao diện vào window.UI_I18N (EN/VI)
  *  - LUNAMARIS_FLOW.letter5 : mẫu Lá thư thứ năm (DUSTER) + Sổ tay DUSTER cho popup Hồ sơ
- * Lời thoại lấy từ docs/Kich_ban_relic_Final_v2.md; Surveyor 3 dùng 160 m (đo từ ảnh LRO 2011, NASA SVS).
+ * Lời thoại phỏng theo docs/Kich_ban_relic_Final_v2.md, viết lại cho web theo skill .claude/skills/loi-ke-tu-nhien; Surveyor 3 dùng 160 m (đo từ ảnh LRO 2011, NASA SVS).
  * Thêm ảnh cho một cảnh: điền `img: "assets/story/<tên>.webp"` — thiếu ảnh thì dùng nền vẽ bằng CSS.
  */
 (function () {
@@ -50,68 +50,68 @@
       to_ch2: [
         {
           id: "to2-1", world: "moon", speaker: C, img: "assets/story/to2-01-lrrr-beam.webp",
-          text_vi: "Người ta đặt nó xuống rồi đi. Chắc không ai nghĩ nó sẽ làm việc lâu đến thế.",
-          text_en: "They set it down and left. Nobody thought it would keep working this long."
+          text_vi: "Người ta đặt nó xuống rồi đi về. Chắc chẳng ai nghĩ nó làm việc được lâu đến thế đâu.",
+          text_en: "They set it down and went home. Nobody thought it would keep working this long."
         },
         {
           id: "to2-2", world: "moon", speaker: null, img: "assets/story/to2-02-surveyor3-scar.webp",
-          text_vi: "Biển Bão Tố, Mặt Trăng. Một cỗ máy ba chân đứng trong lòng hố nông. Lớp sơn ngả màu nâu bẩn.",
-          text_en: "Ocean of Storms, the Moon. A three-legged machine stands in a shallow crater. Its paint has turned a dirty brown."
+          text_vi: "Trên Biển Bão Tố của Mặt Trăng, một cỗ máy ba chân đứng trong lòng hố nông, lớp sơn đã ngả màu nâu bẩn. Ở đó chẳng có gió, vậy mà máy thu cứ rè rè như có gì đang cọ vào kim loại.",
+          text_en: "Out on the Moon's Ocean of Storms, a three-legged machine stands in a shallow crater, its paint gone a dirty brown. There's no wind up there, yet the receiver keeps crackling, as if something is scraping metal."
         },
         {
           id: "to2-3", world: "moon", speaker: C, img: "assets/story/to2-02-surveyor3-scar.webp",
-          text_vi: "Cái này từng bị thương. Do chúng ta.",
-          text_en: "This one got hurt. By us."
+          text_vi: "Cái này từng bị thương. …Mà là tại chúng mình đấy.",
+          text_en: "This one got hurt once. …And it was our fault."
         }
       ],
       to_ch3: [
         {
           id: "to3-1", world: "moon", speaker: C, img: "assets/story/story-to-ch2.webp",
-          text_vi: "Người ta còn chọn chỗ đáp gần nó cho tiện đi bộ sang xem. Ai ngờ.",
-          text_en: "They even landed close on purpose, so they could walk over and look. Who knew."
+          text_vi: "Thế mà người ta còn cố ý chọn chỗ đáp gần nó, cho tiện đi bộ sang xem đấy. Ai ngờ.",
+          text_en: "And they landed close on purpose, so they could walk over and take a look. Who knew."
         },
         {
           id: "to3-2", world: "mars", speaker: null, img: "assets/story/story-to-ch3.webp",
-          text_vi: "Thung lũng Perseverance, Sao Hỏa. Bầu trời màu cam, rồi đỏ thẫm. Một chiếc xe sáu bánh đứng yên, tấm pin phủ một lớp bụi mỏng.",
-          text_en: "Perseverance Valley, Mars. The sky turns orange, then deep red. A six-wheeled rover sits still, a thin layer of dust on its solar panels."
+          text_vi: "Gió rít từng cơn qua Thung lũng Perseverance trên Sao Hỏa, bầu trời ngả cam rồi đỏ thẫm. Giữa sườn thung lũng, một chiếc xe sáu bánh đứng yên, tấm pin đã phủ một lớp bụi mỏng.",
+          text_en: "Wind howls through Perseverance Valley on Mars as the sky turns orange, then deep red. Halfway up the slope, a six-wheeled rover sits still, a thin layer of dust on its solar panels."
         },
         {
           id: "to3-3", world: "mars", speaker: C, img: "assets/story/story-to-ch3.webp",
-          text_vi: "Ôi. Bão bụi. Cả hành tinh luôn.",
-          text_en: "Oh no. A dust storm. The whole planet."
+          text_vi: "Chết thật, bão bụi. Phủ kín cả hành tinh luôn.",
+          text_en: "Oh no, a dust storm. And it's covering the whole planet."
         }
       ],
       to_ch4: [
         {
           id: "to4-1", world: "mars", speaker: C, img: "assets/story/story-to-ch4.webp",
-          text_vi: "Nó không hỏng gì cả. Nó chỉ không còn thấy mặt trời.",
+          text_vi: "Nó có hỏng gì đâu. Chỉ là không còn thấy mặt trời nữa thôi.",
           text_en: "Nothing was broken. It just couldn't see the Sun anymore."
         },
         {
           id: "to4-2", world: "mars", speaker: null, img: "assets/story/to4-02-ingenuity-flight.webp",
-          text_vi: "Hố Jezero, Sao Hỏa. Tiếng cánh quạt quay rít, nhanh và cao. Một chiếc trực thăng nhỏ như cái hộp, bốn chân mảnh, đứng trên nền cát.",
-          text_en: "Jezero Crater, Mars. A high, fast whine of rotor blades. A helicopter the size of a tissue box stands on the sand on four thin legs."
+          text_vi: "Giữa hố Jezero trên Sao Hỏa, một chiếc trực thăng bé bằng cái hộp giấy ăn đang đứng trên bốn cái chân mảnh. Cánh quạt của nó quay tít, rít lên nhanh và cao.",
+          text_en: "In Jezero Crater on Mars, a helicopter the size of a tissue box stands on four thin legs. Its rotors spin hard, with a high, fast whine."
         },
         {
           id: "to4-3", world: "mars", speaker: C, img: "assets/story/to4-02-ingenuity-flight.webp",
-          text_vi: "Cái này thì chưa bao giờ chịu ngồi yên.",
+          text_vi: "Cái này thì chẳng bao giờ chịu ngồi yên đâu.",
           text_en: "This one never could sit still."
         }
       ],
       to_artemis: [
         {
           id: "toA-1", world: "mars", speaker: C, img: "assets/story/to4-02-ingenuity-flight.webp",
-          text_vi: "Không ai cứu được nó đâu. Nhưng giờ mình biết vì sao nó ngã.",
-          text_en: "Nobody could have saved it. But now we know why it fell."
+          text_vi: "Không ai cứu được nó đâu. Nhưng ít ra giờ mình biết vì sao nó ngã.",
+          text_en: "Nobody could have saved it. But at least now we know why it fell."
         },
         {
           id: "toA-2", world: "earth", speaker: null, img: "assets/story/toA-02-artemis-alert.webp",
-          text_vi: "Phòng trực, 04:10. Bốn lá thư nằm mở trên bàn. Dòng tin đổi màu hổ phách và chạy nhanh hơn: Artemis IV cần chọn bãi đáp trước bình minh. Bốn vùng ứng viên.",
-          text_en: "The control room, 04:10. Four open letters lie on the desk. The ticker turns amber and speeds up: Artemis IV must pick a landing site before dawn. Four candidate zones."
+          text_vi: "Bốn lá thư nằm mở trên bàn, còn máy thu thì đã im. Đến 04:10, dòng tin dưới màn hình bỗng đổi sang màu hổ phách và chạy nhanh hơn: Artemis IV phải chọn bãi đáp trước bình minh, trong bốn vùng ứng viên.",
+          text_en: "Four letters lie open on the desk, and the receiver has gone quiet. At 04:10 the news line turns amber and speeds up: Artemis IV has to pick a landing site before dawn, from four candidate zones."
         },
         {
           id: "toA-3", world: "earth", speaker: C, img: "assets/story/toA-02-artemis-alert.webp",
-          text_vi: "Khoan. Chúng nó trả lời câu này từ lâu rồi.",
+          text_vi: "Khoan đã. Mấy cỗ máy này trả lời câu đó từ lâu rồi mà.",
           text_en: "Wait. They answered this question a long time ago."
         }
       ],
@@ -119,13 +119,13 @@
       ending: [
         {
           id: "end-1", world: "moon", speaker: null, img: "assets/story/story-ending.webp",
-          text_vi: "Trên bản đồ, con tàu ở vùng D đứng yên. Các phi hành gia đặt xuống chiếc xe nhỏ mang bộ đo bụi DUSTER, rồi quay lại tàu. Tàu cất cánh. DUSTER ở lại.",
-          text_en: "On the map, the lander in zone D sits still. The astronauts set down a small rover carrying the DUSTER dust instruments, then walk back to the lander. The lander lifts off. DUSTER stays."
+          text_vi: "Con tàu ở vùng D nằm yên trên bản đồ. Các phi hành gia đặt xuống một chiếc xe nhỏ mang bộ đo bụi DUSTER, rồi quay về tàu. Tàu cất cánh, còn DUSTER thì ở lại.",
+          text_en: "On the map, the lander in zone D sits still. The astronauts set down a small rover carrying the DUSTER dust instruments and head back. The lander lifts off, and DUSTER stays behind."
         },
         {
           id: "end-2", world: "moon", speaker: null, img: "assets/story/ending-02-columbina-gaze.webp",
-          text_vi: "Columbina nhìn nó rất lâu.",
-          text_en: "Columbina watches it for a long time."
+          text_vi: "Columbina ngả người ra ghế, lần đầu tiên trong đêm trông cô nhẹ nhõm. Cô nhìn nó rất lâu.",
+          text_en: "Columbina leans back in her chair, relieved for the first time tonight. She watches it for a long time."
         },
         {
           id: "end-3", world: "moon", speaker: C, img: "assets/story/ending-02-columbina-gaze.webp",
@@ -134,17 +134,17 @@
         },
         {
           id: "end-4", world: "moon", speaker: C, img: "assets/story/ending-03-duster-alone.webp",
-          text_vi: "Cái máy mới đó tên là DUSTER. Người ta để nó lại để đo bụi Mặt Trăng, đúng thứ bụi từng làm khổ cái gương, làm xước Surveyor và che mắt Oppy.",
-          text_en: "That new machine is called DUSTER. It was left there to measure lunar dust, the same dust that troubled the mirror, scarred Surveyor and blinded Oppy."
+          text_vi: "Cái máy mới ấy tên là DUSTER. Người ta để nó lại đo bụi trên Mặt Trăng. Bụi, cái thứ từng làm khổ cái gương, làm xước Surveyor và che mắt Oppy.",
+          text_en: "That new machine is DUSTER. They left it there to measure dust on the Moon. Dust: the thing that troubled the mirror, scarred Surveyor and blinded Oppy."
         },
         {
           id: "end-5", world: "moon", speaker: C, img: "assets/story/ending-03-duster-alone.webp",
-          text_vi: "Rồi DUSTER cũng sẽ nằm lại đó. Năm mươi năm nữa, sẽ có ai đó ngồi đúng chỗ này lúc hai giờ sáng, và nghe nó gọi.",
+          text_vi: "Rồi một ngày DUSTER cũng thành cỗ máy cũ nằm lại đó. Năm mươi năm nữa, sẽ có ai đó ngồi đúng chỗ này lúc hai giờ sáng, và nghe nó gọi.",
           text_en: "One day DUSTER will be an old machine too. Fifty years from now, someone will sit right here at two in the morning and hear it call."
         },
         {
           id: "end-6", world: "earth", speaker: C, img: "assets/story/ending-02-columbina-gaze.webp",
-          text_vi: "Vậy nó nên nói gì với họ?",
+          text_vi: "Thế nó nên nói gì với họ nhỉ?",
           text_en: "So what should it tell them?"
         }
       ],
@@ -152,23 +152,23 @@
       future: [
         {
           id: "fut-1", world: "earth", speaker: null, img: "assets/story/future-01-room-2076.webp",
-          text_vi: "Hà Nội, 02:40, năm 2076. Vẫn căn phòng đó. Màn hình mới hơn, ghế khác. Một người khác đang ngồi trực.",
-          text_en: "Hanoi, 02:40, the year 2076. The same room. Newer screens, a different chair. Someone else is on the night shift."
+          text_vi: "Năm 2076, đồng hồ ở Hà Nội lại chỉ 02:40, trong đúng căn phòng ấy. Màn hình mới hơn, ghế cũng khác, và người ngồi trực là một người khác, quay lưng về phía chúng ta.",
+          text_en: "It's 2076, and in Hanoi the clock reads 02:40 again, in that very same room. The screens are newer, the chair is different, and someone else is on the night shift, back turned to us."
         },
         {
           id: "fut-2", world: "earth", speaker: null, img: "assets/story/future-01-room-2076.webp",
-          text_vi: "Máy thu kêu lên. Tích… tích… tích…",
-          text_en: "The receiver starts to beep. Tick… tick… tick…"
+          text_vi: "Rồi máy thu lại kêu. Tích… tích… tích…",
+          text_en: "Then the receiver beeps again. Tick… tick… tick…"
         },
         {
           id: "fut-3", world: "earth", speaker: null, img: "assets/story/future-01-room-2076.webp",
-          text_vi: "Trên bản đồ Mặt Trăng, cạnh chấm sáng của cái gương, có thêm một chấm sáng thứ năm mang tên DUSTER.",
-          text_en: "On the lunar map, next to the mirror's light, there is a fifth light. It is called DUSTER."
+          text_vi: "Trên bản đồ Mặt Trăng, cạnh chấm sáng của cái gương, giờ có thêm một chấm thứ năm. Nó mang tên DUSTER.",
+          text_en: "On the lunar map, next to the mirror's light, there's a fifth light now. Its name is DUSTER."
         },
         {
           id: "fut-4", world: "earth", speaker: null, img: "assets/story/future-01-room-2076.webp",
-          text_vi: "Phong bì được mở. Đó là lá thư bạn vừa viết.",
-          text_en: "The envelope opens. It is the letter you just wrote."
+          text_vi: "Người đang trực mở phong bì. Bên trong là lá thư bạn vừa viết.",
+          text_en: "The person on duty opens the envelope. Inside is the letter you just wrote."
         }
       ]
     },
@@ -179,12 +179,12 @@
       greeting_vi: "Gửi người ở tương lai,",
       greeting_en: "To whoever comes in the future,",
       body_vi: [
-        "Tôi là DUSTER, được phi hành gia Artemis IV đặt xuống Mặt Trăng để canh chừng những hạt bụi. Người ta chọn chỗ này cho tôi vì nó cách các di tích cũ hơn 2 km, có nắng và có đủ điểm mốc để tàu tìm đường.",
-        "Chọn chỗ này là nhờ bốn người đi trước: một cái gương vẫn còn trả lời, một cỗ máy từng bị bụi làm bị thương, một chiếc xe đã chạy theo mặt trời, và một chiếc trực thăng từng bị lạc."
+        "Tôi là DUSTER. Các phi hành gia Artemis IV đã đặt tôi xuống Mặt Trăng để canh chừng những hạt bụi. Họ chọn chỗ này cho tôi vì nó cách các di tích cũ hơn 2 km, có nắng, lại có đủ điểm mốc để tàu tìm đường.",
+        "Có được chỗ này là nhờ bốn người đi trước: một cái gương vẫn còn trả lời, một cỗ máy mang vết sẹo vì bụi, một chiếc xe từng chạy theo mặt trời, và một chiếc trực thăng từng bị lạc."
       ],
       body_en: [
         "I am DUSTER. The Artemis IV astronauts set me down on the Moon to keep watch over the dust. They chose this spot for me because it is more than 2 km from the old relics, it gets sunlight, and it has enough landmarks for landers to find their way.",
-        "I owe this spot to four who came before me: a mirror that still answers, a machine once hurt by dust, a rover that chased the Sun, and a helicopter that once got lost."
+        "I owe this spot to four who came before me: a mirror that still answers, a machine scarred by dust, a rover that chased the Sun, and a helicopter that once got lost."
       ],
       ask_vi: "Nếu bạn đến đây, xin hãy",
       ask_en: "If you come here, please",
@@ -221,50 +221,50 @@
       "apollo11-lrrr": {
         kind: "hold",
         hold_ms: 2560,
-        cue_vi: "Cái này không có pin, không có radio. Nó không gọi được ai cả. Muốn nói chuyện với nó thì phải chiếu ánh sáng vào.",
-        cue_en: "It has no battery and no radio. It can't call anyone. To talk to it, you have to shine light at it.",
+        cue_vi: "Cái này chẳng có pin, cũng chẳng có radio, nên nó không gọi được ai đâu. Muốn nói chuyện với nó thì phải chiếu ánh sáng vào.",
+        cue_en: "This one has no battery and no radio, so it can't call anyone. If you want to talk to it, you have to shine light at it.",
         goal_vi: "Nhấn giữ nút cho tới khi ánh sáng quay về Trái Đất, khoảng 2,56 giây.",
         goal_en: "Press and hold the button until the light comes back to Earth, about 2.56 seconds.",
-        win_vi: "Một chấm sáng nhỏ quay về. Nó vẫn trả lời.",
-        win_en: "A tiny point of light comes back. It still answers."
+        win_vi: "Một chấm sáng bé tí quay về. Nó vẫn trả lời.",
+        win_en: "A tiny dot of light comes back. It still answers."
       },
       "surveyor-3": {
         kind: "slider",
         start: 2500,
         target: 160,
         tolerance: 15,
-        cue_vi: "Năm 1969, tàu Intrepid của Apollo 12 hạ xuống gần Surveyor 3. Bụi từ động cơ bắn ngang mặt đất như cát phun.",
-        cue_en: "In 1969, Apollo 12's lander Intrepid came down near Surveyor 3. Engine exhaust blasted dust sideways like a sandblaster.",
+        cue_vi: "Năm 1969, tàu Intrepid của Apollo 12 hạ xuống gần Surveyor 3. Động cơ phun xuống, bụi bắn ngang mặt đất như phun cát.",
+        cue_en: "In 1969, Apollo 12's lander Intrepid came down near Surveyor 3. Its engine blasted dust sideways across the ground like a sandblaster.",
         goal_vi: "Kéo thanh để đưa tàu Intrepid tới đúng chỗ nó đã đáp: cách Surveyor 3 khoảng 160 m.",
         goal_en: "Drag the slider to bring Intrepid to where it really landed: about 160 m from Surveyor 3.",
-        far_vi: "Còn xa. Kéo tàu lại gần hơn.",
+        far_vi: "Vẫn còn xa. Kéo tàu lại gần thêm.",
         far_en: "Still far. Bring the lander closer.",
-        near_vi: "Gần hơn cả năm 1969 rồi. Lùi ra một chút.",
-        near_en: "That's closer than in 1969. Back off a little.",
-        win_vi: "160 m. Lớp sơn trắng của Surveyor 3 ngả nâu, ống kính bị rỗ. Vẫn chưa đủ xa.",
-        win_en: "160 m. Surveyor 3's white paint turns brown and its lens gets pitted. Still not far enough."
+        near_vi: "Gần hơn cả hồi 1969 rồi đấy. Lùi ra một chút.",
+        near_en: "That's even closer than in 1969. Back off a little.",
+        win_vi: "160 m. Lớp sơn trắng của Surveyor 3 ngả nâu, ống kính rỗ lỗ chỗ. Vậy mà vẫn chưa đủ xa.",
+        win_en: "160 m. Surveyor 3's white paint turns brown and its lens gets pitted. And that's still not far enough."
       },
       "opportunity-rover": {
         kind: "slider",
         start: 1,
         target: 10.8,
-        cue_vi: "Ôi. Bão bụi phủ cả hành tinh. Nhìn đồng hồ điện kìa.",
-        cue_en: "A dust storm is covering the whole planet. Look at the power meter.",
+        cue_vi: "Bão bụi đang che kín mặt trời. Nhìn đồng hồ điện kìa.",
+        cue_en: "The dust storm is blotting out the Sun. Look at the power meter.",
         goal_vi: "Kéo thanh độ dày của bụi tới khi điện còn 22 Wh, mức của tín hiệu cuối cùng.",
         goal_en: "Drag the dust thickness slider until power drops to 22 Wh, the level of the last signal.",
-        win_vi: "22 Wh mỗi ngày. Không đủ để thức. Giữa trưa mà tối như nửa đêm.",
-        win_en: "22 Wh a day. Not enough to stay awake. Noon is as dark as midnight."
+        win_vi: "22 Wh mỗi ngày, không đủ để thức. Giữa trưa mà trời tối như nửa đêm.",
+        win_en: "22 Wh a day, not enough to stay awake. At noon it's as dark as midnight."
       },
       "ingenuity-helicopter": {
         kind: "slider",
         start: 1,
         target: 72,
-        cue_vi: "Không khí ở đây chỉ dày bằng khoảng 1% ở Trái Đất. Người ta chỉ mong nó bay 5 lần.",
-        cue_en: "The air here is only about 1% as thick as Earth's. The team hoped for 5 flights.",
+        cue_vi: "Không khí ở đây loãng lắm, chỉ dày bằng khoảng 1% ở Trái Đất. Thế nên người ta chỉ mong nó bay được 5 lần.",
+        cue_en: "The air here is thin, only about 1% as thick as Earth's. So the team only hoped it would fly 5 times.",
         goal_vi: "Kéo số chuyến bay tới chuyến 72, chuyến cuối cùng.",
         goal_en: "Drag the flight counter to flight 72, the last one.",
-        win_vi: "Chuyến 72. Đồi cát trơn nhẵn, camera không tìm được viên đá nào làm mốc. Cánh quạt gãy.",
-        win_en: "Flight 72. The sand ripples were smooth, the camera found no rock to track. A rotor blade broke."
+        win_vi: "Chuyến 72. Bên dưới chỉ có đồi cát trơn nhẵn, camera không tìm được viên đá nào làm mốc. Nó chạm đất mạnh, gãy cánh quạt.",
+        win_en: "Flight 72. Below there's only smooth sand, and the camera can't find a single rock to track. It hits the ground hard and breaks a rotor blade."
       }
     },
 
@@ -274,25 +274,25 @@
         zone: "A", effect: "reveal",
         title_vi: "Di tích vẫn đang làm việc", title_en: "The relic is still working",
         sub_vi: "“Tôi chỉ sợ bụi.”", sub_en: "“I am only afraid of dust.”",
-        say_vi: "Ở vùng A có một thứ vẫn đang làm việc: cái gương.", say_en: "Something in zone A is still working: the mirror."
+        say_vi: "Ở vùng A có một thứ vẫn đang làm việc. Cái gương.", say_en: "Something in zone A is still working. The mirror."
       },
       "surveyor-3": {
         zone: "A", effect: "cross",
         title_vi: "Cách di tích ít nhất 2 km", title_en: "Stay at least 2 km away",
         sub_vi: "“160 m vẫn chưa đủ xa.”", sub_en: "“160 m was still not far enough.”",
-        say_vi: "Vùng A nằm trọn trong vòng 2 km. Gần quá, bụi sẽ phủ lên nó.", say_en: "Zone A is inside the 2 km ring. Too close, the dust would bury it."
+        say_vi: "Vùng A nằm trọn trong vòng 2 km. Gần thế thì bụi sẽ phủ lên nó mất.", say_en: "Zone A sits inside the 2 km ring. That close, the dust would bury it."
       },
       "opportunity-rover": {
         zone: "B", effect: "cross",
         title_vi: "Phải có nắng", title_en: "There must be sunlight",
         sub_vi: "“Không đủ để thức.”", sub_en: "“Not enough to stay awake.”",
-        say_vi: "Đáy hố B khuất nắng quanh năm. Không có mặt trời thì pin nào cũng cạn.", say_en: "Crater B sits in shadow all year. Without the Sun, every battery runs dry."
+        say_vi: "Đáy hố B khuất nắng quanh năm. Không có mặt trời thì pin nào cũng cạn, Oppy hiểu điều đó hơn ai hết.", say_en: "Crater B sits in shadow all year. Without the Sun, every battery runs dry, and Oppy knows that better than anyone."
       },
       "ingenuity-helicopter": {
         zone: "C", effect: "cross",
         title_vi: "Phải có điểm mốc", title_en: "There must be landmarks",
         sub_vi: "“…không tìm được viên đá nào làm mốc.”", sub_en: "“…couldn't find a single rock to hold on to.”",
-        say_vi: "Đồng bằng C phẳng lì, không có hố nhỏ hay đá nào làm mốc. Tàu sẽ trượt giống Ingenuity.", say_en: "Plain C is flat, with no small craters or rocks to track. The lander would slip, like Ingenuity."
+        say_vi: "Đồng bằng C phẳng lì, chẳng có hố nhỏ hay hòn đá nào làm mốc. Tàu đáp xuống đó sẽ trượt như Ingenuity thôi.", say_en: "Plain C is flat, with no small craters or rocks to track. A lander would slip, just like Ingenuity."
       }
     }
   };
