@@ -18,8 +18,8 @@
       intro: [
         {
           id: "intro-1", world: "earth", speaker: null, img: "assets/story/intro-01-desk.webp",
-          text_vi: "Trạm mặt đất Hà Nội, 02:40. Dưới đáy màn hình, một dòng tin chạy chậm: Artemis IV chuẩn bị đưa con người trở lại Mặt Trăng. Bãi đáp cho trạm đo bụi DUSTER: chưa chốt.",
-          text_en: "Hanoi ground station, 02:40. A slow news ticker crawls along the bottom of the screen: Artemis IV is about to take people back to the Moon. Landing site for the DUSTER dust station: not decided."
+          text_vi: "Đã 02:40, Hà Nội ngủ cả rồi. Phòng trực của trạm mặt đất chỉ còn ánh sáng từ dãy màn hình, nơi một dòng tin cứ chạy chầm chậm: Artemis IV sắp đưa người trở lại Mặt Trăng, còn chỗ đặt trạm đo bụi DUSTER thì chưa ai chốt.",
+          text_en: "It's 02:40 and Hanoi is asleep. In the control room, the only light comes from the screens, where a news line crawls by: Artemis IV will soon take people back to the Moon, but no one has picked a spot for the DUSTER dust station."
         },
         {
           id: "intro-2", world: "earth", speaker: C, img: "assets/story/intro-02-columbina.webp",
@@ -28,8 +28,8 @@
         },
         {
           id: "intro-3", world: "earth", speaker: null, img: "assets/story/intro-03-radio-beep.webp",
-          text_vi: "Máy thu ở góc bàn kêu lên. Tích… tích… tích…",
-          text_en: "The receiver in the corner starts to beep. Tick… tick… tick…"
+          text_vi: "Cô vừa dứt lời thì cái máy thu ở góc bàn bỗng kêu. Tích… tích… tích…",
+          text_en: "She has barely finished speaking when the receiver in the corner of the desk starts to beep. Tick… tick… tick…"
         },
         {
           id: "intro-4", world: "earth", speaker: C, img: "assets/story/intro-03-radio-beep.webp",
@@ -38,13 +38,13 @@
         },
         {
           id: "intro-5", world: "earth", speaker: C, img: "assets/story/intro-04-envelopes.webp",
-          text_vi: "Hai trên Mặt Trăng, hai trên Sao Hỏa. Toàn những cỗ máy người ta để lại từ lâu rồi. Không ai nghe chúng nữa. Nên mình nghe.",
-          text_en: "Two on the Moon, two on Mars. Machines people left behind a long time ago. Nobody listens to them anymore. So we will."
+          text_vi: "Hai cái trên Mặt Trăng, hai cái trên Sao Hỏa kìa. Toàn máy móc người ta bỏ lại từ lâu lắm rồi. Giờ chẳng ai nghe chúng nữa. Thế thì mình nghe.",
+          text_en: "Two on the Moon, two on Mars, see? All machines people left behind ages ago. Nobody listens to them anymore. So we will."
         },
         {
           id: "intro-6", world: "earth", speaker: C, img: "assets/story/intro-04-envelopes.webp",
-          text_vi: "Mỗi tín hiệu là một lá thư. Nhưng muốn mở thì phải hiểu nó đã sống thế nào. Bạn mở cái đầu tiên đi.",
-          text_en: "Each signal is a letter. But to open one, you have to understand how that machine lived. Go ahead, open the first one."
+          text_vi: "Mỗi tín hiệu là một lá thư đấy. Nhưng muốn mở được thì phải hiểu cỗ máy ấy đã sống thế nào đã. Bạn mở cái đầu tiên đi.",
+          text_en: "Every signal is a letter. But you can only open one once you understand how that machine lived. Go on, open the first one."
         }
       ],
       to_ch2: [
