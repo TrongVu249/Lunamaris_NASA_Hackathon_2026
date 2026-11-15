@@ -17,56 +17,56 @@
     story: {
       intro: [
         {
-          id: "intro-1", world: "earth", speaker: null, img: "assets/story/story-intro.webp",
+          id: "intro-1", world: "earth", speaker: null, img: "assets/story/intro-01-desk.webp",
           text_vi: "Trạm mặt đất Hà Nội, 02:40. Dưới đáy màn hình, một dòng tin chạy chậm: Artemis IV chuẩn bị đưa con người trở lại Mặt Trăng. Bãi đáp cho trạm đo bụi DUSTER: chưa chốt.",
           text_en: "Hanoi ground station, 02:40. A slow news ticker crawls along the bottom of the screen: Artemis IV is about to take people back to the Moon. Landing site for the DUSTER dust station: not decided."
         },
         {
-          id: "intro-2", world: "earth", speaker: C, img: "assets/story/story-intro.webp",
+          id: "intro-2", world: "earth", speaker: C, img: "assets/story/intro-02-columbina.webp",
           text_vi: "Ca đêm đầu tiên hả? Đừng lo, giờ này chẳng có gì xảy ra đâu.",
           text_en: "First night shift? Don't worry, nothing ever happens at this hour."
         },
         {
-          id: "intro-3", world: "earth", speaker: null, img: "assets/story/story-intro.webp",
+          id: "intro-3", world: "earth", speaker: null, img: "assets/story/intro-03-radio-beep.webp",
           text_vi: "Máy thu ở góc bàn kêu lên. Tích… tích… tích…",
           text_en: "The receiver in the corner starts to beep. Tick… tick… tick…"
         },
         {
-          id: "intro-4", world: "earth", speaker: C, img: "assets/story/story-intro.webp",
+          id: "intro-4", world: "earth", speaker: C, img: "assets/story/intro-03-radio-beep.webp",
           text_vi: "…Trừ cái đó.",
           text_en: "…Except that."
         },
         {
-          id: "intro-5", world: "earth", speaker: C, img: "assets/story/story-intro.webp",
+          id: "intro-5", world: "earth", speaker: C, img: "assets/story/intro-04-envelopes.webp",
           text_vi: "Hai trên Mặt Trăng, hai trên Sao Hỏa. Toàn những cỗ máy người ta để lại từ lâu rồi. Không ai nghe chúng nữa. Nên mình nghe.",
           text_en: "Two on the Moon, two on Mars. Machines people left behind a long time ago. Nobody listens to them anymore. So we will."
         },
         {
-          id: "intro-6", world: "earth", speaker: C, img: "assets/story/story-intro.webp",
+          id: "intro-6", world: "earth", speaker: C, img: "assets/story/intro-04-envelopes.webp",
           text_vi: "Mỗi tín hiệu là một lá thư. Nhưng muốn mở thì phải hiểu nó đã sống thế nào. Bạn mở cái đầu tiên đi.",
           text_en: "Each signal is a letter. But to open one, you have to understand how that machine lived. Go ahead, open the first one."
         }
       ],
       to_ch2: [
         {
-          id: "to2-1", world: "moon", speaker: C, img: "assets/story/story-to-ch2.webp",
+          id: "to2-1", world: "moon", speaker: C, img: "assets/story/to2-01-lrrr-beam.webp",
           text_vi: "Người ta đặt nó xuống rồi đi. Chắc không ai nghĩ nó sẽ làm việc lâu đến thế.",
           text_en: "They set it down and left. Nobody thought it would keep working this long."
         },
         {
-          id: "to2-2", world: "moon", speaker: null, img: "assets/story/story-to-ch2.webp",
+          id: "to2-2", world: "moon", speaker: null, img: "assets/story/to2-02-surveyor3-scar.webp",
           text_vi: "Biển Bão Tố, Mặt Trăng. Một cỗ máy ba chân đứng trong lòng hố nông. Lớp sơn ngả màu nâu bẩn.",
           text_en: "Ocean of Storms, the Moon. A three-legged machine stands in a shallow crater. Its paint has turned a dirty brown."
         },
         {
-          id: "to2-3", world: "moon", speaker: C, img: "assets/story/story-to-ch2.webp",
+          id: "to2-3", world: "moon", speaker: C, img: "assets/story/to2-02-surveyor3-scar.webp",
           text_vi: "Cái này từng bị thương. Do chúng ta.",
           text_en: "This one got hurt. By us."
         }
       ],
       to_ch3: [
         {
-          id: "to3-1", world: "moon", speaker: C, img: "assets/story/story-to-ch3.webp",
+          id: "to3-1", world: "moon", speaker: C, img: "assets/story/story-to-ch2.webp",
           text_vi: "Người ta còn chọn chỗ đáp gần nó cho tiện đi bộ sang xem. Ai ngờ.",
           text_en: "They even landed close on purpose, so they could walk over and look. Who knew."
         },
@@ -88,29 +88,29 @@
           text_en: "Nothing was broken. It just couldn't see the Sun anymore."
         },
         {
-          id: "to4-2", world: "mars", speaker: null, img: "assets/story/story-to-ch4.webp",
+          id: "to4-2", world: "mars", speaker: null, img: "assets/story/to4-02-ingenuity-flight.webp",
           text_vi: "Hố Jezero, Sao Hỏa. Tiếng cánh quạt quay rít, nhanh và cao. Một chiếc trực thăng nhỏ như cái hộp, bốn chân mảnh, đứng trên nền cát.",
           text_en: "Jezero Crater, Mars. A high, fast whine of rotor blades. A helicopter the size of a tissue box stands on the sand on four thin legs."
         },
         {
-          id: "to4-3", world: "mars", speaker: C, img: "assets/story/story-to-ch4.webp",
+          id: "to4-3", world: "mars", speaker: C, img: "assets/story/to4-02-ingenuity-flight.webp",
           text_vi: "Cái này thì chưa bao giờ chịu ngồi yên.",
           text_en: "This one never could sit still."
         }
       ],
       to_artemis: [
         {
-          id: "toA-1", world: "mars", speaker: C, img: "assets/story/story-to-artemis.webp",
+          id: "toA-1", world: "mars", speaker: C, img: "assets/story/to4-02-ingenuity-flight.webp",
           text_vi: "Không ai cứu được nó đâu. Nhưng giờ mình biết vì sao nó ngã.",
           text_en: "Nobody could have saved it. But now we know why it fell."
         },
         {
-          id: "toA-2", world: "earth", speaker: null, img: "assets/story/story-to-artemis.webp",
+          id: "toA-2", world: "earth", speaker: null, img: "assets/story/toA-02-artemis-alert.webp",
           text_vi: "Phòng trực, 04:10. Bốn lá thư nằm mở trên bàn. Dòng tin đổi màu hổ phách và chạy nhanh hơn: Artemis IV cần chọn bãi đáp trước bình minh. Bốn vùng ứng viên.",
           text_en: "The control room, 04:10. Four open letters lie on the desk. The ticker turns amber and speeds up: Artemis IV must pick a landing site before dawn. Four candidate zones."
         },
         {
-          id: "toA-3", world: "earth", speaker: C, img: "assets/story/story-to-artemis.webp",
+          id: "toA-3", world: "earth", speaker: C, img: "assets/story/toA-02-artemis-alert.webp",
           text_vi: "Khoan. Chúng nó trả lời câu này từ lâu rồi.",
           text_en: "Wait. They answered this question a long time ago."
         }
@@ -123,27 +123,27 @@
           text_en: "On the map, the lander in zone D sits still. The astronauts set down a small rover carrying the DUSTER dust instruments, then walk back to the lander. The lander lifts off. DUSTER stays."
         },
         {
-          id: "end-2", world: "moon", speaker: null, img: "assets/story/story-ending.webp",
+          id: "end-2", world: "moon", speaker: null, img: "assets/story/ending-02-columbina-gaze.webp",
           text_vi: "Columbina nhìn nó rất lâu.",
           text_en: "Columbina watches it for a long time."
         },
         {
-          id: "end-3", world: "moon", speaker: C, img: "assets/story/story-ending.webp",
+          id: "end-3", world: "moon", speaker: C, img: "assets/story/ending-02-columbina-gaze.webp",
           text_vi: "Bạn thấy không?",
           text_en: "Do you see it?"
         },
         {
-          id: "end-4", world: "moon", speaker: C, img: "assets/story/story-ending.webp",
+          id: "end-4", world: "moon", speaker: C, img: "assets/story/ending-03-duster-alone.webp",
           text_vi: "Cái máy mới đó tên là DUSTER. Người ta để nó lại để đo bụi Mặt Trăng, đúng thứ bụi từng làm khổ cái gương, làm xước Surveyor và che mắt Oppy.",
           text_en: "That new machine is called DUSTER. It was left there to measure lunar dust, the same dust that troubled the mirror, scarred Surveyor and blinded Oppy."
         },
         {
-          id: "end-5", world: "moon", speaker: C, img: "assets/story/story-ending.webp",
+          id: "end-5", world: "moon", speaker: C, img: "assets/story/ending-03-duster-alone.webp",
           text_vi: "Rồi DUSTER cũng sẽ nằm lại đó. Năm mươi năm nữa, sẽ có ai đó ngồi đúng chỗ này lúc hai giờ sáng, và nghe nó gọi.",
           text_en: "One day DUSTER will be an old machine too. Fifty years from now, someone will sit right here at two in the morning and hear it call."
         },
         {
-          id: "end-6", world: "earth", speaker: C, img: "assets/story/story-ending.webp",
+          id: "end-6", world: "earth", speaker: C, img: "assets/story/ending-02-columbina-gaze.webp",
           text_vi: "Vậy nó nên nói gì với họ?",
           text_en: "So what should it tell them?"
         }
@@ -151,22 +151,22 @@
       /* Cảnh 13 (Hà Nội 2076): xong thì sang cảnh "future" hiện lại lá thư người chơi vừa niêm phong */
       future: [
         {
-          id: "fut-1", world: "earth", speaker: null, img: "assets/story/story-future.webp",
+          id: "fut-1", world: "earth", speaker: null, img: "assets/story/future-01-room-2076.webp",
           text_vi: "Hà Nội, 02:40, năm 2076. Vẫn căn phòng đó. Màn hình mới hơn, ghế khác. Một người khác đang ngồi trực.",
           text_en: "Hanoi, 02:40, the year 2076. The same room. Newer screens, a different chair. Someone else is on the night shift."
         },
         {
-          id: "fut-2", world: "earth", speaker: null, img: "assets/story/story-future.webp",
+          id: "fut-2", world: "earth", speaker: null, img: "assets/story/future-01-room-2076.webp",
           text_vi: "Máy thu kêu lên. Tích… tích… tích…",
           text_en: "The receiver starts to beep. Tick… tick… tick…"
         },
         {
-          id: "fut-3", world: "earth", speaker: null, img: "assets/story/story-future.webp",
+          id: "fut-3", world: "earth", speaker: null, img: "assets/story/future-01-room-2076.webp",
           text_vi: "Trên bản đồ Mặt Trăng, cạnh chấm sáng của cái gương, có thêm một chấm sáng thứ năm mang tên DUSTER.",
           text_en: "On the lunar map, next to the mirror's light, there is a fifth light. It is called DUSTER."
         },
         {
-          id: "fut-4", world: "earth", speaker: null, img: "assets/story/story-future.webp",
+          id: "fut-4", world: "earth", speaker: null, img: "assets/story/future-01-room-2076.webp",
           text_vi: "Phong bì được mở. Đó là lá thư bạn vừa viết.",
           text_en: "The envelope opens. It is the letter you just wrote."
         }
