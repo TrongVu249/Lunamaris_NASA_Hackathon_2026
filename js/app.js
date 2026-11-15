@@ -1210,6 +1210,7 @@
             <div id="media-modal-media" class="media-modal-media"></div>
             <p id="media-modal-caption" class="media-modal-caption"></p>
             <p id="media-modal-credit" class="media-modal-credit"></p>
+            <a id="media-modal-yt" class="media-modal-yt" target="_blank" rel="noopener noreferrer" hidden></a>
             <div class="media-modal-foot">
               <button id="media-modal-prev" type="button" class="media-modal-nav" aria-label="Trước">←</button>
               <span id="media-modal-counter" class="media-modal-counter"></span>
@@ -1249,11 +1250,19 @@
     const it = items[state.mediaModal.idx];
     setTxt("media-modal-title", `${t.media_modal_title}: ${L(art, "name")}`);
     const media = document.getElementById("media-modal-media");
+    const yt = document.getElementById("media-modal-yt");
     if (it.type === "video") {
       const start = it.start ? `&start=${it.start}` : "";
-      media.innerHTML = `<iframe title="${escAttr(L(it, "caption"))}" src="https://www.youtube-nocookie.com/embed/${it.youtube_id}?autoplay=1&mute=1&rel=0&playsinline=1${start}" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+      /* YouTube Error 153 = embed không xác định được trang gọi: gửi Referer + origin (file:// không có origin hợp lệ). */
+      const origin = /^https?:$/.test(location.protocol) ? `&enablejsapi=1&origin=${encodeURIComponent(location.origin)}` : "";
+      media.innerHTML = `<iframe title="${escAttr(L(it, "caption"))}" src="https://www.youtube-nocookie.com/embed/${it.youtube_id}?autoplay=1&mute=1&rel=0&playsinline=1${start}${origin}" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`;
+      yt.href = `https://www.youtube.com/watch?v=${encodeURIComponent(it.youtube_id)}${it.start ? `&t=${it.start}s` : ""}`;
+      yt.textContent = t.watch_on_youtube;
+      yt.hidden = false;
     } else {
       media.innerHTML = `<img src="${it.url}" alt="${escAttr(L(it, "caption"))}" />`;
+      yt.hidden = true;
+      yt.removeAttribute("href");
     }
     setTxt("media-modal-caption", L(it, "caption"));
     setTxt("media-modal-credit", it.credit || "");

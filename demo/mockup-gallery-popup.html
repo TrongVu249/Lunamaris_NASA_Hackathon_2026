@@ -222,7 +222,9 @@
     } else {
       lbMedia.innerHTML =
         '<iframe src="https://www.youtube-nocookie.com/embed/' + it.youtube_id +
-        '?autoplay=1&mute=1&rel=0&playsinline=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>';
+        '?autoplay=1&mute=1&rel=0&playsinline=1' +
+        (/^https?:$/.test(location.protocol) ? '&enablejsapi=1&origin=' + encodeURIComponent(location.origin) : '') +
+        '" allow="autoplay; encrypted-media" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>';
     }
     document.getElementById("lbCap").textContent = it.cap;
     document.getElementById("lbCredit").textContent = it.credit + " (" + (cur + 1) + "/" + ITEMS.length + ")";

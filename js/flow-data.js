@@ -381,7 +381,8 @@
       gallery_sub: "Real photos & footage of this machine. Tap a tile to view.",
       media_modal_title: "Image dossier",
       label_photo: "Photo",
-      label_video: "Video"
+      label_video: "Video",
+      watch_on_youtube: "Watch on YouTube ↗"
     },
     vi: {
       signals_lead: "Nghe lần lượt từng tín hiệu. Mỗi lá thư mở ra khi bạn hiểu cỗ máy đó đã sống thế nào.",
@@ -465,7 +466,8 @@
       gallery_sub: "Ảnh & video thật của cỗ máy này. Chạm vào ô để xem.",
       media_modal_title: "Hồ sơ hình ảnh",
       label_photo: "Ảnh",
-      label_video: "Video"
+      label_video: "Video",
+      watch_on_youtube: "Xem trên YouTube ↗"
     }
   };
 

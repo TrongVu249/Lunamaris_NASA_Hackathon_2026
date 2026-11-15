@@ -4267,6 +4267,23 @@ body:not(.book-paged) .dossier-btn {
   font-size: 0.7rem;
   color: var(--ink-2);
 }
+.media-modal-yt {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px; /* vùng chạm đủ lớn trên điện thoại */
+  margin: 2px 2px 0;
+  font-size: 0.8rem;
+  color: var(--signal);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.media-modal-yt[hidden] {
+  display: none;
+}
+.media-modal-yt:hover,
+.media-modal-yt:focus-visible {
+  color: var(--ink);
+}
 .media-modal-foot {
   display: flex;
   align-items: center;
