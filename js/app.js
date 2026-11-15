@@ -54,6 +54,8 @@
   const L5 = FLOW.letter5 || null;
   state.chapterView = {}; // artId → "game" | "letter"
   state.dossierOpen = false;
+  state.mediaModalOpen = false;
+  state.mediaModal = null; // { artId, idx } — cửa sổ ảnh & video thật
   state.letter5 = { choice: 0, custom: "", sealed: false };
 
   function loadProgress() {
@@ -713,6 +715,7 @@
           <span class="epistemic">${epNarrative}</span>
           <p class="letter-route">${t.postmark_from} <strong>${art.location_name}</strong> ${t.postmark_to}</p>
           <blockquote class="letter">${L(nv, "letter")}</blockquote>
+          ${enclosureHtml(art)}
           ${rule
             ? `<div class="rule-stamp rule-stamp--earned" style="--c: ${planetColor(art)};">
                  <span class="rule-stamp-n num" aria-hidden="true">${Number(art.chapter_num)}</span>
@@ -1075,7 +1078,7 @@
     }
     setTxt("dossier-sheet-title", art ? `${t.dossier_title}: ${L(art, "name")}` : `${t.dossier_title}: ${t.scene_title_artemis}`);
     if (art) {
-      body.innerHTML = `<div class="dossier-grid" style="--c: ${planetColor(art)};">${instrumentHtml(art)}${dossierHtml(art)}</div>`;
+      body.innerHTML = `<div class="dossier-grid" style="--c: ${planetColor(art)};"><div class="dossier-left">${galleryHtml(art)}${instrumentHtml(art)}</div>${dossierHtml(art)}</div>`;
       updateChapterTelemetryDOM(art.id);
       bindInstrument(body, art);
     } else {
@@ -1123,6 +1126,158 @@
     btn.setAttribute("aria-expanded", String(open));
     btn.setAttribute("aria-label", open ? t.dossier_close : t.dossier_btn);
     setTxt("dossier-btn-label", open ? t.dossier_close : t.dossier_btn);
+  }
+
+  /* ===========================================================================
+   * ẢNH & VIDEO THẬT: trigger (polaroid trong thư, thumbnail trong hồ sơ) → modal
+   * Dữ liệu: media.gallery của từng thiết bị trong js/data.js
+   * =========================================================================== */
+
+  function escAttr(s) {
+    return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+  }
+
+  /** Gộp photos + videos của một thiết bị thành danh sách mục xem được. */
+  function galleryItems(art) {
+    const g = art && art.media && art.media.gallery;
+    if (!g) return [];
+    const photos = (g.photos || []).map((p) => ({ type: "photo", ...p }));
+    const videos = (g.videos || []).map((v) => ({ type: "video", ...v }));
+    return photos.concat(videos);
+  }
+
+  /** Vị trí 1 — "Tái bút": tấm ảnh polaroid kẹp vào lá thư. */
+  function enclosureHtml(art) {
+    const t = tr();
+    const items = galleryItems(art);
+    if (!items.length) return "";
+    const firstPhoto = items.find((i) => i.type === "photo") || items[0];
+    const idx = items.indexOf(firstPhoto);
+    const hasVideo = items.some((i) => i.type === "video");
+    return `
+          <button type="button" class="letter-enclosure" data-media-open="${art.id}" data-media-idx="${idx}" aria-haspopup="dialog">
+            <span class="enclosure-tape" aria-hidden="true"></span>
+            <span class="enclosure-photo">
+              <img src="${firstPhoto.url}" alt="${escAttr(L(firstPhoto, "caption"))}" loading="lazy" />
+              ${hasVideo ? '<span class="enclosure-play" aria-hidden="true">▶</span>' : ""}
+            </span>
+            <span class="enclosure-ps">${t.enclosure_ps}</span>
+            <span class="enclosure-hint">${t.enclosure_hint}</span>
+          </button>`;
+  }
+
+  /** Vị trí 2 — mục "Bằng chứng hình ảnh" trong popup Hồ sơ Khoa học. */
+  function galleryHtml(art) {
+    const t = tr();
+    const items = galleryItems(art);
+    if (!items.length) return "";
+    const fallback = (items.find((i) => i.type === "photo") || {}).url || "";
+    return `
+        <section class="gallery-sec" aria-label="${t.gallery_title}">
+          <h3>${t.gallery_title}</h3>
+          <p class="gallery-sub">${t.gallery_sub}</p>
+          <div class="gallery-strip">
+            ${items
+              .map(
+                (it, i) => `
+                <button type="button" class="gallery-thumb" data-media-open="${art.id}" data-media-idx="${i}">
+                  <span class="thumb-media">
+                    <img src="${it.type === "video" ? `https://i.ytimg.com/vi/${it.youtube_id}/hqdefault.jpg` : it.url}"
+                      alt="${escAttr(L(it, "caption"))}" loading="lazy"
+                      ${it.type === "video" && fallback ? `onerror="this.onerror=null;this.src='${fallback}';"` : ""} />
+                    ${it.type === "video" ? '<span class="play-icon" aria-hidden="true">▶</span>' : ""}
+                  </span>
+                  <span class="thumb-cap"><span class="thumb-type">${it.type === "video" ? t.label_video : t.label_photo}</span>${escAttr(L(it, "caption"))}</span>
+                </button>`
+              )
+              .join("")}
+          </div>
+        </section>`;
+  }
+
+  function ensureMediaModal() {
+    if (document.getElementById("media-modal")) return;
+    document.body.insertAdjacentHTML(
+      "beforeend",
+      `
+      <div id="media-modal" class="media-modal" hidden>
+        <div class="media-modal-box" role="dialog" aria-modal="true" aria-labelledby="media-modal-title">
+          <div class="media-modal-head">
+            <h3 id="media-modal-title"></h3>
+            <button id="media-modal-close" type="button" class="media-modal-close" aria-label="Đóng">✕</button>
+          </div>
+          <div class="media-modal-body">
+            <div id="media-modal-media" class="media-modal-media"></div>
+            <p id="media-modal-caption" class="media-modal-caption"></p>
+            <p id="media-modal-credit" class="media-modal-credit"></p>
+            <div class="media-modal-foot">
+              <button id="media-modal-prev" type="button" class="media-modal-nav" aria-label="Trước">←</button>
+              <span id="media-modal-counter" class="media-modal-counter"></span>
+              <button id="media-modal-next" type="button" class="media-modal-nav" aria-label="Sau">→</button>
+            </div>
+          </div>
+        </div>
+      </div>`
+    );
+    const modal = document.getElementById("media-modal");
+    document.getElementById("media-modal-close").addEventListener("click", closeMediaModal);
+    document.getElementById("media-modal-prev").addEventListener("click", () => stepMediaModal(-1));
+    document.getElementById("media-modal-next").addEventListener("click", () => stepMediaModal(1));
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) closeMediaModal();
+    });
+  }
+
+  function openMediaModal(artId, idx) {
+    const art = DATA.artifacts.find((a) => a.id === artId);
+    if (!art || !galleryItems(art).length) return;
+    ensureMediaModal();
+    state.mediaModal = { artId, idx: idx || 0 };
+    state.mediaModalOpen = true;
+    renderMediaModal();
+    document.getElementById("media-modal").hidden = false;
+    document.getElementById("media-modal-close").focus();
+  }
+
+  function renderMediaModal() {
+    if (!state.mediaModal) return;
+    const t = tr();
+    const art = DATA.artifacts.find((a) => a.id === state.mediaModal.artId);
+    const items = galleryItems(art);
+    if (!items.length) return;
+    state.mediaModal.idx = (state.mediaModal.idx + items.length) % items.length;
+    const it = items[state.mediaModal.idx];
+    setTxt("media-modal-title", `${t.media_modal_title}: ${L(art, "name")}`);
+    const media = document.getElementById("media-modal-media");
+    if (it.type === "video") {
+      const start = it.start ? `&start=${it.start}` : "";
+      media.innerHTML = `<iframe title="${escAttr(L(it, "caption"))}" src="https://www.youtube-nocookie.com/embed/${it.youtube_id}?autoplay=1&mute=1&rel=0&playsinline=1${start}" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+    } else {
+      media.innerHTML = `<img src="${it.url}" alt="${escAttr(L(it, "caption"))}" />`;
+    }
+    setTxt("media-modal-caption", L(it, "caption"));
+    setTxt("media-modal-credit", it.credit || "");
+    setTxt("media-modal-counter", `${state.mediaModal.idx + 1} / ${items.length} · ${it.type === "video" ? t.label_video : t.label_photo}`);
+    const solo = items.length < 2;
+    document.getElementById("media-modal-prev").hidden = solo;
+    document.getElementById("media-modal-next").hidden = solo;
+  }
+
+  function stepMediaModal(d) {
+    if (!state.mediaModal) return;
+    state.mediaModal.idx += d;
+    renderMediaModal();
+  }
+
+  function closeMediaModal() {
+    state.mediaModalOpen = false;
+    state.mediaModal = null;
+    const modal = document.getElementById("media-modal");
+    if (modal) {
+      modal.hidden = true;
+      const media = document.getElementById("media-modal-media");
+      if (media) media.innerHTML = ""; /* gỡ iframe/video để dừng hẳn khi đóng */
+    }
   }
 
   /* ===========================================================================
@@ -1383,6 +1538,7 @@
     renderClassroomAndFooter();
     renderSceneTitles();
     if (state.dossierOpen) renderDossierSheet();
+    if (state.mediaModalOpen) renderMediaModal();
     setTxt("dossier-btn-label", state.dossierOpen ? tr().dossier_close : tr().dossier_btn);
     notifyBook();
   }
@@ -1396,14 +1552,33 @@
     const artSkip = document.getElementById("artemis-game-skip");
     if (artSkip) artSkip.addEventListener("click", finishArtemis);
     document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && state.dossierOpen) {
+      if (e.key === "Escape" && state.dossierOpen && !state.mediaModalOpen) {
         e.preventDefault();
         setDossierOpen(false);
         if (dossierBtn) dossierBtn.focus();
       }
     });
+    // Ảnh & video thật: mọi trigger (polaroid / thumbnail) đều mở modal qua ủy quyền
+    document.addEventListener("click", (e) => {
+      const trigger = e.target.closest("[data-media-open]");
+      if (!trigger) return;
+      openMediaModal(trigger.getAttribute("data-media-open"), parseInt(trigger.getAttribute("data-media-idx") || "0", 10));
+    });
+    // Modal ảnh & video: Esc đóng, mũi tên chuyển mục
+    document.addEventListener("keydown", (e) => {
+      if (!state.mediaModalOpen) return;
+      if (e.key === "Escape") {
+        e.preventDefault();
+        closeMediaModal();
+      } else if (e.key === "ArrowLeft") {
+        stepMediaModal(-1);
+      } else if (e.key === "ArrowRight") {
+        stepMediaModal(1);
+      }
+    });
     // Đổi cảnh: đóng popup, cập nhật trạng thái game/thư cho CSS
     window.addEventListener("hashchange", () => {
+      if (state.mediaModalOpen) closeMediaModal();
       if (state.dossierOpen) setDossierOpen(false);
       setTimeout(syncSceneView, 0);
     });
@@ -1479,7 +1654,7 @@
       });
     }
     document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && state.siModalOpen) setSiOpen(false);
+      if (e.key === "Escape" && state.siModalOpen && !state.mediaModalOpen) setSiOpen(false);
     });
   }
 

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Mockup — Thư viện ảnh/video trong popup hồ sơ</title>
+<style>
+  :root {
+    --panel: #1E2030;
+    --panel-2: #262a3f;
+    --signal: #E7F434;
+    --moon: #38BDF8;
+    --ink: #F8FAFC;
+    --ink-2: #94A3B8;
+    --rule: rgba(248, 250, 252, 0.12);
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: radial-gradient(1200px 700px at 70% -10%, #1c2b4a 0%, #0b0d17 55%, #07080f 100%);
+    color: var(--ink);
+    font-family: "Segoe UI", system-ui, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    padding: 30px 16px;
+  }
+  h1 { font-size: 20px; margin: 0; color: var(--signal); letter-spacing: .04em; }
+  p.lead { margin: 0; color: var(--ink-2); max-width: 560px; text-align: center; font-size: 14px; line-height: 1.6; }
+
+  .open-btn {
+    border: 1px solid var(--rule);
+    background: var(--panel);
+    color: var(--ink);
+    padding: 12px 22px;
+    border-radius: 999px;
+    font-size: 15px;
+    cursor: pointer;
+  }
+  .open-btn:hover { border-color: var(--moon); }
+
+  /* ===== Popup hồ sơ (mô phỏng #dossier-sheet) ===== */
+  .sheet-backdrop {
+    position: fixed; inset: 0;
+    background: rgba(4, 6, 14, .66);
+    display: none;
+    align-items: flex-end; justify-content: center;
+    z-index: 40;
+  }
+  .sheet-backdrop.open { display: flex; }
+  .sheet {
+    width: min(980px, 100%);
+    max-height: 88vh;
+    overflow: auto;
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-bottom: none;
+    border-radius: var(--radius) var(--radius) 0 0;
+    padding: 22px 24px 30px;
+  }
+  .sheet-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 6px; }
+  .sheet-head h2 { margin: 0; font-size: 18px; color: var(--moon); }
+  .close-x { background: none; border: none; color: var(--ink-2); font-size: 22px; cursor: pointer; }
+
+  .grid { display: grid; grid-template-columns: 300px 1fr; gap: 22px; margin-top: 14px; }
+  @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } }
+
+  /* ===== KHỐI MỚI: Bằng chứng hình ảnh ===== */
+  .gallery-sec { border: 1px dashed rgba(231, 244, 52, .45); border-radius: var(--radius); padding: 14px; background: rgba(231, 244, 52, .04); }
+  .gallery-sec h3 { margin: 0 0 2px; font-size: 14px; color: var(--signal); letter-spacing: .05em; text-transform: uppercase; }
+  .gallery-sub { margin: 0 0 10px; font-size: 12px; color: var(--ink-2); }
+  .strip { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 4px; }
+  .thumb {
+    flex: 0 0 128px; cursor: pointer; border: none; padding: 0; background: none; text-align: left; color: inherit;
+  }
+  .thumb .frame {
+    position: relative; width: 128px; height: 84px; border-radius: 10px; overflow: hidden;
+    border: 1px solid var(--rule); background: #0d1020;
+  }
+  .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .thumb .play {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    background: rgba(6, 8, 16, .35); color: #fff; font-size: 26px;
+  }
+  .thumb .cap { margin-top: 6px; font-size: 11px; color: var(--ink-2); line-height: 1.4; }
+  .thumb:hover .frame { border-color: var(--moon); }
+
+  .facts div { border-bottom: 1px solid var(--rule); padding: 10px 2px; font-size: 13px; color: var(--ink-2); line-height: 1.6; }
+  .facts b { color: var(--ink); }
+
+  /* ===== Lightbox media (mô phỏng #media-modal) ===== */
+  .lightbox {
+    position: fixed; inset: 0; z-index: 95;
+    background: rgba(4, 6, 14, .82);
+    display: none; align-items: center; justify-content: center; padding: 20px;
+  }
+  .lightbox.open { display: flex; }
+  .lb-card {
+    width: min(760px, 100%);
+    background: var(--panel-2);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    padding: 16px;
+  }
+  .lb-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .lb-head span { font-size: 13px; color: var(--moon); }
+  .lb-media img, .lb-media iframe {
+    width: 100%; border-radius: 10px; display: block; border: none; background: #000;
+  }
+  .lb-media iframe { aspect-ratio: 16 / 9; }
+  .lb-cap { margin-top: 10px; font-size: 13px; color: var(--ink-2); line-height: 1.6; }
+  .lb-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; gap: 10px; }
+  .nav-btn { background: none; border: 1px solid var(--rule); color: var(--ink); border-radius: 999px; padding: 6px 14px; cursor: pointer; font-size: 13px; }
+  .nav-btn:hover { border-color: var(--moon); }
+  .credit { font-size: 11px; color: var(--ink-2); }
+</style>
+</head>
+<body>
+  <h1>Mockup — “Bằng chứng hình ảnh” trong popup hồ sơ</h1>
+  <p class="lead">
+    Đây là demo độc lập (không đụng code dự án). Bấm nút bên dưới để mở popup hồ sơ
+    mô phỏng <code>#dossier-sheet</code>. Khối mới nằm ở đầu cột trái: dải thumbnail
+    ảnh + video. Bấm thumbnail → lightbox dùng chung (ảnh hoặc YouTube embed),
+    có ←/→ chuyển mục, Esc/✕/nền đóng và dừng phát.
+  </p>
+  <button class="open-btn" id="openSheet">Mở hồ sơ thiết bị (demo)</button>
+
+  <!-- Popup hồ sơ -->
+  <div class="sheet-backdrop" id="sheetBack">
+    <div class="sheet" role="dialog" aria-modal="true">
+      <div class="sheet-head">
+        <h2>Hồ sơ Khoa học — Apollo 11 LRRR (demo)</h2>
+        <button class="close-x" id="closeSheet" aria-label="Đóng">✕</button>
+      </div>
+      <div class="grid">
+        <div>
+          <!-- ===== KHỐI MỚI ===== -->
+          <div class="gallery-sec">
+            <h3>Bằng chứng hình ảnh</h3>
+            <p class="gallery-sub">Ảnh thật &amp; phim tư liệu — bấm để phóng to / phát.</p>
+            <div class="strip" id="strip"></div>
+          </div>
+        </div>
+        <div class="facts">
+          <div><b>Thiết bị:</b> Laser Ranging Retroreflector (LRRR), Apollo 11 — 1969.</div>
+          <div><b>Trạng thái:</b> Vẫn được bắn laser đo khoảng cách Trái Đất–Mặt Trăng tới ngày nay.</div>
+          <div><b>Vị trí:</b> Biển Tĩnh Lặng (Mare Tranquillitatis).</div>
+          <div style="border-bottom:none;color:#5b6478;">(Phần nội dung hồ sơ thật giữ nguyên như web hiện tại — mockup chỉ minh hoạ vị trí khối mới.)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
+    <div class="lb-card">
+      <div class="lb-head">
+        <span id="lbTitle">Hồ sơ hình ảnh</span>
+        <button class="close-x" id="lbClose" aria-label="Đóng">✕</button>
+      </div>
+      <div class="lb-media" id="lbMedia"></div>
+      <p class="lb-cap" id="lbCap"></p>
+      <div class="lb-foot">
+        <div>
+          <button class="nav-btn" id="lbPrev">← Trước</button>
+          <button class="nav-btn" id="lbNext">Sau →</button>
+        </div>
+        <span class="credit" id="lbCredit"></span>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // Dữ liệu demo (1 ảnh NASA + 1 video YouTube)
+  var ITEMS = [
+    {
+      type: "photo",
+      url: "https://images-assets.nasa.gov/image/as11-40-5948/as11-40-5948~large.jpg",
+      thumb: "https://images-assets.nasa.gov/image/as11-40-5948/as11-40-5948~medium.jpg",
+      cap: "Tấm ảnh Apollo 11 (AS11-40-5948) — dùng làm demo dữ liệu ảnh thật.",
+      credit: "Ảnh: NASA / Apollo 11."
+    },
+    {
+      type: "video",
+      youtube_id: "iwxrNurAuu8",
+      thumb: "https://i.ytimg.com/vi/iwxrNurAuu8/hqdefault.jpg",
+      cap: "Video demo — bấm thumbnail sẽ phát trong lightbox (YouTube embed, tự tắt tiếng).",
+      credit: "Video: NASA/JPL (demo)."
+    }
+  ];
+
+  var cur = 0;
+  var strip = document.getElementById("strip");
+  var lb = document.getElementById("lightbox");
+  var lbMedia = document.getElementById("lbMedia");
+
+  // Render dải thumbnail
+  ITEMS.forEach(function (it, i) {
+    var b = document.createElement("button");
+    b.className = "thumb";
+    b.innerHTML =
+      '<div class="frame"><img src="' + it.thumb + '" alt="" />' +
+      (it.type === "video" ? '<div class="play">▶</div>' : "") +
+      '</div><div class="cap">' + (it.type === "video" ? "Video" : "Ảnh") + "</div>";
+    b.addEventListener("click", function () { openLb(i); });
+    strip.appendChild(b);
+  });
+
+  function openLb(i) {
+    cur = i;
+    renderLb();
+    lb.classList.add("open");
+  }
+  function renderLb() {
+    var it = ITEMS[cur];
+    if (it.type === "photo") {
+      lbMedia.innerHTML = '<img src="' + it.url + '" alt="" />';
+    } else {
+      lbMedia.innerHTML =
+        '<iframe src="https://www.youtube-nocookie.com/embed/' + it.youtube_id +
+        '?autoplay=1&mute=1&rel=0&playsinline=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>';
+    }
+    document.getElementById("lbCap").textContent = it.cap;
+    document.getElementById("lbCredit").textContent = it.credit + " (" + (cur + 1) + "/" + ITEMS.length + ")";
+    document.getElementById("lbTitle").textContent = it.type === "video" ? "Video" : "Ảnh";
+  }
+  function closeLb() {
+    lb.classList.remove("open");
+    lbMedia.innerHTML = ""; // dừng phát video
+  }
+  function step(d) {
+    cur = (cur + d + ITEMS.length) % ITEMS.length;
+    renderLb();
+  }
+
+  document.getElementById("lbClose").addEventListener("click", closeLb);
+  document.getElementById("lbPrev").addEventListener("click", function () { step(-1); });
+  document.getElementById("lbNext").addEventListener("click", function () { step(1); });
+  lb.addEventListener("click", function (e) { if (e.target === lb) closeLb(); });
+
+  var sheetBack = document.getElementById("sheetBack");
+  document.getElementById("openSheet").addEventListener("click", function () { sheetBack.classList.add("open"); });
+  document.getElementById("closeSheet").addEventListener("click", function () { sheetBack.classList.remove("open"); });
+  sheetBack.addEventListener("click", function (e) { if (e.target === sheetBack) sheetBack.classList.remove("open"); });
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") {
+      if (lb.classList.contains("open")) closeLb();
+      else sheetBack.classList.remove("open");
+    }
+    if (lb.classList.contains("open")) {
+      if (e.key === "ArrowLeft") step(-1);
+      if (e.key === "ArrowRight") step(1);
+    }
+  });
+</script>
+</body>
+</html>

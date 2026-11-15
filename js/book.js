@@ -184,6 +184,8 @@
     if (si && !si.classList.contains("hidden")) return true;
     var nb = document.getElementById("notebook-qr-panel");
     if (nb && !nb.classList.contains("invisible")) return true;
+    var mm = document.getElementById("media-modal");
+    if (mm && !mm.hidden) return true;
     return false;
   }
 

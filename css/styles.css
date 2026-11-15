@@ -4005,3 +4005,298 @@ body:not(.book-paged) .dossier-btn {
     padding-bottom: 64px;
   }
 }
+
+/* ===========================================================================
+   ẢNH & VIDEO THẬT (2026-11-15) — polaroid kẹp thư, gallery hồ sơ, modal xem
+   =========================================================================== */
+
+/* ---------- Vị trí 1: tấm polaroid "Tái bút" trong màn thư ---------- */
+.letter-enclosure {
+  position: relative;
+  display: block;
+  width: min(250px, 72%);
+  margin: 26px auto 10px;
+  padding: 10px 10px 12px;
+  background: #f5f1e6;
+  border: 1px dashed rgba(31, 36, 48, 0.4);
+  border-radius: 4px;
+  transform: rotate(-1.5deg);
+  cursor: pointer;
+  font-family: inherit;
+  color: #1f2430;
+  text-align: center;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.letter-enclosure:hover,
+.letter-enclosure:focus-visible {
+  transform: rotate(0deg) scale(1.03);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.45);
+  outline: none;
+}
+.enclosure-tape {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  width: 74px;
+  height: 20px;
+  transform: translateX(-50%) rotate(-2deg);
+  background: rgba(231, 244, 52, 0.5);
+  border: 1px solid rgba(231, 244, 52, 0.65);
+}
+.enclosure-photo {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 3;
+  background: #0d101b;
+  overflow: hidden;
+}
+.enclosure-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.enclosure-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  background: rgba(231, 244, 52, 0.92);
+  color: #151622;
+  display: grid;
+  place-items: center;
+  padding-left: 3px;
+  font-size: 1rem;
+}
+.enclosure-ps {
+  display: block;
+  margin-top: 9px;
+  font-size: 0.72rem;
+  line-height: 1.45;
+  font-style: italic;
+}
+.enclosure-hint {
+  display: block;
+  margin-top: 3px;
+  font-size: 0.62rem;
+  color: #5a6272;
+}
+
+/* ---------- Vị trí 2: mục "Bằng chứng hình ảnh" trong popup hồ sơ ---------- */
+.dossier-left {
+  display: grid;
+  gap: 20px;
+  min-width: 0;
+}
+.gallery-sec {
+  border: 1px solid var(--rule);
+  border-radius: 16px;
+  background: var(--panel);
+  padding: 14px 16px 16px;
+}
+.gallery-sec h3 {
+  margin: 0 0 4px;
+  font-size: 0.9rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.gallery-sub {
+  margin: 0 0 12px;
+  font-size: 0.76rem;
+  color: var(--ink-2);
+}
+.gallery-strip {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+.gallery-thumb {
+  flex: 0 0 auto;
+  width: 168px;
+  padding: 0;
+  border-radius: 12px;
+  border: 1px solid var(--rule);
+  background: #0d101b;
+  cursor: pointer;
+  overflow: hidden;
+  text-align: left;
+  font-family: inherit;
+  color: inherit;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+.gallery-thumb:hover,
+.gallery-thumb:focus-visible {
+  border-color: var(--signal);
+  transform: translateY(-2px);
+  outline: none;
+}
+.thumb-media {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 10;
+  background: #0d101b;
+  overflow: hidden;
+}
+.thumb-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.play-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: rgba(231, 244, 52, 0.92);
+  color: #151622;
+  display: grid;
+  place-items: center;
+  padding-left: 3px;
+  font-size: 0.95rem;
+}
+.thumb-cap {
+  display: block;
+  padding: 8px 10px 10px;
+  font-size: 0.7rem;
+  line-height: 1.4;
+  color: var(--ink-2);
+}
+.thumb-type {
+  display: inline-block;
+  margin-bottom: 4px;
+  font-size: 0.58rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--moon);
+}
+
+/* ---------- Modal xem ảnh & video thật ---------- */
+.media-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 95;
+  background: rgba(8, 10, 17, 0.72);
+  display: grid;
+  place-items: center;
+  padding: 20px;
+}
+.media-modal[hidden] {
+  display: none;
+}
+.media-modal-box {
+  width: min(680px, 100%);
+  max-height: min(88vh, 820px);
+  display: flex;
+  flex-direction: column;
+  background: var(--panel);
+  border: 1px solid var(--rule);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+}
+.media-modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--rule);
+  flex-shrink: 0;
+}
+.media-modal-head h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 900;
+  color: var(--ink);
+}
+.media-modal-close {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border-radius: 999px;
+  border: 1px solid var(--rule);
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+}
+.media-modal-close:hover {
+  border-color: var(--signal);
+  color: var(--signal);
+}
+.media-modal-body {
+  padding: 16px;
+  overflow-y: auto;
+}
+.media-modal-media {
+  background: #0d101b;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.media-modal-media img {
+  display: block;
+  width: 100%;
+  max-height: 52vh;
+  object-fit: contain;
+}
+.media-modal-media iframe {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 0;
+}
+.media-modal-caption {
+  margin: 12px 2px 4px;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--ink);
+}
+.media-modal-credit {
+  margin: 0 2px;
+  font-size: 0.7rem;
+  color: var(--ink-2);
+}
+.media-modal-foot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 12px;
+}
+.media-modal-nav {
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  border: 1px solid var(--rule);
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+}
+.media-modal-nav:hover {
+  border-color: var(--signal);
+  color: var(--signal);
+}
+.media-modal-counter {
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .letter-enclosure,
+  .gallery-thumb {
+    transition: none;
+  }
+}

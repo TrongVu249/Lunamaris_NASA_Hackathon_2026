@@ -46,7 +46,32 @@
         "functionality_status_vi": "HOẠT ĐỘNG THỤ ĐỘNG SUỐT 57 NĂM (Không cần nguồn điện)",
         "media": {
           "primary_image_url": "https://nssdc.gsfc.nasa.gov/imgcat/hires/a11_h_40_5948.gif",
-          "image_credit": "NASA / NSSDCA Photo ID: AS11-40-5948 (Apollo 11 Lunar Laser Ranging Retroreflector deployed on Mare Tranquillitatis)"
+          "image_credit": "NASA / NSSDCA Photo ID: AS11-40-5948 (Apollo 11 Lunar Laser Ranging Retroreflector deployed on Mare Tranquillitatis)",
+          "gallery": {
+            "photos": [
+              {
+                "url": "assets/media/apollo11-lrrr/photo-01.jpg",
+                "caption_vi": "Mảng gương phản xạ laser đặt tay xuống Biển Tĩnh Lặng; những dấu giày phi hành gia bên cạnh vẫn còn nguyên sau hơn nửa thế kỷ.",
+                "caption_en": "The retroreflector array hand-placed at Tranquility Base; the boot prints beside it are still untouched after more than half a century.",
+                "credit": "Ảnh: NASA / Apollo 11 (AS11-40-5948)."
+              },
+              {
+                "url": "assets/media/apollo11-lrrr/photo-02.webp",
+                "caption_vi": "Tầng đổ bộ Eagle lấp lánh dưới nắng mặt trời, chụp từ cửa sổ khoang chỉ huy Columbia trước khi ghép nối.",
+                "caption_en": "The Eagle descent stage glinting in sunlight, photographed from the Columbia command module window before docking.",
+                "credit": "Ảnh: NASA / Apollo 11."
+              }
+            ],
+            "videos": [
+              {
+                "kind": "youtube",
+                "youtube_id": "iwxrNurAuu8",
+                "caption_vi": "Phim ngắn về thí nghiệm cuối cùng còn hoạt động của Apollo 11 trên Mặt Trăng: mảng gương laser vẫn bắt photon mỗi đêm.",
+                "caption_en": "A short film on Apollo 11's last working experiment on the Moon: the laser array still catching photons every night.",
+                "credit": "Video: JILA Science (YouTube)."
+              }
+            ]
+          }
         },
         "narrative_voice": {
           "epistemic_label_en": "NARRATIVE INTERPRETATION GROUNDED IN TELEMETRY",
@@ -132,7 +157,26 @@
         "functionality_status_vi": "ĐÃ NGỪNG HOẠT ĐỘNG (Camera & Gầu xúc được mang về Trái Đất năm 1969)",
         "media": {
           "primary_image_url": "https://nssdc.gsfc.nasa.gov/imgcat/hires/a12_h_48_7133.gif",
-          "image_credit": "NASA / NSSDCA Photo ID: AS12-48-7133 (Astronaut Pete Conrad examining Surveyor 3 with LM Intrepid on horizon)"
+          "image_credit": "NASA / NSSDCA Photo ID: AS12-48-7133 (Astronaut Pete Conrad examining Surveyor 3 with LM Intrepid on horizon)",
+          "gallery": {
+            "photos": [
+              {
+                "url": "assets/media/surveyor-3/photo-01.jpg",
+                "caption_vi": "Năm 1969, phi hành gia Pete Conrad đến thăm Surveyor 3 và tháo vài bộ phận mang về Trái Đất; xa xa trên đường chân trời là tàu Intrepid chở ông tới.",
+                "caption_en": "In 1969 astronaut Pete Conrad visited Surveyor 3 and brought parts of it home; on the horizon sits Intrepid, the craft that carried him there.",
+                "credit": "Ảnh: NASA / Apollo 12 (AS12-48-7133)."
+              }
+            ],
+            "videos": [
+              {
+                "kind": "youtube",
+                "youtube_id": "Qhgq19u28Fk",
+                "caption_vi": "Phim tư liệu chuyến thám hiểm Surveyor 3 của phi hành đoàn Apollo 12 — cuộc thăm nom cỗ máy bị bỏ lại trong hố lõm Mặt Trăng.",
+                "caption_en": "Archival film of the Apollo 12 crew's survey trip to Surveyor 3 — a visit to the machine left behind in a lunar hollow.",
+                "credit": "Video: VideoFromSpace (YouTube)."
+              }
+            ]
+          }
         },
         "narrative_voice": {
           "epistemic_label_en": "NARRATIVE INTERPRETATION GROUNDED IN TELEMETRY",
@@ -215,7 +259,26 @@
         "functionality_status_vi": "HOÀN THÀNH SỨ MỆNH TRONG IM LẶNG (Ngừng liên lạc từ Sol 5111 / 10/06/2018)",
         "media": {
           "primary_image_url": "https://nssdc.gsfc.nasa.gov/planetary/image/mer_rover.jpg",
-          "image_credit": "NASA / JPL-Caltech / Cornell (Mars Exploration Rover Opportunity in Meridiani Planum)"
+          "image_credit": "NASA / JPL-Caltech / Cornell (Mars Exploration Rover Opportunity in Meridiani Planum)",
+          "gallery": {
+            "photos": [
+              {
+                "url": "assets/media/opportunity-rover/photo-01.webp",
+                "caption_vi": "Bảng tổng kết 'cả đời làm việc' của hai chị em Spirit và Opportunity: riêng Opportunity đi 28 dặm (khoảng 45,2 km) và gửi về 217.594 ảnh thô.",
+                "caption_en": "A 'lifetime résumé' of the twin rovers Spirit and Opportunity: Opportunity alone drove 28 miles (about 45.2 km) and sent home 217,594 raw images.",
+                "credit": "Đồ họa: NASA / JPL-Caltech (cập nhật 04/02/2019)."
+              }
+            ],
+            "videos": [
+              {
+                "kind": "youtube",
+                "youtube_id": "CubXtcQLma0",
+                "caption_vi": "Phim tóm tắt hành trình 2004–2019 của Opportunity trên Sao Hỏa, từ miệng hố Eagle đến rìa Endeavour.",
+                "caption_en": "A film summarizing Opportunity's 2004–2019 journey on Mars, from Eagle Crater to the rim of Endeavour.",
+                "credit": "Video: SciNews (YouTube)."
+              }
+            ]
+          }
         },
         "narrative_voice": {
           "epistemic_label_en": "NARRATIVE INTERPRETATION GROUNDED IN TELEMETRY",
@@ -290,7 +353,26 @@
         "functionality_status_vi": "CHUYỂN THÀNH TRẠM QUAN TRẮC TĨNH 20 NĂM (Từ Sol 1036 / Tháng 01/2024)",
         "media": {
           "primary_image_url": "https://mars.nasa.gov/system/resources/detail_files/25802_PIA24647-web.jpg",
-          "image_credit": "NASA / JPL-Caltech / ASU / MSSS (Ingenuity Mars Helicopter on the floor of Jezero Crater)"
+          "image_credit": "NASA / JPL-Caltech / ASU / MSSS (Ingenuity Mars Helicopter on the floor of Jezero Crater)",
+          "gallery": {
+            "photos": [
+              {
+                "url": "assets/media/ingenuity-helicopter/photo-01.jpg",
+                "caption_vi": "Ingenuity đứng giữa bình nguyên đá sỏi của miệng hố Jezero, nhìn qua ống kính của tàu Perseverance.",
+                "caption_en": "Ingenuity standing amid the rocky plain of Jezero Crater, seen through Perseverance's lens.",
+                "credit": "Ảnh: NASA / JPL-Caltech."
+              }
+            ],
+            "videos": [
+              {
+                "kind": "youtube",
+                "youtube_id": "0RQWv1ybsjM",
+                "caption_vi": "Phim chính thức của NASA JPL về Ingenuity — chiếc máy bay đầu tiên cất cánh trên một hành tinh khác.",
+                "caption_en": "The official NASA JPL film about Ingenuity — the first aircraft ever to fly on another planet.",
+                "credit": "Video: NASA Jet Propulsion Laboratory (YouTube)."
+              }
+            ]
+          }
         },
         "narrative_voice": {
           "epistemic_label_en": "NARRATIVE INTERPRETATION GROUNDED IN TELEMETRY",
