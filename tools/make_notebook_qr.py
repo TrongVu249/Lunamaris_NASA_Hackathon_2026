@@ -21,7 +21,7 @@ import os
 
 import segno
 
-NOTEBOOK_URL = "https://notebook.google.com/notebook/eb772db5-b353-4fd7-aeea-b67ca4b120c4"
+NOTEBOOK_URL = "https://notebook.google.com/notebook/1c4fe88f-3774-481e-ac80-15f0992d96da"
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, "..", "assets", "qr-notebooklm.png")
