@@ -1,95 +1,100 @@
-# LUNAMARIS: Letters Across the Silent Seas 🛰️🌕🔴
+<p align="center">
+  <img src="assets/lunamaris-logo.png" alt="Logo LUNAMARIS" width="120" />
+</p>
 
-**Cuộc thi:** 2026 NASA International Space Apps Challenge  
-**Đề tài:** *Abandoned but not Forgotten: Storytelling about NASA's Discarded Equipment on the Moon and Mars*  
-**Trạm neo tọa độ địa phương:** Hanoi Ground Receiving Station, Vietnam (`21.0285° N, 105.8542° E`)  
-**Repository:** [Lunamaris_NASA_Hackathon_2026](https://github.com/TrongVu249/Lunamaris_NASA_Hackathon_2026.git)  
-**Live Demo:** 🚀 [lunamaris.vercel.app](https://lunamaris.vercel.app)
+<h1 align="center">LUNAMARIS: Letters Across the Silent Seas</h1>
 
----
+<p align="center">
+  Trò chơi kể chuyện trên web: bốn cỗ máy NASA bị bỏ lại trên Mặt Trăng và Sao Hỏa "viết thư" về Trạm mặt đất Hà Nội.<br/>
+  <b>🚀 Chơi ngay: <a href="https://lunamaris.vercel.app">lunamaris.vercel.app</a></b>
+</p>
 
-## 1. Tổng quan Dự án (Project Overview)
-
-**LUNAMARIS: Letters Across the Silent Seas** (Lunamaris - mang ý nghĩa *"Những Biển Mặt Trăng"*) là ứng dụng web Scrollytelling tương tác đa ngôn ngữ (`EN | VI`), kết hợp **Mô phỏng Vật lý & Đo xa bằng Đồ họa SVG Động (Interactive Inline SVG Telemetry)** với **Kiến trúc Kể chuyện Hai Giọng (Dual-Voice Storytelling)**:
-
-1. **`[📡 The Machine's Pulse]`** *(Nhãn nhận thức luận: `NARRATIVE INTERPRETATION GROUNDED IN TELEMETRY`)*: Những bức thư ngôi thứ nhất giàu cảm xúc viết dưới dạng bưu thiếp vũ trụ gửi về Trạm Mặt đất Hà Nội.
-2. **`[🏛️ Archaeologist & Science Dossier]`** *(Nhãn nhận thức luận: `VERIFIED SCIENTIFIC & LEGAL RECORD`)*: Hồ sơ khoa học, trạng thái vật liệu và luật bảo tồn di sản không gian đã được kiểm chứng từ tài liệu gốc của NASA (NSSDCA, ILRS, NASA SP-284, Public Law 116-275).
-
-Dự án còn tích hợp 2 Module thực chiến độc lập:
-- **Module 01: Trạm Quyết định Bãi đáp Sứ mệnh Artemis (Vacuum Ballistics Simulator)**: Mô phỏng động học đạn đạo bụi regolith trong chân không $1/6g$ và kiểm chứng bán kính an toàn $\ge 2.0\text{ km}$.
-- **Module 02: Thẻ Chứng nhận Space Heritage Guardian (Zero-PII Canvas Exporter)**: Cấp thẻ chứng nhận bảo vệ di sản không gian tạo trực tiếp 100% bằng HTML5 Canvas trên trình duyệt (không lưu trữ PII).
-- **Góc Giáo viên STEM 15 Phút**: Kế hoạch bài giảng tích hợp số liệu đo xa thực tế dành cho học sinh 11–15 tuổi.
+> Bài dự thi **NASA International Space Apps Challenge 2026** (điểm thi Hà Nội), đề bài *Abandoned but not Forgotten: Storytelling about NASA's Discarded Equipment on the Moon and Mars*.
 
 ---
 
-## 2. Cấu trúc Thư mục Mô-đun (Modular Architecture)
+## Dự án giải quyết gì?
+
+Tài liệu của NASA gần như toàn tiếng Anh, số liệu khó hình dung, và người đọc khó biết nguồn nào đáng tin. LUNAMARIS biến những số liệu đó thành một câu chuyện có trò chơi, để **học sinh 11–15 tuổi** tự khám phá, và để **giáo viên KHTN/Vật lý** có sẵn một bài học ngắn.
+
+Thông điệp: *lắng nghe những cỗ máy cũ để biết nên đặt bước chân mới ở đâu*. Người chơi hiểu vì sao các chuyến đổ bộ mới (Artemis) phải đáp xa các di tích cũ.
+
+## Trải nghiệm (khoảng 10 phút)
+
+- **4 cỗ máy, 4 trò chơi nhỏ:** Apollo 11 (gương phản xạ laser), Surveyor 3, xe tự hành Opportunity và trực thăng Ingenuity. Thắng mỗi trò chơi sẽ mở một lá thư của cỗ máy và nhận một **thẻ luật**, tức một bài học về cách bảo vệ di tích.
+- **Trò chơi cuối, chọn bãi đáp Artemis:** dùng 4 thẻ luật để loại các vùng không an toàn và chọn vùng cách di tích **ít nhất 2 km**.
+- **Thẻ Space Heritage Guardian:** tấm thẻ chứng nhận người chơi tải về được. Thẻ được vẽ ngay trên trình duyệt, không thu thông tin cá nhân.
+- **Nút "Hồ sơ Khoa học"** ở mỗi trò chơi: mô phỏng, số liệu thật và nguồn NASA của từng con số.
+- **Góc giáo viên** (kế hoạch bài giảng 15 phút) và **trang Nguồn**.
+- Song ngữ **Tiếng Việt / English**. Chạy trên điện thoại lẫn máy tính, bằng cảm ứng lẫn chuột và bàn phím.
+
+## Chuyện tưởng tượng và dữ liệu thật
+
+Trang tách rõ hai giọng:
+
+- 📡 **Thư của cỗ máy** là phần văn học, được viết dựa trên dữ liệu thật. Máy móc không thật sự gửi thư.
+- 🏛️ **Hồ sơ khoa học** là số liệu đã kiểm chứng từ tài liệu gốc của NASA (NSSDCA, ảnh LRO, JPL, NASA SP-284) và luật bảo vệ di sản *One Small Step* (Public Law 116-275).
+
+| Cỗ máy | Ở đâu | Con số chính trong trò chơi |
+| :--- | :--- | :--- |
+| Apollo 11 – gương LRRR | Mặt Trăng, Biển Yên Tĩnh | Ánh laser đi về mất khoảng **2,56 giây**; Mặt Trăng lùi xa 3,8 cm mỗi năm |
+| Surveyor 3 | Mặt Trăng, Biển Bão Tố | Apollo 12 đáp cách nó khoảng **160 m**, bụi bắn làm rỗ và đổi màu thân máy |
+| Opportunity | Sao Hỏa, Thung lũng Perseverance | Bão bụi 2018 làm điện tụt từ **645 xuống 22 Wh** mỗi ngày |
+| Ingenuity | Sao Hỏa, hố Jezero | **72 chuyến bay**, tổng **17,0 km**, rồi dừng vì gãy cánh quạt |
+
+## Chạy thử trên máy
+
+Không cần cài đặt hay build. Cách đơn giản nhất là nhấp đúp mở `index.html` trong trình duyệt. Nếu muốn chạy qua server cục bộ:
+
+```bash
+python -m http.server 8000   # hoặc: npx serve .
+```
+
+Rồi mở `http://localhost:8000`.
+
+Mẹo khi phát triển:
+
+- Vào thẳng một cảnh bằng hash trên URL: `#start`, `#signals`, `#ch1` … `#ch4`, `#artemis`.
+- Tiến trình chơi lưu trong `localStorage` (khóa `lunamaris_progress`). Xóa khóa này để chơi lại từ đầu.
+
+**Triển khai:** trang đang chạy trên Vercel. Cập nhật bản chính thức bằng `npx vercel deploy --prod`. File `.vercelignore` loại tài liệu nội bộ (`docs/`, `types/`, `*.docx`) khỏi bản deploy.
+
+## Công nghệ và cấu trúc thư mục
+
+HTML, CSS, JavaScript thuần, không backend. Dùng Tailwind CSS và Google Fonts qua CDN; hình minh họa vẽ bằng SVG, thẻ chứng nhận vẽ bằng Canvas.
 
 ```text
-Lunamaris_NASA_Hackathon_2026/
-├── index.html                           # Các cảnh toàn màn hình: truyện mở đầu, bật thu sóng, 4 tín hiệu, 4 game + thư, truyện chuyển cảnh, Game 5 Artemis, truyện kết, Guardian, Giáo viên, Nguồn; nút + popup "Hồ sơ Khoa học"
-├── css/
-│   └── styles.css                       # Hệ thống thiết kế NASA Space Apps Palette, cảnh + đường chân trời, hiệu ứng chuyển cảnh, Keyframes SVG
-├── data/
-│   └── content.json                     # Dữ liệu chuẩn hóa gốc (Song ngữ EN/VI) đối chiếu NASA Open Data
+├── index.html            # Trang duy nhất, chứa mọi cảnh: truyện, trò chơi, thư, Guardian, Giáo viên, Nguồn
+├── css/styles.css        # Toàn bộ giao diện và hiệu ứng
 ├── js/
-│   ├── data.js                          # Mô-đun nạp dữ liệu Zero-CORS (LUNAMARIS_DATA & Từ điển UI_I18N)
-│   ├── flow-data.js                     # Lời thoại các chuỗi truyện, cấu hình 4 game, 4 thẻ luật, chữ giao diện mới (EN/VI)
-│   ├── svg-engine.js                    # Công thức Toán học & Đồ họa Interactive SVG cho 4 Chương Di vật
-│   ├── decision-station.js              # Sơ đồ Mặt cắt Đạn đạo Chân không (nằm trong popup Hồ sơ Khoa học của Artemis)
-│   ├── certificate.js                   # Bộ tạo Thẻ Chứng nhận Space Heritage Guardian (Zero-PII Canvas PNG)
-│   ├── story.js                         # Bộ phát truyện chạm-để-sang (chữ phủ trên nền cảnh, ảnh tùy chọn)
-│   ├── games.js                         # 5 trò chơi: giữ laser, 3 thanh trượt tới mục tiêu, bản đồ 4 vùng Artemis IV
-│   ├── app.js                           # Điều phối State, tiến trình (localStorage), thẻ luật, cảnh game/thư, popup Hồ sơ, EN/VI
-│   └── book.js                          # Bộ máy chuyển cảnh: cảnh mới vào từ phải, vuốt/phím ←→, hash #start #signals #ch1…, chặn "Tiếp" khi chưa xong game, chế độ đọc cuộn
-├── types/
-│   └── dataset.types.ts                 # Kiểu dữ liệu TypeScript chuẩn hóa khớp 1:1 với NASA Open Data
-├── docs/
-│   ├── CONTEXT_DU_AN.md                 # Tóm tắt context dự án (kế hoạch, cốt truyện, số liệu, mâu thuẫn cần chốt)
-│   └── dac_ta_ky_thuat_lunamaris.md     # Tài liệu Đặc tả Kỹ thuật & Sản phẩm (PRD Chi tiết)
-├── Huong_Dan_Lay_Nguon_Du_Lieu_NASA_Lunamaris.docx # Hướng dẫn khai thác tài liệu & ảnh gốc NASA
-├── .vercelignore                        # Loại tài liệu nội bộ khỏi bản deploy Vercel
-└── README.md                            # Tài liệu hướng dẫn dự án
+│   ├── app.js            # Điều phối chính: tiến trình, trò chơi, thư, thẻ luật, popup Hồ sơ, đổi ngôn ngữ
+│   ├── book.js           # Chuyển cảnh, vuốt/phím mũi tên, điều hướng bằng hash trên URL
+│   ├── story.js          # Bộ phát các đoạn truyện (chạm để sang câu tiếp)
+│   ├── games.js          # 5 trò chơi
+│   ├── svg-engine.js     # Hình vẽ SVG và công thức tính của 4 cỗ máy
+│   ├── decision-station.js # Sơ đồ bụi bắn khi đổ bộ (trong Hồ sơ Khoa học của Artemis)
+│   ├── certificate.js    # Vẽ và tải thẻ Guardian, lá thư thứ năm dưới dạng ảnh PNG
+│   ├── data.js           # Dữ liệu 4 cỗ máy và chữ giao diện (VI/EN)
+│   ├── flow-data.js      # Lời truyện, cấu hình trò chơi, thẻ luật (VI/EN)
+│   └── notebook-qr.js    # Nút mở mã QR sổ tay NotebookLM
+├── data/content.json     # Bản JSON của dữ liệu (khớp với js/data.js)
+├── assets/               # Logo, ảnh nền cảnh, ảnh truyện, ảnh/video thiết bị, mã QR
+├── types/                # Kiểu dữ liệu TypeScript để tham khảo
+├── tools/                # Script phụ (tạo ảnh QR)
+├── demo/                 # Bản mockup thử nghiệm giao diện
+└── docs/                 # Tài liệu nội bộ của nhóm
 ```
 
-> **Chạy ngay không cần cài đặt (Zero-CORS Architecture):** Bạn có thể nhấp đúp mở trực tiếp file `index.html` trên bất kỳ trình duyệt nào (Chrome, Edge, Firefox, Safari) hoặc triển khai thẳng lên GitHub Pages / Vercel / Netlify mà không cần Node.js build step.
+## Tuân thủ luật cuộc thi
 
-### Bản triển khai trên Vercel
+1. **Không dùng logo NASA.** Biểu tượng trên trang do nhóm tự vẽ. Ảnh của NASA đều được ghi công.
+2. **Không thu dữ liệu người dưới 18 tuổi.** Biệt danh trên thẻ Guardian là tùy chọn, chỉ dùng để vẽ thẻ trên máy người chơi, không lưu và không gửi đi đâu.
+3. **Khai báo dùng AI.** Trang ghi rõ công cụ AI đã dùng và quy trình người kiểm lại số liệu với tài liệu gốc.
+4. **Tách truyện khỏi dữ liệu.** Phần tưởng tượng và phần số liệu kiểm chứng luôn được gắn nhãn riêng.
 
-Website đã được triển khai tại **https://lunamaris.vercel.app**. Để cập nhật bản production sau khi chỉnh sửa:
+## Sổ tay NotebookLM
 
-```bash
-npx vercel deploy --prod
-```
+Toàn bộ nguồn tài liệu NASA nhóm dùng được gom trong một sổ tay NotebookLM:
+**[Mở sổ tay NotebookLM](https://notebook.google.com/notebook/1c4fe88f-3774-481e-ac80-15f0992d96da)**
 
-> Các tài liệu nội bộ (`*.docx`, `docs/`, `types/`, `.deepeval/`) được loại khỏi bản deploy qua file `.vercelignore`.
-
-### Chạy qua Local HTTP Server (Tùy chọn)
-
-```bash
-# Python 3
-python -m http.server 8000
-
-# Hoặc Node.js npx
-npx serve .
-```
-Truy cập: `http://localhost:8000`
-
----
-
-## 3. Tóm tắt 4 Chương Di vật & Mô hình Toán học
-
-| Chương | Thiết bị & Mã COSPAR | Biến điều khiển Thanh trượt | Công thức Vật lý & Trạng thái Đích |
-| :--- | :--- | :--- | :--- |
-| **01** | **Apollo 11 Eagle & LRRR**<br>`1969-059C` (Mặt Trăng) | Năm quan trắc $Y \in [1969, 2026]$ | $\Delta t = Y - 1969$ năm<br>$\Delta d = \Delta t \times 3.8\text{ cm/năm}$ $\rightarrow$ **`+216.6 cm (2.17 m)`** tại năm 2026. Khứ hồi laser: `2.56 s`. |
-| **02** | **Surveyor 3 & Apollo 12**<br>`1967-035A` / `1969-099C` | Khoảng cách đáp $D \in [50, 2500]\text{ m}$ | Tại mốc lịch sử **`160 m`** (ảnh LRO 2011: 538 ft ≈ 164 m; NASA SVS ghi 160 m): Bão cát siêu thanh $v = 300\text{–}2000\text{ m/s}$ làm rỗ kính và nhuộm nâu sơn trắng (NASA SP-284). |
-| **03** | **Opportunity Rover (MER-B)**<br>`2003-032A` (Sao Hỏa) | Độ mờ khí quyển $\tau \in [0.6, 10.8]$ | Nội suy tuyến tính từng đoạn qua 5 mốc JPL `[(0.6, 645), (3.5, 280), (5.5, 120), (8.5, 45), (10.8, 22)]` (hai đầu là số đo thật ngày 2/6 và 10/6/2018) $\rightarrow$ **`22 Wh/sol`** tại Sol 5111 ($\tau = 10.8$). |
-| **04** | **Ingenuity Mars Helicopter**<br>`2020-052B` (Sao Hỏa) | Chuyến bay $F \in [1, 72]$ | Quay đồng trục `2,537 RPM` ($F < 72$). Tại **`Flight 72`** (Sol 1036): Quãng đường **`17.0 km`**, `128.8 min`, gãy đầu cánh quạt và tái sinh thành trạm thời tiết tĩnh `~20 năm`. |
-
----
-
-## 4. Tuân thủ Quy tắc Pháp lý NASA Space Apps 2026
-
-1. **Không sử dụng Logo NASA:** Tuyệt đối không hiển thị logo "Meatball" hay "Worm" của NASA trên giao diện web và thẻ chứng nhận. Hệ thống sử dụng biểu tượng vector SVG tự tạo theo đúng quy định nhãn hiệu của NASA.
-2. **Bảo vệ Quyền riêng tư Dưới 18 tuổi (Zero-PII):** Thẻ chứng nhận *Space Heritage Guardian* được vẽ và tải xuống hoàn toàn cục bộ trên trình duyệt bằng HTML5 Canvas, không thu thập, lưu trữ hay truyền đi bất kỳ thông tin cá nhân nào.
-3. **Super Intelligence (SI) Disclosure 2026:** Hiển thị minh bạch công cụ hỗ trợ và quy trình kiểm chứng thủ công đối chiếu tài liệu gốc (Human Verification Gate) tại chân trang và cửa sổ Modal.
-4. **Nhãn Phân định Nhận thức luận (Epistemic Labeling):** Phân định rạch ròi giữa cảm xúc nghệ thuật văn học (`NARRATIVE INTERPRETATION`) và cứ liệu khoa học/pháp lý (`VERIFIED SCIENTIFIC & LEGAL RECORD`).
+<img src="assets/qr-notebooklm.png" alt="Mã QR mở sổ tay NotebookLM của nhóm LUNAMARIS" width="160" />
